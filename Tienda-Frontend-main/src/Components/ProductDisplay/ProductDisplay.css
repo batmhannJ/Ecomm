@@ -1,0 +1,318 @@
+/* Base styles */
+.productdisplay {
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1200px;
+  padding: 10px;
+  flex-direction: row; /* Default for larger screens */
+}
+
+.productdisplay-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.productdisplay-main-img {
+  width: 100%;
+  max-width: 575px;
+  height: auto;
+  border: 2px solid #e0e0e0;
+  border-radius: 5px;
+}
+
+.productdisplay-img-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* Allow images to wrap to the next row */
+  gap: 10px;
+  width: 100%;
+  max-width: 575px;
+  margin-top: 20px;
+}
+
+.productdisplay-img-list img {
+  width: calc(25% - 10px); /* 4 images per row with gap */
+  height: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px; /* Add gap between elements */
+  margin-bottom: 15px;
+}
+
+.quantity-button {
+  width: 30px; /* Set fixed width for consistent size */
+  height: 30px; /* Set fixed height */
+  border: none;
+  background-color: #f0f0f0;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px; /* Add rounded corners */
+}
+
+.quantity-button:hover {
+  background-color: #ddd;
+}
+
+.quantity-value {
+  font-size: 18px;
+  padding: 0 20px; /* Ensure consistent padding around the quantity number */
+  text-align: center;
+  width: 50px; /* Set width to ensure consistent spacing */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  height: 30px;
+}
+
+.productdisplay-right-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  width: 600px; /* Fixed width */
+  height: 538px; /* Fixed height */
+  border: 1px solid #787777;
+  border-radius: 5px;
+  padding: 20px;
+  background: #fff;
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  position: relative; /* Ensures the sticky tabs inside the container */
+  z-index: 1; /* Ensure the right container stays behind the sticky tabs */
+}
+
+.productdisplay-tabs {
+  display: flex;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 20px;
+  position: sticky; /* Fix the tabs at the top when scrolling */
+  top: 0; /* Stick tabs to the top of the container */
+  background: #fff; /* Ensure tabs have a solid background */
+  z-index: 100; /* Ensure tabs are always on top of content */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow to give a floating effect */
+}
+
+/* Keep the tab content below the tabs and prevent overlap */
+.productdisplay-tab-content {
+  display: none;
+  padding: 20px;
+  margin-top: 20px; /* Ensure space below the sticky tabs */
+}
+
+/* Show active tab content */
+.productdisplay-tab-content.active {
+  display: block;
+}
+
+.productdisplay-tab {
+  width: 500px; /* Set a specific width for the tabs */
+  height: 50px; /* Set a specific height for the tabs */
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.3s, color 0.3s, border-bottom 0.3s;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex; /* Ensures text is vertically centered */
+  justify-content: center; /* Centers text horizontally */
+  align-items: center; /* Centers text vertically */
+}
+
+.productdisplay-tab:hover {
+  background: #f8f8f8;
+}
+
+.productdisplay-tab.active {
+  background: #ff4141;
+  color: white;
+  border-bottom: 2px solid transparent;
+}
+
+/* Hide all content by default */
+.productdisplay-tab-content {
+  display: none;
+  padding: 20px;
+}
+
+/* Show active tab content */
+.productdisplay-tab-content.active {
+  display: block;
+}
+
+/* Optionally, you can add some margin or padding to the tab content */
+.productdisplay-tab-content h2 {
+  margin-top: 0;
+}
+.productdisplay-right h1 {
+  color: #3d3d3d;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.productdisplay-right-prices {
+  display: flex;
+  margin: 20px 0;
+  gap: 30px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.productdisplay-right-price-old {
+  color: #818181;
+  text-decoration: line-through;
+}
+
+.productdisplay-right-price-new {
+  color: #ff4141;
+}
+
+.productdisplay-right-size h1 {
+  margin-top: 10px;
+  color: #656565;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.productdisplay-right-sizes {
+  display: flex;
+  margin: 30px 0;
+  gap: 20px;
+}
+
+.productdisplay-right-sizes div {
+  padding: 18px 24px;
+  background: #fbfbfb;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.productdisplay-right-sizes div:hover {
+  background: #e8e8e8;
+  transform: scale(1.05);
+}
+
+.productdisplay-right-sizes div.selected {
+  background: #ff4141;
+  color: #fff;
+  border: 1px solid #ff4141;
+}
+
+.productdisplay-right button {
+  padding: 20px 40px;
+  width: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: #ff4141;
+  margin-bottom: 40px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.productdisplay-right button:hover {
+  transform: scale(0.95);
+  background: #ff4141e6;
+}
+
+.productdisplay-right-category {
+  margin-top: 10px;
+}
+
+.productdisplay-right-category span {
+  font-weight: 600;
+}
+
+/* Add margin-top to push the stock display further down */
+.productdisplay-stock {
+  margin-top: 20px; /* Adjust this value as needed */
+  font-size: 20px;
+  color: #333;
+}
+
+.productdisplay-stock p {
+  margin-top: 20px; /* Adjust this value as needed */
+  font-weight: 600;
+  font-size: 20px;
+  color: #ff4141e6;
+}
+
+/* General button styling */
+.productdisplay-button {
+  background-color: #ff4141; /* Gray background */
+  color: #fff; /* White text */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Padding */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size */
+  height: 50px;
+  width: 200px;
+}
+
+/* Button disabled state */
+.productdisplay-button:disabled {
+  background-color: #5c6166; /* Blue background */
+  cursor: not-allowed; /* Not allowed cursor */
+}
+
+/* Responsive styles */
+@media (max-width: 1280px) {
+  .productdisplay {
+    margin: 0 60px;
+  }
+
+  .productdisplay-main-img {
+    height: 510px;
+  }
+
+  .productdisplay-img-list img {
+    height: 120px;
+    width: calc(25% - 10px); /* Ensure 4 images per row with gap */
+  }
+
+  .productdisplay-img-list {
+    max-width: 510px; /* Adjust to fit smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .productdisplay {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .productdisplay-left {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .productdisplay-main-img,
+  .productdisplay-img-list {
+    max-width: 100%;
+  }
+
+  .productdisplay-right-container {
+    width: 100%;
+    margin-left: 0;
+    height: 100%; /* Auto height for smaller screens */
+  }
+
+  .productdisplay-tabs {
+    flex-direction: column;
+  }
+}

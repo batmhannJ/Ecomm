@@ -1,0 +1,29 @@
+.userprofile {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 100px; /* Space for the footer */
+}
+
+.userprofilein {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10vh;
+    gap: 20px;
+}
+
+.userprofile .userprofilein .left {
+    width: 20%;
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    min-height: 50vh; /* Ensure a minimum height for the sidebar */
+    padding: 10px; /* Add padding for better spacing */
+}
+
+.userprofile .userprofilein .right {
+    width: 60%;
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    min-height: 50vh; /* Ensure a minimum height for the content area */
+    padding: 20px; /* Add padding for content */
+}

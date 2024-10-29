@@ -1,0 +1,66 @@
+:root {
+    --primary-color: #BAC195;
+    --hover-color: #747b50;
+    --active-color: #f0f0f0;
+    --icon-color: gray;
+    --text-color: #333;
+  }
+  
+  .usersidebar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Spacing between items */
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #ffffff; /* Sidebar background color */
+}
+
+.usersidebar .s1,
+.usersidebar .s2 {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    gap: 15px; /* Space between icon and text */
+    padding: 15px 20px; /* Padding for better spacing */
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+    height: 50px; /* Consistent height for all items */
+}
+
+.usersidebar .s1 {
+    color: var(--text-color); /* Set text color for s1 */
+}
+
+.usersidebar .s1:hover {
+    background-color: var(--active-color); /* Background color on hover */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.usersidebar .s2 {
+    background-color: var(--active-color); /* Active background color */
+    font-weight: bold; /* Bold text for s2 */
+    color: var(--primary-color); /* Primary color for text */
+}
+
+.usersidebar .s2.active {
+    background-color: var(--active-color); /* Active state for s2 */
+    color: var(--primary-color); /* Primary color for active text */
+}
+
+.usersidebar svg {
+    width: 24px; /* Set a consistent width for icons */
+    height: 24px; /* Set a consistent height for icons */
+    color: var(--icon-color); /* Icon color */
+}
+
+.usersidebar .active svg,
+.usersidebar .s1:hover svg {
+    color: var(--primary-color); /* Change icon color on active and hover states */
+}
+
+.stylenone {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit color from parent element */
+}
+

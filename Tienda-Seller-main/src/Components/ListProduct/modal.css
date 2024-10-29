@@ -1,0 +1,74 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.edit-form {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  position: relative;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease; /* Smooth transition for modal */
+}
+
+.edit-form h2 {
+  font-size: 24px;
+  color: #444;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.edit-form input,
+.edit-form select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+  border-color: #73ff61; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+.edit-form button {
+  background-color: #ff6f61;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.edit-form button:hover {
+  background-color: #e55b52;
+  transform: scale(1.05); /* Slight scale effect on hover */
+}
+
+.edit-form button + button {
+  margin-left: 10px; /* Space between buttons */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .edit-form {
+    padding: 15px;
+  }
+}

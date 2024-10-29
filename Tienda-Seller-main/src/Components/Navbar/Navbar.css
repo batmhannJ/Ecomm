@@ -1,0 +1,61 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 30px; /* Reduced padding */
+  box-shadow: 0 1px 3px -2px #000;
+  background-color: white;
+  height: 100px; /* Adjusted height */
+  position: relative;
+  z-index: 10; /* Ensures it's above the sidebar */
+}
+
+.nav-logo {
+  width: 80px; /* Adjusted width */
+  height: auto;
+}
+
+.nav-profile-container {
+  position: relative;
+}
+
+.nav-profile {
+  width: 80px; /* Adjusted size */
+  height: auto;
+  cursor: pointer;
+}
+
+.navbar p{
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.profile-menu {
+  display: none;
+  position: absolute;
+  top: 60px; /* Adjusted based on the new height */
+  right: 0;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.profile-menu button {
+  width: 100%;
+  padding: 10px;
+  background: white;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-menu button:hover {
+  background: #f0f0f0;
+}
+
+.nav-profile-container .profile-menu {
+  display: block;
+}
