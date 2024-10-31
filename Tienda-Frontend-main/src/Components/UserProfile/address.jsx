@@ -43,7 +43,7 @@ const Address = () => {
       try {
         const userId = localStorage.getItem('userId'); // Get userId from local storage
         const token = localStorage.getItem("authToken"); // Ensure you store and retrieve the token properly
-        const response = await axios.get(`https://tienda-backend-au3t.onrender.com/api/users/${userId}`, {
+        const response = await axios.get(`https://ip-tienda-backend.onrender.com/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         // Assuming the response contains the user data, set it in state
@@ -144,7 +144,7 @@ const Address = () => {
 
         console.log("Form Data: ", formData); // Debug form data
 
-        const response = await axios.patch('https://tienda-backend-au3t.onrender.com/api/edituser/address', {
+        const response = await axios.patch('https://ip-tienda-backend.onrender.com/api/edituser/address', {
           userId,
           addressData: formData
         });

@@ -62,7 +62,7 @@ export const PlaceOrder = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("https://tienda-backend-au3t.onrender.com/api/users", {
+        const response = await axios.get("https://ip-tienda-backend.onrender.com/api/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -347,7 +347,7 @@ export const PlaceOrder = () => {
             console.log("Saving Transaction Details:", transactionDetails);
             try {
               await axios.post(
-                "https://tienda-backend-au3t.onrender.com/api/transactions",
+                "https://ip-tienda-backend.onrender.com/api/transactions",
                 transactionDetails
               );
               console.log("Transaction saved:", transactionDetails);
@@ -379,7 +379,7 @@ export const PlaceOrder = () => {
                 size: item.size,
                 quantity: item.quantity,
               }));
-              await axios.post("https://tienda-backend-au3t.onrender.com/api/updateStock", {
+              await axios.post("https://ip-tienda-backend.onrender.com/api/updateStock", {
                 updates: stockUpdates,
               });
               console.log("Stock updated successfully");
@@ -393,7 +393,7 @@ export const PlaceOrder = () => {
           };
 
           updateStock();
-          await axios.delete(`https://tienda-backend-au3t.onrender.com/api/cart/${userId}`); // Clear cart after checkout
+          await axios.delete(`https://ip-tienda-backend.onrender.com/api/cart/${userId}`); // Clear cart after checkout
           toast.success("Checkout successful!");
         } else {
           console.error("Checkout Response Error:", response.data);

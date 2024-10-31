@@ -45,7 +45,7 @@ const MyOrders = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        `https://tienda-backend-au3t.onrender.com/api/transactions/userTransactions/${userId}`
+        `https://ip-tienda-backend.onrender.com/api/transactions/userTransactions/${userId}`
       );
       const fetchedOrders = Array.isArray(response.data) ? response.data : [];
       setOrders(fetchedOrders);
@@ -63,7 +63,7 @@ const MyOrders = () => {
     fetchOrders();
 
     // Initialize Socket.IO
-    const socket = io("https://tienda-backend-au3t.onrender.com");
+    const socket = io("https://ip-tienda-backend.onrender.com");
 
     // Listen for real-time updates on order status
     socket.on("orderUpdated", (updatedOrder) => {

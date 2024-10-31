@@ -71,7 +71,7 @@ const LoginSignup = () => {
     }
 
     try {
-      const response = await fetch("https://tienda-backend-au3t.onrender.com/send-otp", {
+      const response = await fetch("https://ip-tienda-backend.onrender.com/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email }),
@@ -98,7 +98,7 @@ const LoginSignup = () => {
     }
 
     try {
-      const response = await fetch("https://tienda-backend-au3t.onrender.com/verify-otp", {
+      const response = await fetch("https://ip-tienda-backend.onrender.com/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -138,7 +138,7 @@ const LoginSignup = () => {
     }
 
     try {
-      const response = await fetch("https://tienda-backend-au3t.onrender.com/reset-password", {
+      const response = await fetch("https://ip-tienda-backend.onrender.com/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -170,7 +170,7 @@ const LoginSignup = () => {
     }
 
     try {
-      const response = await fetch("https://tienda-backend-au3t.onrender.com/forgot-password", {
+      const response = await fetch("https://ip-tienda-backend.onrender.com/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: emailForReset }),
@@ -218,7 +218,7 @@ const LoginSignup = () => {
     }
 
     try {
-      const response = await fetch("https://tienda-backend-au3t.onrender.com/login", {
+      const response = await fetch("https://ip-tienda-backend.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -253,7 +253,7 @@ const LoginSignup = () => {
 
     console.log("Signup Function Executed", formData);
     let responseData;
-    await fetch("https://tienda-backend-au3t.onrender.com/signup", {
+    await fetch("https://ip-tienda-backend.onrender.com/signup", {
       method: "POST",
       headers: {
         Accept: "application/json",
