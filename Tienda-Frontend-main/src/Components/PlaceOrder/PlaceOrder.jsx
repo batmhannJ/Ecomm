@@ -151,7 +151,7 @@ export const PlaceOrder = () => {
   const fetchCoordinates = async (address) => {
     const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY; // Set this in your .env file
     console.log("Position Stack API Key:", apiKey);
-    const url = `http://api.positionstack.com/v1/forward?access_key=48ceab57881e0d4b21c7d7c68d31d792&query=${address}`;
+    const url = `http://api.positionstack.com/v1/forward?access_key=c60e6af4b3421c7b225c09fa354560ec&query=${address}`;
 
     try {
       const response = await axios.get(url);
