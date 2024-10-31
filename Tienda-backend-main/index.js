@@ -383,8 +383,8 @@ app.get("/popularincrafts", async (req, res) => {
     // Map through the products to construct the full image URL
     const updatedProducts = popular_in_crafts.map(product => {
       // Determine which image to display: edited or main
-      const mainImage = product.image ? `https://tienda-backend-main.onrender.com/images/${product.image}` : null;
-      const editedImage = product.editedImage ? `https://tienda-backend-main.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
+      const mainImage = product.image ? `https://ip-tienda-backend.onrender.com/images/${product.image}` : null;
+      const editedImage = product.editedImage ? `https://ip-tienda-backend.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
 
       // Choose the edited image if it exists; otherwise, use the main image
       const imageToDisplay = editedImage || mainImage;

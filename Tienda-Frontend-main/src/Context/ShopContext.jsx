@@ -80,7 +80,7 @@ const ShopContextProvider = (props) => {
 
     const authToken = localStorage.getItem("auth-token");
     if (authToken) {
-      fetch("https://tienda-backend-au3t.onrender.com/getcart", {
+      fetch("https://ip-tienda-backend.onrender.com/getcart", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -96,7 +96,7 @@ const ShopContextProvider = (props) => {
 
   const fetchAllProducts = async () => {
     try {
-      const response = await fetch("https://tienda-backend-au3t.onrender.com/allproducts");
+      const response = await fetch("https://ip-tienda-backend.onrender.com/allproducts");
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
