@@ -7,5 +7,9 @@ export default defineConfig({
   server: {
     host: true, // Enable this to expose
     port: 4173 // You can keep this or change if needed
+  },
+  preview: {
+    host: true,
+    port: 4173
   }
 })
