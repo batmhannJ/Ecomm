@@ -44,7 +44,7 @@ const AccountSettings = () => {
       }
     
       try {
-        const response = await axios.get(`https://tienda-backend-au3t.onrender.com/api/admin/${userId}`, {
+        const response = await axios.get(`https://ip-tienda-backend.onrender.com/api/admin/${userId}`, {
           headers: {
             Authorization: `Bearer ${authToken}`, // Adjusted to use the correct token
           },
@@ -94,7 +94,7 @@ const AccountSettings = () => {
 
       try {
         const response = await axios.patch(
-          `https://tienda-backend-au3t.onrender.com/api/editadmin/${adminId}`, // Ensure this is correct
+          `https://ip-tienda-backend.onrender.com/api/editadmin/${adminId}`, // Ensure this is correct
           updateData, // Send only the data we want to update
           {
             headers: {

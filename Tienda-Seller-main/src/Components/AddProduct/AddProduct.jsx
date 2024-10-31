@@ -179,7 +179,7 @@ export const AddProduct = () => {
       // Construct the image URL using the correct format
       product.image = responseData.image_url; 
       console.log(product);
-      await fetch("http://localhost:4000/addproduct", {
+      await fetch("https://ip-tienda-backend.onrender.com/addproduct", {
         method: "POST",
         headers: {
           Accept: "application/json",

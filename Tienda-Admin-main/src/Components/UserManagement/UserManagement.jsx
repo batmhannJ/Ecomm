@@ -17,7 +17,7 @@ function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("https://tienda-backend-au3t.onrender.com/api/users");
+      const response = await axios.get("https://ip-tienda-backend.onrender.com/api/users");
       setUsers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -40,7 +40,7 @@ function UserManagement() {
 
     try {
       const response = await axios.patch(
-        `https://tienda-backend-au3t.onrender.com/api/edituser/${users[editingUser]._id}`,
+        `https://ip-tienda-backend.onrender.com/api/edituser/${users[editingUser]._id}`,
         { name, email } 
       );
       setUsers(
@@ -56,7 +56,7 @@ function UserManagement() {
 
   const handleDeleteUser = async (id, index) => {
     try {
-      await axios.delete(`https://tienda-backend-au3t.onrender.com/api/deleteuser/${id}`);
+      await axios.delete(`https://ip-tienda-backend.onrender.com/api/deleteuser/${id}`);
       setUsers(users.filter((_, idx) => idx !== index));
       toast.success("User deleted successfully.");
     } catch (error) {
@@ -76,7 +76,7 @@ function UserManagement() {
 
   const handleSearch = async (searchTerm) => {
     try {
-      const response = await axios.get(`https://tienda-backend-au3t.onrender.com/api/users/search?term=${searchTerm}`);
+      const response = await axios.get(`https://ip-tienda-backend.onrender.com/api/users/search?term=${searchTerm}`);
       setUsers(response.data);  // Update users state with search results
     } catch (error) {
       console.error("Error fetching data: ", error);
