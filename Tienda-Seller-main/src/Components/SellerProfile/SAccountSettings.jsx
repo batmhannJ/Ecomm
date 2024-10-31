@@ -41,7 +41,7 @@ const SAccountSettings = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:4000/api/seller/approved/${userId}`, {
+        const response = await axios.get(`https://ip-tienda-backend.onrender.com/api/seller/approved/${userId}`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
@@ -91,7 +91,7 @@ const SAccountSettings = () => {
       try {
         console.log("Outgoing update request data:", updateData); // Check the data before making request
         const response = await axios.patch(
-          `http://localhost:4000/api/editseller/${adminId}`,
+          `https://ip-tienda-backend.onrender.com/api/editseller/${adminId}`,
           updateData,
           {
             headers: {
