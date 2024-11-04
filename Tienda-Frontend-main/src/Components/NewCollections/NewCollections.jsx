@@ -6,7 +6,7 @@ const NewCollections = () => {
   const [new_collection, setNew_Collection] = useState([]);
 
   useEffect(() => {
-    fetch('https://ip-tienda-backend.onrender.com/newcollections')
+    fetch('https://ip-tienda-han-backend.onrender.com/newcollections')
       .then((response) => response.json())
       .then((data) => setNew_Collection(data.slice(0, 8))); 
   }, []);

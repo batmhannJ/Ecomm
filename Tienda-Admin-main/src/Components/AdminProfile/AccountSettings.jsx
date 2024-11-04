@@ -3,6 +3,7 @@ import "./AccountSettings.css";
 import axios from "axios";
 import Navbar from '../Navbar/Navbar'; // Adjust the import path as necessary
 import Sidebar from '../Sidebar/Sidebar'; // Adjust the import path as necessary
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AccountSettings = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const AccountSettings = () => {
 
   const [formErrors, setFormErrors] = useState({});
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const getUserIdFromToken = () => {
     const authToken = localStorage.getItem("admin_token"); // Adjusted to use 'admin_token'
@@ -44,7 +46,7 @@ const AccountSettings = () => {
       }
     
       try {
-        const response = await axios.get(`https://ip-tienda-backend.onrender.com/api/admin/${userId}`, {
+        const response = await axios.get(`https://ip-tienda-han-backend.onrender.com/api/admin/${userId}`, {
           headers: {
             Authorization: `Bearer ${authToken}`, // Adjusted to use the correct token
           },
@@ -94,7 +96,7 @@ const AccountSettings = () => {
 
       try {
         const response = await axios.patch(
-          `https://ip-tienda-backend.onrender.com/api/editadmin/${adminId}`, // Ensure this is correct
+          `https://ip-tienda-han-backend.onrender.com/api/editadmin/${adminId}`, // Ensure this is correct
           updateData, // Send only the data we want to update
           {
             headers: {
@@ -166,14 +168,30 @@ const AccountSettings = () => {
 
             <div className="account-settings__form-group">
               <label htmlFor="password">Password <span>(optional)</span></label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {formErrors.password && <span className="account-settings__error">{formErrors.password}</span>}
+              <div style={{ position: 'relative' }}>
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      id="password"
+      value={formData.password}
+      onChange={handleChange}
+      style={{ paddingRight: '30px', width: '100%'}} // Add padding to make space for the icon
+    />
+    <span
+      className="eye-icon"
+      onClick={togglePasswordVisibility}
+      style={{
+        cursor: 'pointer',
+        position: 'absolute',
+        right: '10px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+      }}
+    >
+      {showPassword ? <FaEyeSlash /> : <FaEye />}
+    </span>
+  </div>
+  {formErrors.password && <span className="account-settings__error">{formErrors.password}</span>}
             </div>
 
             <button className="account-settings__button" type="submit">

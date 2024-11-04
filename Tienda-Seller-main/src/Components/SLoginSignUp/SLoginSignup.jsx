@@ -129,7 +129,7 @@ const SLoginSignup = () => {
     console.log('Verifying OTP with data:', { email, otp, newPassword });
   
     try {
-      const response = await axios.post('https://ip-tienda-backend.onrender.com/api/seller/verify-otp-seller', {
+      const response = await axios.post('https://ip-tienda-han-backend.onrender.com/api/seller/verify-otp-seller', {
         email,
         otp,
         newPassword,
@@ -303,8 +303,8 @@ const handleResetPassword = async (e) => {
               {passwordError && <p className="password-error">{passwordError}</p>}
             </div>
             <div>
-              <label>ID Picture (optional):</label>
-              <input
+            <label>ID Picture (required):</label>
+            <input
                 type="file"
                 name="idPicture"
                 onChange={handleChange}

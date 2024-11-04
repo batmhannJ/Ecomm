@@ -138,6 +138,36 @@ export const AddProduct = () => {
   };
 
   const Add_Product = async () => {
+    const {
+      name,
+      description,
+      old_price,
+      new_price,
+      s_stock,
+      m_stock,
+      l_stock,
+      xl_stock,
+      category,
+      tags
+    } = productDetails;
+
+    if (
+      !name ||
+      !description ||
+      !old_price ||
+      !new_price ||
+      (!s_stock && s_stock !== 0) ||
+      (!m_stock && m_stock !== 0) ||
+      (!l_stock && l_stock !== 0) ||
+      (!xl_stock && xl_stock !== 0) ||
+      !image ||
+      !category ||
+      !tags
+    ) {
+      toast.error("Please fill in all fields.", { position: "top-left" });
+      return;
+    }
+    
     if (errors.old_price || errors.new_price || errors.tags) {
       toast.error("Please fix the errors before submitting", {
         position: "top-left",
@@ -163,7 +193,7 @@ export const AddProduct = () => {
     let formData = new FormData();
     formData.append("product", image);
   
-    await fetch("https://ip-tienda-backend.onrender.com/upload", {
+    await fetch("https://tienda-backend-au3t.onrender.com/upload", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -179,7 +209,7 @@ export const AddProduct = () => {
       // Construct the image URL using the correct format
       product.image = responseData.image_url; 
       console.log(product);
-      await fetch("https://ip-tienda-backend.onrender.com/addproduct", {
+      await fetch("https://tienda-backend-au3t.onrender.com/addproduct", {
         method: "POST",
         headers: {
           Accept: "application/json",
