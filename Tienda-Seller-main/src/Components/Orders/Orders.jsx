@@ -9,24 +9,30 @@ const Orders = () => {
   const socket = io("https://ip-tienda-han-backend.onrender.com"); // Connect to Socket.IO server
 
   // Fetch all orders (transactions)
-  const fetchAllOrders = async () => {
-    try {
-      const response = await fetch("https://ip-tienda-han-backend.onrender.com/api/transactions"); // Fetch transaction data
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      const filteredOrders = data.filter((order) => order.status !== "pending");
-      setOrders(filteredOrders); // Ensure data is an array
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-      toast.error("Error fetching orders");
+  // Fetch all orders (transactions)
+const fetchAllOrders = async () => {
+  try {
+    const response = await fetch("https://ip-tienda-han-backend.onrender.com/api/transactions"); // Fetch transaction data
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
-  };
+    const data = await response.json();
+    const filteredOrders = data
+      .filter((order) => order.status !== "pending")
+      .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort from latest to oldest
+    setOrders(filteredOrders); // Ensure data is an array
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    toast.error("Error fetching orders");
+  }
+};
 
-  // Update the order status
-  const statusHandler = async (event, transactionId) => {
-    const newStatus = event.target.value;
+
+const statusHandler = async (event, transactionId) => {
+  const newStatus = event.target.value;
+
+  // Show confirmation dialog before updating status
+  if (window.confirm(`Are you sure you want to change the status to "${newStatus}"?`)) {
     try {
       const response = await fetch(
         `https://ip-tienda-han-backend.onrender.com/api/transactions/${transactionId}`,
@@ -57,7 +63,9 @@ const Orders = () => {
       console.error("Error updating order status:", error);
       toast.error("Error updating order status");
     }
-  };
+  }
+};
+
 
   useEffect(() => {
     fetchAllOrders(); // Initial fetch of orders
