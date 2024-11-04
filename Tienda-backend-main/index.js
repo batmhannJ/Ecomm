@@ -1251,6 +1251,14 @@ app.post('/check-user-address', async (req, res) => {
   }
 });
 
+app.use(express.static("public", { 
+  setHeaders: (res, path) => {
+    if (path.endsWith(".css")) {
+      res.setHeader("Content-Type", "text/css");
+    }
+  }
+}));
+
 // Admin Routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/", adminRoutes);
