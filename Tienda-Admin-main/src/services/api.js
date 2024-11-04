@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://tienda-backend-au3t.onrender.com/api/admin';
+const API_URL = 'https://ip-tienda=han-backend.onrender.com/api/admin';
 
 export const adminSignup = async (data) => {
   const response = await axios.post(`${API_URL}/signup`, data);
