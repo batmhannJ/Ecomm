@@ -18,11 +18,13 @@ const TransactionManagement = () => {
         "https://ip-tienda-han-backend.onrender.com/api/transactions"
       );
       console.log(response.data);
+  
       const filteredTransactions = Array.isArray(response.data)
-        ? response.data.filter(
-            (transaction) => transaction.status !== "pending"
-          )
+        ? response.data
+            .filter((transaction) => transaction.status !== "pending")
+            .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date (latest to oldest)
         : [];
+  
       setTransactions(filteredTransactions);
     } catch (error) {
       console.error("Error fetching transactions:", error);
