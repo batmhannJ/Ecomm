@@ -392,6 +392,8 @@ const LoginSignup = () => {
                   onChange={changeHandler}
                   type="text"
                   placeholder="Phone Number"
+                  maxLength="11"
+
                 />
               )}
               <div
