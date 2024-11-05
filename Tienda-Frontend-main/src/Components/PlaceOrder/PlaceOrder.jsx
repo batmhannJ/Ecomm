@@ -315,9 +315,9 @@ export const PlaceOrder = () => {
           },
         ],
         redirectUrl: {
-          success: `https://ip-tienda.onrender.com/myorders?orderId=${requestReferenceNumber}&status=success`,
-          failure: `https://ip-tienda.onrender.com/myorders?orderId=${requestReferenceNumber}&status=failed`,
-          cancel: `https://ip-tienda.onrender.com/myorders?orderId=${requestReferenceNumber}&status=canceled`,
+          success: `https://ip-tienda.onrender.com/verify?status=success&orderId=${requestReferenceNumber}`,
+          failure: `https://ip-tienda.onrender.com/verify?status=failed&orderId=${requestReferenceNumber}`,
+          cancel: `https://ip-tienda.onrender.com/verify?status=canceled&orderId=${requestReferenceNumber}`,
         },
         requestReferenceNumber,
       };
