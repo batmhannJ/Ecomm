@@ -28,13 +28,13 @@ const MyOrders = () => {
 
   const handleTransactionStatus = (status) => {
     switch (status) {
-      case "Failed":
+      case "failed":
         toast.warn("The transaction Failed.");
         break;
-      case "Success":
+      case "success":
         toast.success("The transaction has been processed successfully.");
         break;
-      case "Cancelled":
+      case "cancelled":
         toast.info("The transaction has been cancelled.");
         break;
       default:
