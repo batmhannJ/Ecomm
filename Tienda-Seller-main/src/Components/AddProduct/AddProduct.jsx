@@ -193,7 +193,7 @@ export const AddProduct = () => {
     let formData = new FormData();
     formData.append("product", image);
   
-    await fetch("https://tienda-backend-au3t.onrender.com/upload", {
+    await fetch("https://ip-tienda-han-backend.onrender.com/upload", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -209,7 +209,7 @@ export const AddProduct = () => {
       // Construct the image URL using the correct format
       product.image = responseData.image_url; 
       console.log(product);
-      await fetch("https://tienda-backend-au3t.onrender.com/addproduct", {
+      await fetch("https://ip-tienda-han-backend.onrender.com/addproduct", {
         method: "POST",
         headers: {
           Accept: "application/json",
