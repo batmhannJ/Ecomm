@@ -75,6 +75,8 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
+  methods: ["GET", "POST", "DELETE", "PUT"], // Specify the HTTP methods you want to allow
+  allowedHeaders: ["Content-Type", "Authorization"], // Specify headers needed for requests
   credentials: true // Allow credentials to be included in the request
 }));
 app.use(express.json());
