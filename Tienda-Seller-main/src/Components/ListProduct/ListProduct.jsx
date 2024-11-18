@@ -177,7 +177,7 @@ const handleFileChange = (e) => {
         ))}
       </div>
 
-       {/* Modal for Editing Product */}
+      {/* Modal for Editing Product */}
 {isModalOpen && (
   <div className="modal-overlay" onClick={closeModal}>
     <div className="edit-form">
@@ -280,14 +280,17 @@ const handleFileChange = (e) => {
         <label htmlFor="image">Product Image</label>
         <input type="file" id="image" name="image" onChange={handleFileChange} />
       </div>
-      
+
       <button className="update-button" onClick={updateProduct}>Update</button>
 <button
   className="cancel-button"
   onClick={() => {
     setEditProduct(null);
     setIsModalOpen(false); // Close the modal when canceling
-  }}>Cancel</button>
+  }} >
+  Cancel
+</button>
+
     </div>
   </div>
 )}
