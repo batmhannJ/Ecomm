@@ -302,8 +302,15 @@ const ShopContextProvider = (props) => {
   
     if (itemIndex !== -1) {
       const currentItem = cartItems[itemIndex];
-      const stockKey = `${selectedSize.toLowerCase()}_stock`; // Generate the stock key dynamically
       console.log("Current Item:", currentItem);
+  
+      // Check if the product data exists
+      if (!currentItem.product) {
+        console.error("Product data is missing for this cart item.");
+        return;
+      }
+  
+      const stockKey = `${selectedSize.toLowerCase()}_stock`; // Generate the stock key dynamically
       console.log("Product Data:", currentItem.product);
       console.log("Stock Key:", stockKey);
   
@@ -340,15 +347,13 @@ const ShopContextProvider = (props) => {
           alert(`You can't add more than available stock (${availableStock}).`);
         }
       } else {
-        console.error(
-          `Stock key "${stockKey}" not found in product data.`,
-          currentItem.product
-        );
+        console.error(`Stock key "${stockKey}" not found in product data.`, currentItem.product);
       }
     } else {
       console.error("Item not found in cart:", key);
     }
   };
+  
 
 const decreaseItemQuantity = async (productId, selectedSize) => {
   const userId = localStorage.getItem('userId');
