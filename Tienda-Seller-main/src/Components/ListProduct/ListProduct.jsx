@@ -177,7 +177,8 @@ const handleFileChange = (e) => {
         ))}
       </div>
 
-      {isModalOpen && (
+       {/* Modal for Editing Product */}
+{isModalOpen && (
   <div className="modal-overlay" onClick={closeModal}>
     <div className="edit-form">
       <h2>Edit Product</h2>
@@ -281,17 +282,17 @@ const handleFileChange = (e) => {
       </div>
       
       <button className="update-button" onClick={updateProduct}>Update</button>
-      <button
-        className="cancel-button"
-        onClick={() => {
-          setEditProduct(null);
-          setIsModalOpen(false); // Close the modal when canceling
-        }}>Cancel</button>
-          </div>
-        </div>
-      )}
-          </div>
-        );
-      };
+<button
+  className="cancel-button"
+  onClick={() => {
+    setEditProduct(null);
+    setIsModalOpen(false); // Close the modal when canceling
+  }}>Cancel</button>
+    </div>
+  </div>
+)}
+    </div>
+  );
+};
 
 export default ListProduct;
