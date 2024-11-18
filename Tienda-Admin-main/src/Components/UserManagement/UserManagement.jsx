@@ -55,15 +55,22 @@ function UserManagement() {
   };
 
   const handleDeleteUser = async (id, index) => {
-    try {
-      await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/deleteuser/${id}`);
-      setUsers(users.filter((_, idx) => idx !== index));
-      toast.success("User deleted successfully.");
-    } catch (error) {
-      toast.error("User delete error.");
-      console.error(error);
+    // Show confirmation dialog
+    const isConfirmed = window.confirm("Are you sure you want to delete this user?");
+    
+    // If the user confirms, proceed with deletion
+    if (isConfirmed) {
+      try {
+        await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/deleteuser/${id}`);
+        setUsers(users.filter((_, idx) => idx !== index));
+        toast.success("User deleted successfully.");
+      } catch (error) {
+        toast.error("User delete error.");
+        console.error(error);
+      }
     }
   };
+  
 
   const handleViewUser = (index) => {
     setViewUser(users[index]);
