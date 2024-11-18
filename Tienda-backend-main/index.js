@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
-const { Server } = require("socket.io");
+
 const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
 
@@ -93,28 +93,6 @@ mongoose
 // API Creation
 app.get("/", (req, res) => {
   res.send("Express App is Running");
-});
-
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*", // Allow all origins for testing, restrict in production
-    methods: ["GET", "POST"],
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-
-  // Emit order updates to clients
-  socket.on("orderUpdated", (updatedOrder) => {
-    io.emit("orderUpdated", updatedOrder);
-  });
-
-  // Handle disconnections
-  socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
-  });
 });
 
 app.get("/api/transactions", (req, res) => {
