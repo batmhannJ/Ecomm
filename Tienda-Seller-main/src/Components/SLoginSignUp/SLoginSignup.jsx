@@ -101,7 +101,7 @@ const SLoginSignup = () => {
 
       localStorage.setItem('admin_token', responseData.data.token);
       toast.success('Login successful! Redirecting to the dashboard...');
-      navigate('/seller/addproduct');
+      navigate('/addproduct');
       window.location.reload(); // Optional: Reload if necessary
     } catch (error) {
       console.error('Login error:', error);
@@ -303,7 +303,7 @@ const handleResetPassword = async (e) => {
               {passwordError && <p className="password-error">{passwordError}</p>}
             </div>
             <div>
-            <label>ID Picture (required):</label>
+            <label>Valid ID/GOVERNMENT ISSUED:</label>
             <input
                 type="file"
                 name="idPicture"
