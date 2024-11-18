@@ -1050,21 +1050,23 @@ app.delete('/api/cart/:userId/:productId', async (req, res) => {
 
 app.patch('/api/cart/:userId/:productId', async (req, res) => {
   try {
-    const { userId, productId } = req.params;
-    const { selectedSize, quantity } = req.query;
+    const { userId, productId } = req.params; // Extracting userId and productId from the URL params
+    const { selectedSize } = req.query; // Extracting selectedSize from the query parameters
 
-    // Update the cart item with the provided quantity
-    const cartItem = await Cart.findOneAndUpdate(
-      { userId, productId, selectedSize },
-      { $set: { quantity: quantity } }, // Update quantity
-      { new: true }
+    // Find the cart for this user and update the quantity of the selected product
+    const cart = await Cart.findOneAndUpdate(
+      { userId, "cartItems.productId": productId, "cartItems.selectedSize": selectedSize },
+      {
+        $inc: { "cartItems.$.quantity": 1 } // Increment the quantity of the selected product
+      },
+      { new: true } // Return the updated cart
     );
 
-    if (!cartItem) {
-      return res.status(404).json({ message: 'Cart item not found' });
+    if (!cart) {
+      return res.status(404).json({ message: "Cart item not found" });
     }
 
-    res.status(200).json(cartItem);
+    res.status(200).json(cart);
   } catch (error) {
     console.error("Error updating cart:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -1072,7 +1074,6 @@ app.patch('/api/cart/:userId/:productId', async (req, res) => {
 });
 
 
-// Halimbawa ng search route
 app.get('/api/users/search', async (req, res) => {
   const searchTerm = req.query.term;
   
