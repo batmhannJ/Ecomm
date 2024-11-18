@@ -10,7 +10,7 @@ const generateReferenceNumber = () => {
 //const stripe = require('stripe')(process.env.REACT_APP_CHECKOUT_SECRET_API_KEY);
 
 const PlaceOrder = async (req, res) => {
-  const frontend_url = "https://tienda-frontend.onrender.com";
+  const frontend_url = "https://ip-tienda-han.onrender.com";
 
   try {
     // Debugging: Print the Stripe key to verify it's being read correctly
@@ -129,7 +129,7 @@ const PlaceOrder = async (req, res) => {
     };
 
     const PlaceOrder = async (req, res) => {
-      const frontend_url = "https://tienda-frontend.onrender.com";
+      const frontend_url = "https://ip-tienda-han.onrender.com";
 
       try {
         const requestReferenceNumber = generateReferenceNumber();
@@ -196,7 +196,7 @@ const verifyOrder = async (req, res) => {
 
     if (success === "true") {
       // Update the order to mark it as paid
-      updateData = { payment: true, status: "paid" };
+      updateData = { payment: true, status: "Cart Processing" };
       redirectUrl = `/myorders?orderId=${orderId}`;
     } else if (success === "cancel") {
       // Handle cancel logic
@@ -248,24 +248,6 @@ const userOrders = async (req, res) => {
     });
   }
 };
-
-/*const Orders = require('../models/Order');
-
-exports.getUserOrders = async (req, res) => {
-  try {
-    const { userId } = req.body;
-    const orders = await Orders.find({ userId });
-
-    if (!orders) {
-      return res.status(404).json({ success: false, message: "No orders found" });
-    }
-
-    res.json({ success: true, data: orders });
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    res.status(500).json({ success: false, message: "Failed to fetch orders" });
-  }
-};*/
 
 // Listing Orders for Admin Panel
 const listOrders = async (req, res) => {
