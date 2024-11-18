@@ -52,7 +52,7 @@ export const Navbar = () => {
         />
         {profileMenuVisible && (
           <div ref={profileMenuRef} className="profile-menu">
-            <Link to="/seller/saccountsettings" onClick={closeProfileMenu}>
+            <Link to="/saccountsettings" onClick={closeProfileMenu}>
               <button>Profile</button>
             </Link>
             <button onClick={handleLogout}>Logout</button>
