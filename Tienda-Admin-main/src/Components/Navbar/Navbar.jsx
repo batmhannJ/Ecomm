@@ -39,9 +39,7 @@ const handleLogout = () => {
 
   return (
     <div className='navbar'>
-      <Link to="/admin/profile">
         <p>TIENDA</p>
-      </Link>
       <p>ADMIN PANEL</p>
       <div className="nav-profile-container">
         <img
@@ -52,7 +50,7 @@ const handleLogout = () => {
         />
         {profileMenuVisible && (
           <div ref={profileMenuRef} className="profile-menu">
-            <Link to="/accountsettings" onClick={closeProfileMenu}>
+            <Link to="/admin/accountsettings" onClick={closeProfileMenu}>
               <button>Profile</button>
             </Link>
             <button onClick={handleLogout}>Logout</button>
