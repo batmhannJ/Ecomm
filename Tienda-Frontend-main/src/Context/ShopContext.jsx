@@ -281,17 +281,17 @@ const ShopContextProvider = (props) => {
 
   const increaseItemQuantity = async (productId, selectedSize) => {
     const userId = localStorage.getItem("userId");
-
+  
     // Check if userId exists
     if (!userId) {
       console.error("No user ID found. Cannot increase item quantity.");
       return;
     }
-
+  
     const key = `${productId}_${selectedSize || "N/A"}`; // Handle undefined size
     console.log("Increasing quantity for item with key:", key);
     console.log("Cart Items:", cartItems);
-
+  
     // Find the index of the item to update based on productId and selectedSize
     const itemIndex = cartItems.findIndex((item) => {
       return (
@@ -299,31 +299,46 @@ const ShopContextProvider = (props) => {
         item.selectedSize.toUpperCase() === selectedSize.toUpperCase()
       );
     });
-
-    // If the item is found, increase the quantity
+  
+    // If the item is found, check stock before increasing the quantity
     if (itemIndex !== -1) {
-      // Update the local state to increase the quantity
-      setCartItems((prevItems) => {
-        return prevItems.map((cartItem, index) => {
-          if (index === itemIndex) {
-            return { ...cartItem, quantity: cartItem.quantity + 1 }; // Increase the quantity
-          }
-          return cartItem;
+      const currentItem = cartItems[itemIndex];
+      const stockKey = `${selectedSize.toLowerCase()}_stock`; // Get the stock key dynamically
+      const availableStock = currentItem.product[stockKey]; // Access the stock value
+  
+      if (currentItem.quantity < availableStock) {
+        // Update the local state to increase the quantity
+        setCartItems((prevItems) => {
+          return prevItems.map((cartItem, index) => {
+            if (index === itemIndex) {
+              return { ...cartItem, quantity: cartItem.quantity + 1 }; // Increase the quantity
+            }
+            return cartItem;
+          });
         });
-      });
-
-    // Update the database
-    try {
-      const updatedQuantity = cartItems[itemIndex].quantity + 1; // New quantity to update in the database
-      const response = await axios.patch(`https://ip-tienda-han-backend.onrender.com/api/cart/${userId}/${productId}?selectedSize=${selectedSize}`, { quantity: updatedQuantity });
-      console.log("Cart updated in database successfully:", response.data);
-    } catch (error) {
-      console.error("Error updating cart in database:", error.response ? error.response.data : error.message);
+  
+        // Update the database
+        try {
+          const updatedQuantity = currentItem.quantity + 1; // New quantity to update in the database
+          const response = await axios.patch(
+            `https://ip-tienda-han-backend.onrender.com/api/cart/${userId}/${productId}?selectedSize=${selectedSize}`,
+            { quantity: updatedQuantity }
+          );
+          console.log("Cart updated in database successfully:", response.data);
+        } catch (error) {
+          console.error(
+            "Error updating cart in database:",
+            error.response ? error.response.data : error.message
+          );
+        }
+      } else {
+        alert(`You can't add more than available stock (${availableStock}).`);
+      }
+    } else {
+      console.error("Item not found in cart:", key);
     }
-  } else {
-    console.error('Item not found in cart:', key);
-  }
-};
+  };
+  
 
 const decreaseItemQuantity = async (productId, selectedSize) => {
   const userId = localStorage.getItem('userId');
