@@ -1066,7 +1066,7 @@ app.get('/api/users/search', async (req, res) => {
   }
 });
 
-router.get('/api/products/:productId', async (req, res) => {
+app.get('/api/products/:productId', async (req, res) => {
   try {
     const productId = req.params.productId;
     // Find the product in the database by ID
