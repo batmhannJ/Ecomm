@@ -300,45 +300,55 @@ const ShopContextProvider = (props) => {
       );
     });
   
-    // If the item is found, check stock before increasing the quantity
     if (itemIndex !== -1) {
       const currentItem = cartItems[itemIndex];
-      const stockKey = `${selectedSize.toLowerCase()}_stock`; // Get the stock key dynamically
-      const availableStock = currentItem.product[stockKey]; // Access the stock value
+      const stockKey = `${selectedSize.toLowerCase()}_stock`; // Generate the stock key dynamically
+      console.log("Current Item:", currentItem);
+      console.log("Product Data:", currentItem.product);
+      console.log("Stock Key:", stockKey);
   
-      if (currentItem.quantity < availableStock) {
-        // Update the local state to increase the quantity
-        setCartItems((prevItems) => {
-          return prevItems.map((cartItem, index) => {
-            if (index === itemIndex) {
-              return { ...cartItem, quantity: cartItem.quantity + 1 }; // Increase the quantity
-            }
-            return cartItem;
+      // Validate if product and stockKey exist
+      if (currentItem.product && stockKey in currentItem.product) {
+        const availableStock = currentItem.product[stockKey]; // Get the stock for the selected size
+  
+        if (currentItem.quantity < availableStock) {
+          // Update the local state to increase the quantity
+          setCartItems((prevItems) => {
+            return prevItems.map((cartItem, index) => {
+              if (index === itemIndex) {
+                return { ...cartItem, quantity: cartItem.quantity + 1 }; // Increase the quantity
+              }
+              return cartItem;
+            });
           });
-        });
   
-        // Update the database
-        try {
-          const updatedQuantity = currentItem.quantity + 1; // New quantity to update in the database
-          const response = await axios.patch(
-            `https://ip-tienda-han-backend.onrender.com/api/cart/${userId}/${productId}?selectedSize=${selectedSize}`,
-            { quantity: updatedQuantity }
-          );
-          console.log("Cart updated in database successfully:", response.data);
-        } catch (error) {
-          console.error(
-            "Error updating cart in database:",
-            error.response ? error.response.data : error.message
-          );
+          // Update the database
+          try {
+            const updatedQuantity = currentItem.quantity + 1; // New quantity to update in the database
+            const response = await axios.patch(
+              `https://ip-tienda-han-backend.onrender.com/api/cart/${userId}/${productId}?selectedSize=${selectedSize}`,
+              { quantity: updatedQuantity }
+            );
+            console.log("Cart updated in database successfully:", response.data);
+          } catch (error) {
+            console.error(
+              "Error updating cart in database:",
+              error.response ? error.response.data : error.message
+            );
+          }
+        } else {
+          alert(`You can't add more than available stock (${availableStock}).`);
         }
       } else {
-        alert(`You can't add more than available stock (${availableStock}).`);
+        console.error(
+          `Stock key "${stockKey}" not found in product data.`,
+          currentItem.product
+        );
       }
     } else {
       console.error("Item not found in cart:", key);
     }
   };
-  
 
 const decreaseItemQuantity = async (productId, selectedSize) => {
   const userId = localStorage.getItem('userId');
