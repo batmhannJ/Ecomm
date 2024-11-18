@@ -1066,6 +1066,23 @@ app.get('/api/users/search', async (req, res) => {
   }
 });
 
+router.get('/api/products/:productId', async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    // Find the product in the database by ID
+    const product = await Product.findOne({ id: productId });
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(product); // Send product data as response
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 //======================== M O B I L E ==================================//
 
