@@ -279,16 +279,19 @@ const handleFileChange = (e) => {
         <label htmlFor="image">Product Image</label>
         <input type="file" id="image" name="image" onChange={handleFileChange} />
       </div>
-            <button onClick={updateProduct}>Update</button>
-            <button onClick={() => {
-                setEditProduct(null);
-                setIsModalOpen(false); // Close the modal when canceling
-              }}>Cancel</button>
+      
+      <button className="update-button" onClick={updateProduct}>Update</button>
+      <button
+        className="cancel-button"
+        onClick={() => {
+          setEditProduct(null);
+          setIsModalOpen(false); // Close the modal when canceling
+        }}>Cancel</button>
           </div>
         </div>
       )}
-    </div>
-  );
-};
+          </div>
+        );
+      };
 
 export default ListProduct;
