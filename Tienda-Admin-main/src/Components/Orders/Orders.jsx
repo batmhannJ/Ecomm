@@ -24,35 +24,39 @@ const Orders = () => {
   // Update the order status
   const statusHandler = async (event, transactionId) => {
     const newStatus = event.target.value;
-    try {
-      const response = await fetch(
-        `https://ip-tienda-han-backend.onrender.com/api/transactions/${transactionId}`,
-        {
-          method: "PATCH", // Using PATCH to update
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: newStatus }), // Send new status
+  
+    // Show confirmation dialog before updating status
+    if (window.confirm(`Are you sure you want to change the status to "${newStatus}"?`)) {
+      try {
+        const response = await fetch(
+          `https://ip-tienda-han-backend.onrender.com/api/transactions/${transactionId}`,
+          {
+            method: "PATCH", // Using PATCH to update
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status: newStatus }), // Send new status
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error("Failed to update status");
         }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update status");
+  
+        // Update local state to reflect the status change
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.transactionId === transactionId
+              ? { ...order, status: newStatus }
+              : order
+          )
+        );
+  
+        toast.success("Order status updated successfully!");
+      } catch (error) {
+        console.error("Error updating order status:", error);
+        toast.error("Error updating order status");
       }
-
-      // Update local state to reflect the status change
-      setOrders(
-        orders.map((order) =>
-          order.transactionId === transactionId
-            ? { ...order, status: newStatus }
-            : order
-        )
-      );
-
-      toast.success("Order status updated successfully!");
-    } catch (error) {
-      console.error("Error updating order status:", error);
-      toast.error("Error updating order status");
     }
   };
 
@@ -99,7 +103,6 @@ const Orders = () => {
                 onChange={(event) => statusHandler(event, order.transactionId)}
                 value={order.status}
               >
-                <option value="Paid">Paid</option>
                 <option value="Cart Processing">Cart Processing</option>
                 <option value="Out for Delivery">Out for Delivery</option>
                 <option value="Delivered">Delivered</option>
