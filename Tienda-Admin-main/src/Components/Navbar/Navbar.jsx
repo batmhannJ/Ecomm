@@ -52,7 +52,7 @@ const handleLogout = () => {
         />
         {profileMenuVisible && (
           <div ref={profileMenuRef} className="profile-menu">
-            <Link to="/accountsettings" onClick={closeProfileMenu}>
+            <Link to="/admin/accountsettings" onClick={closeProfileMenu}>
               <button>Profile</button>
             </Link>
             <button onClick={handleLogout}>Logout</button>
