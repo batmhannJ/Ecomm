@@ -390,10 +390,16 @@ const LoginSignup = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={changeHandler}
-                  type="text"
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+                    if (e.target.value.length > 11) {
+                      e.target.value = e.target.value.slice(0, 11); // Limit to 11 digits
+                    }
+                  }}
+                  type="tel" // Better type for phone numbers
                   placeholder="Phone Number"
-                  maxLength="11"
-
+                  maxLength="11" // Prevent input longer than 11 digits
+                  aria-required="true"
                 />
               )}
               <div
@@ -455,6 +461,10 @@ const LoginSignup = () => {
 
             <button
               onClick={() => {
+                if (state === "Sign Up" && !formData.agreed) {
+                  alert("Please agree to the terms of use & privacy policy before continuing.");
+                  return; // Prevent sending OTP if checkbox is unchecked
+                }
                 state === "Login"
                   ? login() // Only CAPTCHA verification for Login
                   : otpSent
