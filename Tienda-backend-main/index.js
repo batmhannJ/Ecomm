@@ -1048,6 +1048,30 @@ app.delete('/api/cart/:userId/:productId', async (req, res) => {
   }
 });
 
+app.patch('/api/cart/:userId/:productId', async (req, res) => {
+  try {
+    const { userId, productId } = req.params;
+    const { selectedSize, quantity } = req.query;
+
+    // Update the cart item with the provided quantity
+    const cartItem = await CartItem.findOneAndUpdate(
+      { userId, productId, selectedSize },
+      { $set: { quantity: quantity } }, // Update quantity
+      { new: true }
+    );
+
+    if (!cartItem) {
+      return res.status(404).json({ message: 'Cart item not found' });
+    }
+
+    res.status(200).json(cartItem);
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 // Halimbawa ng search route
 app.get('/api/users/search', async (req, res) => {
   const searchTerm = req.query.term;
