@@ -1054,7 +1054,7 @@ app.patch('/api/cart/:userId/:productId', async (req, res) => {
     const { selectedSize, quantity } = req.query;
 
     // Update the cart item with the provided quantity
-    const cartItem = await CartItem.findOneAndUpdate(
+    const cartItem = await Cart.findOneAndUpdate(
       { userId, productId, selectedSize },
       { $set: { quantity: quantity } }, // Update quantity
       { new: true }
