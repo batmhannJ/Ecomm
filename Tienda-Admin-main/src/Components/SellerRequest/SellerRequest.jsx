@@ -152,13 +152,13 @@ function SellerRequest() {
                     onClick={() => handleApproveSeller(seller._id)}
                     disabled={approving}
                   >
-                    Approve
+                    Accept
                   </button>
                   <button
                     className="action-button delete"
                     onClick={() => handleDeleteSeller(seller._id)}
                   >
-                    Delete
+                    Reject
                   </button>
                 </td>
               </tr>
