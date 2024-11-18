@@ -38,31 +38,25 @@ const Address = () => {
   }, []);
 
   // Fetch user data when component mounts
-   useEffect(() => {
-  const fetchUserData = async () => {
-    try {
-      const userId = localStorage.getItem('userId'); 
-      const token = localStorage.getItem("authToken");
-      console.log("Fetched UserId:", userId); // Debug
-      console.log("Fetched AuthToken:", token); // Debug
-
-      if (!token) {
-        throw new Error("Auth token is missing.");
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = localStorage.getItem('userId'); // Get userId from local storage
+        const token = localStorage.getItem("authToken"); // Ensure you store and retrieve the token properly
+        const response = await axios.get(`https://ip-tienda-han-backend.onrender.com/api/users/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        // Assuming the response contains the user data, set it in state
+        setUserData(response.data);
+        // Set formData with user's address
+        setFormData(response.data.address); // Assuming user data contains an address field
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
+    };
 
-      const response = await axios.get(`https://ip-tienda-han-backend.onrender.com/api/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUserData(response.data);
-      setFormData(response.data.address);
-    } catch (error) {
-      console.error("Error fetching user data:", error.message);
-    }
-  };
-
-  fetchUserData();
-}, []);
-
+    fetchUserData();
+  }, []);
 
   // Fetch provinces when region is selected
   useEffect(() => {
@@ -136,39 +130,37 @@ const Address = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setIsLoading(true);
-  
-      const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem('auth-token');
-      console.log("Token on Submit:", token); // Debugging
-  
-      if (!token) {
-        console.error("Missing auth token.");
-        setSubmissionStatus('error');
-        setSubmissionMessage('Authentication failed.');
-        setIsLoading(false);
-        return;
-      }
-  
+      setIsLoading(true); // Start loading
       try {
-        const response = await axios.patch(
-          'https://ip-tienda-han-backend.onrender.com/api/edituser/address',
-          { userId, addressData: formData },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const userId = localStorage.getItem('userId');
+        console.log('Updating user with ID:', userId);
+        if (!userId) {
+          console.error('User ID is null or undefined');
+          setSubmissionStatus('error');
+          setSubmissionMessage('User ID is missing.');
+          setIsLoading(false); // Stop loading if error
+          return;
+        }
+
+        console.log("Form Data: ", formData); // Debug form data
+
+        const response = await axios.patch('https://ip-tienda-han-backend.onrender.com/api/edituser/address', {
+          userId,
+          addressData: formData
+        });
+
+        console.log('Address updated successfully:', response.data);
         setSubmissionStatus('success');
         setSubmissionMessage('Address updated successfully.');
       } catch (error) {
-        console.error('Error updating address:', error.response || error.message);
+        console.error('Error updating address:', error);
         setSubmissionStatus('error');
         setSubmissionMessage('Failed to update address.');
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Stop loading
       }
     }
   };
-  
-
 
   return (
     <div className="address-form">
