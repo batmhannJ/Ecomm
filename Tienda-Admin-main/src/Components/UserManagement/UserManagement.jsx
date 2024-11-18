@@ -191,7 +191,7 @@ function UserManagement() {
               <strong>Email:</strong> {viewUser.email}
             </div>
             <div className="user-detail">
-              <strong>Password:</strong> {viewUser.password}
+              <strong>Password:</strong> {viewUser.password && '*'.repeat(viewUser.password.length)}
             </div>
           </div>
         </div>
