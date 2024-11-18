@@ -123,11 +123,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Creating Upload Endpoints for Images
-app.use(cors({
-  origin: 'https://ip-tienda-han.onrender.com', // Update with allowed origin
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Allow specified methods
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specified headers
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end(); // Preflight requests should end here
+  }
+
+  next();
+});
 app.use("/images", express.static("upload/images"));
 app.use('/upload', express.static('upload'));
 app.use('/upload/images', express.static('upload/images'));
