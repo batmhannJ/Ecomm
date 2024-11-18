@@ -177,68 +177,108 @@ const handleFileChange = (e) => {
         ))}
       </div>
 
-      {/* Modal for Editing Product */}
       {isModalOpen && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="edit-form">
-            <h2>Edit Product</h2>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="Product Name"
-              autoFocus
-            />
-            <input
-              type="number"
-              value={formData.old_price}
-              onChange={(e) => setFormData({ ...formData, old_price: e.target.value })}
-              placeholder="Old Price"
-            />
-            <input
-              type="number"
-              value={formData.new_price}
-              onChange={(e) => setFormData({ ...formData, new_price: e.target.value })}
-              placeholder="New Price"
-            />
-            <select
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            >
-              <option value="" disabled>Select Category</option>
-              <option value="crafts">Craft</option>
-              <option value="food">Food</option>
-              <option value="clothes">Clothes</option>
-            </select>
+  <div className="modal-overlay" onClick={closeModal}>
+    <div className="edit-form">
+      <h2>Edit Product</h2>
 
-            <input
-              type="number"
-              value={formData.s_stock}
-              onChange={(e) => setFormData({ ...formData, s_stock: e.target.value })}
-              placeholder="Small Stock"
-            />
-            <input
-              type="number"
-              value={formData.m_stock}
-              onChange={(e) => setFormData({ ...formData, m_stock: e.target.value })}
-              placeholder="Medium Stock"
-            />
-            <input
-              type="number"
-              value={formData.l_stock}
-              onChange={(e) => setFormData({ ...formData, l_stock: e.target.value })}
-              placeholder="Large Stock"
-            />
-            <input
-              type="number"
-              value={formData.xl_stock}
-              onChange={(e) => setFormData({ ...formData, xl_stock: e.target.value })}
-              placeholder="XL Stock"
-            />
+      <div className="input-group">
+        <label htmlFor="product-name">Product Name</label>
+        <input
+          id="product-name"
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder="Product Name"
+          autoFocus
+        />
+      </div>
 
-            {/* Image input field */}
-            <input type="file" name="image" onChange={handleFileChange} />
+      <div className="input-group">
+        <label htmlFor="old-price">Old Price</label>
+        <input
+          id="old-price"
+          type="number"
+          value={formData.old_price}
+          onChange={(e) => setFormData({ ...formData, old_price: e.target.value })}
+          placeholder="Old Price"
+        />
+      </div>
 
+      <div className="input-group">
+        <label htmlFor="new-price">New Price</label>
+        <input
+          id="new-price"
+          type="number"
+          value={formData.new_price}
+          onChange={(e) => setFormData({ ...formData, new_price: e.target.value })}
+          placeholder="New Price"
+        />
+      </div>
+
+      <div className="input-group">
+        <label htmlFor="category">Category</label>
+        <select
+          id="category"
+          value={formData.category}
+          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+        >
+          <option value="" disabled>Select Category</option>
+          <option value="crafts">Craft</option>
+          <option value="food">Food</option>
+          <option value="clothes">Clothes</option>
+        </select>
+      </div>
+
+      <div className="input-group">
+        <label htmlFor="s-stock">Small Stock</label>
+        <input
+          id="s-stock"
+          type="number"
+          value={formData.s_stock}
+          onChange={(e) => setFormData({ ...formData, s_stock: e.target.value })}
+          placeholder="Small Stock"
+        />
+      </div>
+
+      <div className="input-group">
+        <label htmlFor="m-stock">Medium Stock</label>
+        <input
+          id="m-stock"
+          type="number"
+          value={formData.m_stock}
+          onChange={(e) => setFormData({ ...formData, m_stock: e.target.value })}
+          placeholder="Medium Stock"
+        />
+      </div>
+
+      <div className="input-group">
+        <label htmlFor="l-stock">Large Stock</label>
+        <input
+          id="l-stock"
+          type="number"
+          value={formData.l_stock}
+          onChange={(e) => setFormData({ ...formData, l_stock: e.target.value })}
+          placeholder="Large Stock"
+        />
+      </div>
+
+      <div className="input-group">
+        <label htmlFor="xl-stock">XL Stock</label>
+        <input
+          id="xl-stock"
+          type="number"
+          value={formData.xl_stock}
+          onChange={(e) => setFormData({ ...formData, xl_stock: e.target.value })}
+          placeholder="XL Stock"
+        />
+      </div>
+
+      {/* Image input field */}
+      <div className="input-group">
+        <label htmlFor="image">Product Image</label>
+        <input type="file" id="image" name="image" onChange={handleFileChange} />
+      </div>
             <button onClick={updateProduct}>Update</button>
             <button onClick={() => {
                 setEditProduct(null);
