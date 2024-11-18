@@ -300,54 +300,50 @@ const ShopContextProvider = (props) => {
       );
     });
   
+    // If the item is found, check stock in the database before increasing the quantity
     if (itemIndex !== -1) {
       const currentItem = cartItems[itemIndex];
-      console.log("Current Item:", currentItem);
   
-      // Check if the product data exists
-      if (!currentItem.product) {
-        console.error("Product data is missing for this cart item.");
-        return;
-      }
+      // Fetch the product data from the database, including stock information
+      try {
+        const response = await axios.get(`https://ip-tienda-han-backend.onrender.com/api/products/${productId}`);
+        const productData = response.data;
   
-      const stockKey = `${selectedSize.toLowerCase()}_stock`; // Generate the stock key dynamically
-      console.log("Product Data:", currentItem.product);
-      console.log("Stock Key:", stockKey);
+        // Ensure the product data exists and contains the stock for the selected size
+        if (productData && productData[`${selectedSize.toLowerCase()}_stock`] !== undefined) {
+          const availableStock = productData[`${selectedSize.toLowerCase()}_stock`]; // Access the stock dynamically
   
-      // Validate if product and stockKey exist
-      if (currentItem.product && stockKey in currentItem.product) {
-        const availableStock = currentItem.product[stockKey]; // Get the stock for the selected size
-  
-        if (currentItem.quantity < availableStock) {
-          // Update the local state to increase the quantity
-          setCartItems((prevItems) => {
-            return prevItems.map((cartItem, index) => {
-              if (index === itemIndex) {
-                return { ...cartItem, quantity: cartItem.quantity + 1 }; // Increase the quantity
-              }
-              return cartItem;
+          // Check if the quantity is less than available stock
+          if (currentItem.quantity < availableStock) {
+            // Update the local state to increase the quantity
+            setCartItems((prevItems) => {
+              return prevItems.map((cartItem, index) => {
+                if (index === itemIndex) {
+                  return { ...cartItem, quantity: cartItem.quantity + 1 }; // Increase the quantity
+                }
+                return cartItem;
+              });
             });
-          });
   
-          // Update the database
-          try {
-            const updatedQuantity = currentItem.quantity + 1; // New quantity to update in the database
-            const response = await axios.patch(
-              `https://ip-tienda-han-backend.onrender.com/api/cart/${userId}/${productId}?selectedSize=${selectedSize}`,
-              { quantity: updatedQuantity }
-            );
-            console.log("Cart updated in database successfully:", response.data);
-          } catch (error) {
-            console.error(
-              "Error updating cart in database:",
-              error.response ? error.response.data : error.message
-            );
+            // Update the quantity in the database
+            try {
+              const updatedQuantity = currentItem.quantity + 1;
+              const updateResponse = await axios.patch(
+                `https://ip-tienda-han-backend.onrender.com/api/cart/${userId}/${productId}?selectedSize=${selectedSize}`,
+                { quantity: updatedQuantity }
+              );
+              console.log("Cart updated in database successfully:", updateResponse.data);
+            } catch (error) {
+              console.error("Error updating cart in database:", error.response ? error.response.data : error.message);
+            }
+          } else {
+            alert(`You can't add more than available stock (${availableStock}).`);
           }
         } else {
-          alert(`You can't add more than available stock (${availableStock}).`);
+          console.error(`Stock for size "${selectedSize}" not found in product data.`);
         }
-      } else {
-        console.error(`Stock key "${stockKey}" not found in product data.`, currentItem.product);
+      } catch (error) {
+        console.error("Error fetching product data:", error.response ? error.response.data : error.message);
       }
     } else {
       console.error("Item not found in cart:", key);
