@@ -282,7 +282,6 @@ const ShopContextProvider = (props) => {
   const increaseItemQuantity = async (productId, selectedSize) => {
     const userId = localStorage.getItem("userId");
   
-    // Check if userId exists
     if (!userId) {
       console.error("No user ID found. Cannot increase item quantity.");
       return;
@@ -292,7 +291,6 @@ const ShopContextProvider = (props) => {
     console.log("Increasing quantity for item with key:", key);
     console.log("Cart Items:", cartItems);
   
-    // Find the index of the item to update based on productId and selectedSize
     const itemIndex = cartItems.findIndex((item) => {
       return (
         item.productId === Number(productId) &&
@@ -300,34 +298,32 @@ const ShopContextProvider = (props) => {
       );
     });
   
-    // If the item is found, check stock in the database before increasing the quantity
     if (itemIndex !== -1) {
       const currentItem = cartItems[itemIndex];
   
-      // Fetch the product data from the database, including stock information
       try {
         const response = await axios.get(`https://ip-tienda-han-backend.onrender.com/api/products/${productId}`);
         const productData = response.data;
   
-        // Ensure the product data exists and contains the stock for the selected size
         if (productData && productData[`${selectedSize.toLowerCase()}_stock`] !== undefined) {
-          const availableStock = productData[`${selectedSize.toLowerCase()}_stock`]; // Access the stock dynamically
+          const availableStock = productData[`${selectedSize.toLowerCase()}_stock`];
   
-          // Check if the quantity is less than available stock
           if (currentItem.quantity < availableStock) {
-            // Update the local state to increase the quantity
             setCartItems((prevItems) => {
               return prevItems.map((cartItem, index) => {
                 if (index === itemIndex) {
-                  return { ...cartItem, quantity: cartItem.quantity + 1 }; // Increase the quantity
+                  return { ...cartItem, quantity: cartItem.quantity + 1 }; // Update quantity in the local state
                 }
                 return cartItem;
               });
             });
   
+            // After state update, get the updated quantity from state
+            const updatedItem = cartItems[itemIndex]; // It might be updated already
+            const updatedQuantity = updatedItem.quantity;
+  
             // Update the quantity in the database
             try {
-              const updatedQuantity = currentItem.quantity + 1;
               const updateResponse = await axios.patch(
                 `https://ip-tienda-han-backend.onrender.com/api/cart/${userId}/${productId}?selectedSize=${selectedSize}`,
                 { quantity: updatedQuantity }
