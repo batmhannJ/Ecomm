@@ -25,7 +25,7 @@
   cursor: pointer;
 }
 
-.navbar p{
+.navbar p {
   font-size: 30px;
   font-weight: 800;
 }
@@ -58,4 +58,103 @@
 
 .nav-profile-container .profile-menu {
   display: block;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .navbar {
+    padding: 10px 20px; /* Reduced padding for large screens */
+    height: 80px; /* Reduced height */
+  }
+
+  .nav-logo {
+    width: 70px; /* Adjusted logo size */
+  }
+
+  .nav-profile {
+    width: 70px; /* Adjusted profile size */
+  }
+
+  .navbar p {
+    font-size: 25px; /* Adjusted font size */
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+    height: auto; /* Auto height for flexibility */
+    padding: 10px 15px; /* Adjust padding */
+  }
+
+  .navbar p {
+    font-size: 22px; /* Smaller font size */
+    margin-top: 10px;
+  }
+
+  .nav-logo {
+    width: 60px; /* Smaller logo size */
+  }
+
+  .nav-profile {
+    width: 60px; /* Smaller profile icon */
+  }
+
+  .profile-menu {
+    top: 50px; /* Adjusted menu position */
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 15px; /* Even more reduced padding for mobile */
+    height: auto; /* Auto height for mobile screens */
+  }
+
+  .nav-logo {
+    width: 50px; /* Smaller logo size */
+  }
+
+  .nav-profile {
+    width: 50px; /* Smaller profile icon */
+  }
+
+  .navbar p {
+    font-size: 18px; /* Even smaller font size */
+    margin-top: 5px; /* Reduced margin on mobile */
+  }
+
+  .profile-menu {
+    top: 50px; /* Adjusted menu position for mobile */
+    width: 100%; /* Full-width profile menu */
+  }
+
+  .profile-menu button {
+    font-size: 12px; /* Smaller buttons for mobile */
+  }
+}
+
+@media (max-width: 375px) {
+  .navbar {
+    padding: 8px 10px; /* Even smaller padding for very small screens */
+    height: auto;
+  }
+
+  .nav-logo {
+    width: 45px; /* Smaller logo size for very small screens */
+  }
+
+  .nav-profile {
+    width: 45px; /* Smaller profile icon for very small screens */
+  }
+
+  .navbar p {
+    font-size: 16px; /* Much smaller font size */
+    margin-top: 5px;
+  }
+
+  .profile-menu button {
+    font-size: 10px; /* Adjust button text size */
+  }
 }

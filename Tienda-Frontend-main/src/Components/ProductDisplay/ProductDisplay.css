@@ -17,17 +17,17 @@
 }
 
 .productdisplay-main-img {
-  width: 100%;
+
   max-width: 575px;
-  height: auto;
+  height: 500px;
   border: 2px solid #e0e0e0;
   border-radius: 5px;
 }
 
+/* Image List */
 .productdisplay-img-list {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap; /* Allow images to wrap to the next row */
+  flex-wrap: wrap;
   gap: 10px;
   width: 100%;
   max-width: 575px;
@@ -35,22 +35,23 @@
 }
 
 .productdisplay-img-list img {
-  width: calc(25% - 10px); /* 4 images per row with gap */
+  width: calc(25% - 10px);
   height: auto;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
 }
 
+/* Quantity Controls */
 .quantity-controls {
   display: flex;
   align-items: center;
-  gap: 2px; /* Add gap between elements */
+  gap: 2px;
   margin-bottom: 15px;
 }
 
 .quantity-button {
-  width: 30px; /* Set fixed width for consistent size */
-  height: 30px; /* Set fixed height */
+  width: 30px;
+  height: 30px;
   border: none;
   background-color: #f0f0f0;
   font-size: 18px;
@@ -58,7 +59,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px; /* Add rounded corners */
+  border-radius: 5px;
 }
 
 .quantity-button:hover {
@@ -67,9 +68,9 @@
 
 .quantity-value {
   font-size: 18px;
-  padding: 0 20px; /* Ensure consistent padding around the quantity number */
+  padding: 0 20px;
   text-align: center;
-  width: 50px; /* Set width to ensure consistent spacing */
+  width: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,57 +78,53 @@
   height: 30px;
 }
 
+/* Product Display Right Container */
 .productdisplay-right-container {
   display: flex;
   flex-direction: column;
   margin-left: 20px;
-  width: 600px; /* Fixed width */
-  height: 538px; /* Fixed height */
+  width: 600px;
+  height: 538px;
   border: 1px solid #787777;
   border-radius: 5px;
   padding: 20px;
   background: #fff;
-  overflow-y: auto; /* Enable vertical scrolling if content overflows */
-  position: relative; /* Ensures the sticky tabs inside the container */
-  z-index: 1; /* Ensure the right container stays behind the sticky tabs */
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
 }
 
+/* Product Display Tabs */
 .productdisplay-tabs {
   display: flex;
   border-bottom: 2px solid #e0e0e0;
   margin-bottom: 20px;
-  position: sticky; /* Fix the tabs at the top when scrolling */
-  top: 0; /* Stick tabs to the top of the container */
-  background: #fff; /* Ensure tabs have a solid background */
-  z-index: 100; /* Ensure tabs are always on top of content */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow to give a floating effect */
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Keep the tab content below the tabs and prevent overlap */
 .productdisplay-tab-content {
   display: none;
   padding: 20px;
-  margin-top: 20px; /* Ensure space below the sticky tabs */
+  margin-top: 20px;
 }
 
-/* Show active tab content */
 .productdisplay-tab-content.active {
   display: block;
 }
 
 .productdisplay-tab {
-  width: 500px; /* Set a specific width for the tabs */
-  height: 50px; /* Set a specific height for the tabs */
+  width: 33%;
+  height: 50px;
   padding: 12px;
   text-align: center;
   cursor: pointer;
   font-weight: 700;
-  transition: background 0.3s, color 0.3s, border-bottom 0.3s;
+  transition: background 0.3s, color 0.3s;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex; /* Ensures text is vertically centered */
-  justify-content: center; /* Centers text horizontally */
-  align-items: center; /* Centers text vertically */
 }
 
 .productdisplay-tab:hover {
@@ -137,24 +134,9 @@
 .productdisplay-tab.active {
   background: #ff4141;
   color: white;
-  border-bottom: 2px solid transparent;
 }
 
-/* Hide all content by default */
-.productdisplay-tab-content {
-  display: none;
-  padding: 20px;
-}
-
-/* Show active tab content */
-.productdisplay-tab-content.active {
-  display: block;
-}
-
-/* Optionally, you can add some margin or padding to the tab content */
-.productdisplay-tab-content h2 {
-  margin-top: 0;
-}
+/* Product Display Right Content */
 .productdisplay-right h1 {
   color: #3d3d3d;
   font-size: 10px;
@@ -192,7 +174,7 @@
 }
 
 .productdisplay-right-sizes div {
-  padding: 18px 24px;
+  padding: 12px 16px;
   background: #fbfbfb;
   border: 1px solid #d1d1d1;
   border-radius: 3px;
@@ -211,13 +193,17 @@
   border: 1px solid #ff4141;
 }
 
+/* Adjust button size to match the details section */
 .productdisplay-right button {
-  padding: 20px 40px;
-  width: 200px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 1em 0; /* Same vertical padding as details */
+  font-size: 20px; /* Match font size */
+  width: 100%; /* Full width */
+  max-width: 200px; /* Optional: set a maximum width */
+  display: flex;
+  justify-content: center;
   color: white;
   background: #ff4141;
+  margin-top: auto; /* Push it to the bottom */
   margin-bottom: 40px;
   border: none;
   outline: none;
@@ -238,58 +224,75 @@
   font-weight: 600;
 }
 
-/* Add margin-top to push the stock display further down */
 .productdisplay-stock {
-  margin-top: 20px; /* Adjust this value as needed */
+  margin-top: 20px;
   font-size: 20px;
   color: #333;
 }
 
 .productdisplay-stock p {
-  margin-top: 20px; /* Adjust this value as needed */
+  margin-top: 20px;
   font-weight: 600;
   font-size: 20px;
   color: #ff4141e6;
 }
 
-/* General button styling */
 .productdisplay-button {
-  background-color: #ff4141; /* Gray background */
-  color: #fff; /* White text */
-  border: none; /* Remove border */
-  padding: 10px 20px; /* Padding */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 16px; /* Font size */
+  background-color: #ff4141;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
   height: 50px;
   width: 200px;
 }
 
-/* Button disabled state */
 .productdisplay-button:disabled {
-  background-color: #5c6166; /* Blue background */
-  cursor: not-allowed; /* Not allowed cursor */
+  background-color: #5c6166;
+  cursor: not-allowed;
 }
 
-/* Responsive styles */
-@media (max-width: 1280px) {
-  .productdisplay {
-    margin: 0 60px;
+/* Responsive styles for the button */
+@media (max-width: 768px) {
+  .productdisplay-button {
+    width: 100%; /* Make the button full width on small screens */
+    font-size: 14px; /* Slightly reduce the font size */
+    padding: 10px; /* Adjust padding for a better fit */
   }
+}
 
+@media (max-width: 480px) {
+  .productdisplay-button {
+    font-size: 12px; /* Further reduce the font size for very small screens */
+    padding: 8px; /* Adjust padding for small screens */
+  }
+}
+
+/* Responsive styles for large screens */
+@media (min-width: 1280px) {
   .productdisplay-main-img {
-    height: 510px;
+    max-width: 800px; /* Increase image size for large screens */
   }
 
   .productdisplay-img-list img {
-    height: 120px;
-    width: calc(25% - 10px); /* Ensure 4 images per row with gap */
-  }
-
-  .productdisplay-img-list {
-    max-width: 510px; /* Adjust to fit smaller screens */
+    width: calc(20% - 10px); /* Make the images smaller for larger screens */
   }
 }
 
+/* Responsive styles for medium screens */
+@media (max-width: 1280px) and (min-width: 768px) {
+  .productdisplay-main-img {
+    max-width: 900px; /* Increase the image size for large screens */
+  }
+
+  .productdisplay-img-list img {
+    width: calc(20% - 10px); /* Make the images smaller for larger screens */
+  }
+}
+
+
+/* Responsive styles for small screens */
 @media (max-width: 768px) {
   .productdisplay {
     flex-direction: column;
@@ -309,10 +312,37 @@
   .productdisplay-right-container {
     width: 100%;
     margin-left: 0;
-    height: 100%; /* Auto height for smaller screens */
+    height: auto;
   }
 
+  .productdisplay-tab {
+    width: 100%;
+  }
+
+  .productdisplay-right button {
+    width: 100%; /* Full width on smaller screens */
+    font-size: 16px; /* Optional: maintain size */
+    padding: 1em; /* Adjust padding for better appearance */
+    margin-top: 20px; /* Ensure it has some space */
+  }
+
+  .productdisplay-right-sizes div {
+    padding: 8px 10px; /* Adjusted padding for smaller screens */
+    font-size: 14px; /* Optional: adjust font size */
+  }
+}
+
+@media (max-width: 480px) {
   .productdisplay-tabs {
     flex-direction: column;
+  }
+
+  .productdisplay-img-list img {
+    width: calc(50% - 10px);
+  }
+
+  .productdisplay-right-sizes div {
+    padding: 6px 8px; /* Further adjustment for the smallest screens */
+    font-size: 12px; /* Further adjustment for the smallest screens */
   }
 }

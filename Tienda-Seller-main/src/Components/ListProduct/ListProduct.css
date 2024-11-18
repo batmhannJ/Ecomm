@@ -131,11 +131,10 @@ hr {
 }
 
 
-
 /* Responsive design for smaller screens */
 @media (max-width: 1040px) {
   .listproduct-format-main {
-    grid-template-columns: 80px 2fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 100px 2fr 1fr 1fr 1fr 1fr 1fr;
     font-size: 14px;
   }
   
@@ -152,30 +151,38 @@ hr {
   }
 
   .listproduct-format-main {
-    grid-template-columns: 60px 1fr 1fr 1fr 1fr;
-    gap: 8px;
-    font-size: 12px;
+    display: flex;
+    flex-direction: row; /* Align items horizontally */
+    gap: 15px;
+    width: 100%;
+    overflow-x: auto; /* Allow horizontal scrolling */
+    white-space: nowrap; /* Prevent wrapping */
+  }
+
+  .listproduct-format {
+    flex: 0 0 auto; /* Prevent items from shrinking */
+    width: 200px; /* Adjust item width as necessary */
   }
 
   .listproduct-product-icon {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
   }
-  
+
   .listproduct-remove-icon {
     width: 18px;
   }
-  
+
   .edit-form {
     padding: 15px;
   }
-  
+
   .edit-form input, 
   .edit-form select {
     font-size: 12px;
     padding: 8px;
   }
-  
+
   .edit-form button {
     padding: 8px 16px;
     font-size: 12px;
