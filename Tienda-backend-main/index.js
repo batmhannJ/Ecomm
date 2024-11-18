@@ -124,16 +124,20 @@ const upload = multer({ storage: storage });
 
 // Creating Upload Endpoints for Images
 app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Preflight Check`);
+
   res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Allow specified methods
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specified headers
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Explicitly allow PATCH
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow required headers
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end(); // Preflight requests should end here
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Include PATCH in response
+    return res.status(200).json({}); // Send a 200 OK response for preflight
   }
 
   next();
 });
+
 app.use("/images", express.static("upload/images"));
 app.use('/upload', express.static('upload'));
 app.use('/upload/images', express.static('upload/images'));
