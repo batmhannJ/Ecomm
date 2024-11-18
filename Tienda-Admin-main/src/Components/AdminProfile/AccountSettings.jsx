@@ -16,7 +16,9 @@ const AccountSettings = () => {
   const [formErrors, setFormErrors] = useState({});
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
   const getUserIdFromToken = () => {
     const authToken = localStorage.getItem("admin_token"); // Adjusted to use 'admin_token'
     if (authToken) {

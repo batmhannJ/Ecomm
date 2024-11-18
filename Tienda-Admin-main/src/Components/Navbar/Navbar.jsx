@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Navbar.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import navProfile from '../../assets/nav-profile.png';
 
 export const Navbar = () => {

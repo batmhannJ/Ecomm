@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://ip-tienda-backend.onrender.com/'
+      '/api': 'https://ip-tienda-han-backend.onrender.com/'
     }
   }
 });
