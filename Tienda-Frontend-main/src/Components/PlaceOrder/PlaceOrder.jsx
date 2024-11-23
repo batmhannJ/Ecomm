@@ -149,7 +149,7 @@ export const PlaceOrder = () => {
   }, [token, navigate]);
 
   const fetchCoordinates = async (address) => {
-    const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY;
+    const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY; // Set this in your .env file
     console.log("Position Stack API Key:", apiKey);
     const url = `https://api.positionstack.com/v1/forward?access_key=072e48c34a52df1351a9de28cf930b88&query=${address}`;
 
@@ -264,7 +264,7 @@ export const PlaceOrder = () => {
 
       console.log("Cart Details:", itemDetails); // Ensure this logs correctly
 
-      const mayaApiUrl = "https://manager-sandbox.paymaya.com/checkout/v1/checkouts";
+      const mayaApiUrl = "https://pg-sandbox.paymaya.com/checkout/v1/checkouts";
 
       const secretKey = process.env.REACT_APP_CHECKOUT_PUBLIC_API_KEY;
       if (!secretKey) {
