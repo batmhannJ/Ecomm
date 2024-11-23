@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../../Context/ShopContext";
 import "./PlaceOrder.css";
 import { toast } from "react-toastify";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // useLocation for URL
 import axios from "axios";
 import {
   regions,
@@ -10,8 +10,10 @@ import {
   cities,
   barangays,
 } from "select-philippines-address";
+//import { v4 as uuidv4 } from "uuid";
 
 const generateReferenceNumber = () => {
+  // Using timestamp + random number for simplicity
   return `REF-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 };
 
@@ -25,12 +27,13 @@ const getUserIdFromToken = () => {
 };
 
 const MAIN_OFFICE_COORDINATES = {
-  latitude: 14.628488,
+  latitude: 14.628488, // Sunnymede IT Center latitude
   longitude: 121.03342,
 };
 
 export const PlaceOrder = () => {
-  const { getTotalCartAmount, all_product, cartItems, clearCart } = useContext(ShopContext);
+  const { getTotalCartAmount, all_product, cartItems, clearCart } =
+    useContext(ShopContext);
   const token = localStorage.getItem("auth-token");
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,64 +45,114 @@ export const PlaceOrder = () => {
     lastName: "",
     email: "",
     street: "",
-    barangay: "",
     city: "",
     state: "",
     zipcode: "",
-    country: "Philippines",
+    country: "",
     phone: "",
-    provinceCode: "",
+    size: "",
+    provinceCode: "", // Add a state to hold the selected province code
     provinces: [],
   });
+
   const [deliveryFee, setDeliveryFee] = useState(0);
 
-  // Fetch user data
+  // Fetch user data on component mount
+  // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get("https://ip-tienda-han-backend.onrender.com/api/users", {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
+        const allUsersData = response.data;
         const loggedInUserId = localStorage.getItem("userId");
-        const loggedInUser = response.data.find(user => user._id === loggedInUserId);
+
+        const loggedInUser = allUsersData.find(
+          (user) => user._id === loggedInUserId
+        );
 
         if (loggedInUser) {
-          const { barangay, municipality, province, region, street, zip, country } = loggedInUser.address;
+          // Extracting address details
+          const {
+            barangay,
+            municipality,
+            province,
+            region,
+            street,
+            zip,
+            country,
+          } = loggedInUser.address;
+
+          // Get names from the imported data
           const barangayName = await barangays(municipality);
-          const cityData = await cities(province);
+          const cityData = await cities(province); // Replace with province_code or id
+          //const regionsData = await regions();
           const provincesData = await provincesByCode(region);
+          // Debugging Logs
+          console.log("Province Data:", provincesData); // See the structure of the provinceData array
+          console.log("Province Code:", province);
+
+          // Assuming these functions return arrays, map the correct names
+          const selectedBarangay =
+            barangayName.find((b) => b.brgy_code === barangay)?.brgy_name || "";
+          const selectedCity =
+            cityData.find((c) => c.city_code === municipality)?.city_name || "";
+          const selectedProvince =
+            provincesData.find((p) => p.province_code === province)
+              ?.province_name || "";
+
+          console.log("Selected Province:", selectedProvince);
 
           setData({
             firstName: loggedInUser.name.split(" ")[0] || "",
             lastName: loggedInUser.name.split(" ")[1] || "",
             email: loggedInUser.email || "",
             street: street || "",
-            barangay: barangayName.find(b => b.brgy_code === barangay)?.brgy_name || "",
-            city: cityData.find(c => c.city_code === municipality)?.city_name || "",
-            state: provincesData.find(p => p.province_code === province)?.province_name || "",
+            barangay: selectedBarangay || "",
+            city: selectedCity || "",
+            state: selectedProvince || "",
             zipcode: zip || "",
             country: country || "Philippines",
             phone: loggedInUser.phone || "",
           });
         } else {
+          console.error("Logged-in user not found.");
           toast.error("Error fetching logged-in user's data.");
         }
       } catch (error) {
+        console.error("Error fetching user data:", error);
         toast.error("Error fetching user data.");
       }
     };
 
+    const fetchProvinceData = async () => {
+      try {
+        const regionCode = "some-region-code"; // Replace with the actual region code
+        const provincesData = await provincesByCode(regionCode);
+        setData((prevData) => ({ ...prevData, provinces: provincesData }));
+        console.log("Provinces Data:", provincesData);
+      } catch (error) {
+        console.error("Error fetching province data:", error);
+      }
+    };
+
     if (token) {
-      fetchUserData();
+      fetchUserData(); // Call to fetch user data
+      fetchProvinceData(); // Fetch province data here
     } else {
       toast.error("Please log in to proceed.");
       navigate("/login");
     }
   }, [token, navigate]);
 
-  const fetchCoordinates = async address => {
-    const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY;
-    const url = `https://api.positionstack.com/v1/forward?access_key=${apiKey}&query=${address}`;
+  const fetchCoordinates = async (address) => {
+    const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY; // Set this in your .env file
+    console.log("Position Stack API Key:", apiKey);
+    const url = `https://api.positionstack.com/v1/forward?access_key=072e48c34a52df1351a9de28cf930b88&query=${address}`;
+
     try {
       const response = await axios.get(url);
       return {
@@ -107,6 +160,7 @@ export const PlaceOrder = () => {
         longitude: response.data.data[0].longitude,
       };
     } catch (error) {
+      console.error("Error fetching coordinates:", error);
       toast.error("Error fetching coordinates.");
       return null;
     }
@@ -123,21 +177,30 @@ export const PlaceOrder = () => {
         coordinates.latitude,
         coordinates.longitude
       );
+
+      // Convert distance to miles
       const distanceMiles = distanceKm * 0.621371;
 
-      const isSameRegion = data.state === "Metro Manila" || data.region === "NCR";
-      let baseFee = isSameRegion ? 20 : 40;
-      let feePerMile = isSameRegion ? 2 : 3;
+      // Determine region (Example: Assuming you know how to identify NCR)
+      const isSameRegion =
+        data.state === "Metro Manila" || data.region === "NCR";
+
+      // Adjust base fee and fee per mile depending on the region
+      let baseFee = isSameRegion ? 20 : 40; // Lower base fee within NCR
+      let feePerMile = isSameRegion ? 2 : 3; // Lower fee per mile within NCR
 
       let totalFee = baseFee + feePerMile * Math.ceil(distanceMiles);
-      totalFee = Math.min(totalFee, isSameRegion ? 100 : 200);
+
+      // Capping the delivery fee to avoid extreme values
+      const maxDeliveryFee = isSameRegion ? 100 : 200; // Lower cap for same region
+      totalFee = totalFee > maxDeliveryFee ? maxDeliveryFee : totalFee;
 
       setDeliveryFee(totalFee);
     }
   };
 
   const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
-    const R = 6371;
+    const R = 6371; // Radius of the Earth in km
     const dLat = degreesToRadians(lat2 - lat1);
     const dLon = degreesToRadians(lon2 - lon1);
     const a =
@@ -146,14 +209,37 @@ export const PlaceOrder = () => {
         Math.cos(degreesToRadians(lat2)) *
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
   };
 
-  const degreesToRadians = degrees => degrees * (Math.PI / 180);
+  const degreesToRadians = (degrees) => {
+    return degrees * (Math.PI / 180);
+  };
 
   useEffect(() => {
-    if (data.street && data.city) calculateDeliveryFee();
+    if (data.street && data.city) {
+      calculateDeliveryFee();
+    }
   }, [data.street, data.city]);
+
+  const onChangeHandler = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  // async function submitOrder(orderData) {
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:4000/api/orderedItems/`,
+  //       orderData
+  //     );
+  //     console.log("Order created successfully:", response.data);
+  //   } catch (error) {
+  //     console.error("Error creating order:", error);
+  //   }
+  // }
 
   const handleProceedToCheckout = async event => {
     event.preventDefault();
