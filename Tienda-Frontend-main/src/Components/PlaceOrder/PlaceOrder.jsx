@@ -264,7 +264,7 @@ export const PlaceOrder = () => {
 
       console.log("Cart Details:", itemDetails); // Ensure this logs correctly
 
-      const mayaApiUrl = "https://pg.maya.ph/checkout/v1/checkouts";
+      const mayaApiUrl = "https://manager-sandbox.paymaya.com/checkout/v1/checkouts";
 
       const secretKey = process.env.REACT_APP_CHECKOUT_PUBLIC_API_KEY;
       if (!secretKey) {
