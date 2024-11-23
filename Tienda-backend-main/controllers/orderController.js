@@ -10,7 +10,7 @@ const generateReferenceNumber = () => {
 //const stripe = require('stripe')(process.env.REACT_APP_CHECKOUT_SECRET_API_KEY);
 
 const PlaceOrder = async (req, res) => {
-  const frontend_url = "https://tienda-frontend.onrender.com";
+  const frontend_url = "https://ip-tienda-han.onrender.com";
 
   try {
     // Debugging: Print the Stripe key to verify it's being read correctly
@@ -63,7 +63,7 @@ const PlaceOrder = async (req, res) => {
       try {
         // PayMaya Sandbox API endpoint
         const payMayaApiUrl =
-          "https://pg-sandbox.paymaya.com/checkout/v1/checkouts";
+          "https://manager-sandbox.paymaya.com/checkout/v1/checkouts";
 
         // Fetch your PayMaya API key from environment variables
         const secretKey = process.env.REACT_APP_CHECKOUT_PUBLIC_API_KEY;
@@ -129,7 +129,7 @@ const PlaceOrder = async (req, res) => {
     };
 
     const PlaceOrder = async (req, res) => {
-      const frontend_url = "https://tienda-frontend.onrender.com";
+      const frontend_url = "https://ip-tienda-han.onrender.com";
 
       try {
         const requestReferenceNumber = generateReferenceNumber();
