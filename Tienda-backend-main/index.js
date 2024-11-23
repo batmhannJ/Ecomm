@@ -64,7 +64,8 @@ const allowedOrigins = [
   'https://ip-tienda-han-seller.onrender.com',
   'https://ip-tienda-han.onrender.com',
   'https://ip-tienda-seller.onrender.com',// This is the specific origin to allow
-  'https://ip-tienda-han-backend.onrender.com' 
+  'https://ip-tienda-han-backend.onrender.com',
+  'https://manager-sandbox.paymaya.com/checkout/v1/checkouts'
 ];
 app.use(cors({
   origin: function (origin, callback) {
