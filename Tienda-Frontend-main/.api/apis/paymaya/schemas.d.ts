@@ -1499,7 +1499,7 @@ declare const CreateV1Checkout: {
                 readonly redirectUrl: {
                     readonly type: "string";
                     readonly description: "PayMaya hosted URL to process the Checkout payment. Merchant is expected to redirect the buyer to this URL when it is ready to accept the payment.";
-                    readonly examples: readonly ["https://payments-web-sandbox.paymaya.com/v2/checkout?id=e14a62b9-4d28-43f5-bbc5-b2bfa1ff9b63"];
+                    readonly examples: readonly ["https://pg-sandbox.paymaya.com/checkout/v1/checkouts?id=e14a62b9-4d28-43f5-bbc5-b2bfa1ff9b63"];
                 };
             };
             readonly $schema: "http://json-schema.org/draft-04/schema#";

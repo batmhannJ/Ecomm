@@ -1234,7 +1234,7 @@
                     "redirectUrl": {
                       "type": "string",
                       "description": "PayMaya hosted URL to process the Checkout payment. Merchant is expected to redirect the buyer to this URL when it is ready to accept the payment.",
-                      "example": "https://payments-web-sandbox.paymaya.com/v2/checkout?id=e14a62b9-4d28-43f5-bbc5-b2bfa1ff9b63"
+                      "example": "https://pg-sandbox.paymaya.com/checkout/v1/checkouts?id=e14a62b9-4d28-43f5-bbc5-b2bfa1ff9b63"
                     }
                   }
                 },
@@ -1243,7 +1243,7 @@
                     "summary": "Create checkout response.",
                     "value": {
                       "checkoutId": "fa4da2ff-dcda-4367-a97d-0c9445147b73",
-                      "redirectUrl": "https://payments-web-sandbox.paymaya.com/v2/checkout?id=fa4da2ff-dcda-4367-a97d-0c9445147b73"
+                      "redirectUrl": "https://pg-sandbox.paymaya.com/checkout/v1/checkouts?id=fa4da2ff-dcda-4367-a97d-0c9445147b73"
                     }
                   }
                 }
@@ -12391,7 +12391,7 @@
           "redirectUrl": {
             "type": "string",
             "description": "PayMaya hosted URL to process the Checkout payment. Merchant is expected to redirect the buyer to this URL when it is ready to accept the payment.",
-            "example": "https://payments-web-sandbox.paymaya.com/v2/checkout?id=e14a62b9-4d28-43f5-bbc5-b2bfa1ff9b63"
+            "example": "https://pg-sandbox.paymaya.com/checkout/v1/checkouts?id=e14a62b9-4d28-43f5-bbc5-b2bfa1ff9b63"
           }
         }
       },
@@ -15722,7 +15722,7 @@
         "summary": "Create checkout response.",
         "value": {
           "checkoutId": "fa4da2ff-dcda-4367-a97d-0c9445147b73",
-          "redirectUrl": "https://payments-web-sandbox.paymaya.com/v2/checkout?id=fa4da2ff-dcda-4367-a97d-0c9445147b73"
+          "redirectUrl": "https://pg-sandbox.paymaya.com/checkout/v1/checkouts?id=fa4da2ff-dcda-4367-a97d-0c9445147b73"
         }
       },
       "GetCheckoutCardSuccessResponse": {
