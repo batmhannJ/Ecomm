@@ -402,7 +402,7 @@ export const PlaceOrder = () => {
       } catch (error) {
         console.error(
           "Error during Maya checkout:",
-          error.response ? error.response.data : error
+          error.response ? error.response.data : error.message
         );
         toast.error(`Checkout failed: ${error.message}`);
       }
