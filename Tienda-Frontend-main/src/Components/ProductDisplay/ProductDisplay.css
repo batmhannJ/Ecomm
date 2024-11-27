@@ -17,14 +17,13 @@
 }
 
 .productdisplay-main-img {
-
+  width: 100%;
   max-width: 575px;
-  height: 500px;
+  height: auto;
   border: 2px solid #e0e0e0;
   border-radius: 5px;
 }
 
-/* Image List */
 .productdisplay-img-list {
   display: flex;
   flex-wrap: wrap;
@@ -41,7 +40,6 @@
   border-radius: 5px;
 }
 
-/* Quantity Controls */
 .quantity-controls {
   display: flex;
   align-items: center;
@@ -78,7 +76,6 @@
   height: 30px;
 }
 
-/* Product Display Right Container */
 .productdisplay-right-container {
   display: flex;
   flex-direction: column;
@@ -94,7 +91,6 @@
   z-index: 1;
 }
 
-/* Product Display Tabs */
 .productdisplay-tabs {
   display: flex;
   border-bottom: 2px solid #e0e0e0;
@@ -136,7 +132,6 @@
   color: white;
 }
 
-/* Product Display Right Content */
 .productdisplay-right h1 {
   color: #3d3d3d;
   font-size: 10px;
@@ -268,31 +263,42 @@
     padding: 8px; /* Adjust padding for small screens */
   }
 }
+/* Responsive styles */
+@media (max-width: 1280px) {
+  .productdisplay {
+    margin: 0 60px;
+  }
 
-/* Responsive styles for large screens */
-@media (min-width: 1280px) {
   .productdisplay-main-img {
-    max-width: 800px; /* Increase image size for large screens */
+    height: 510px;
   }
 
   .productdisplay-img-list img {
-    width: calc(20% - 10px); /* Make the images smaller for larger screens */
+    height: 120px;
+    width: calc(25% - 10px);
+  }
+
+  .productdisplay-img-list {
+    max-width: 510px;
   }
 }
 
-/* Responsive styles for medium screens */
-@media (max-width: 1280px) and (min-width: 768px) {
-  .productdisplay-main-img {
-    max-width: 900px; /* Increase the image size for large screens */
+@media (max-width: 1024px) {
+  .productdisplay {
+    max-width: 100%;
+    padding: 10px;
   }
 
-  .productdisplay-img-list img {
-    width: calc(20% - 10px); /* Make the images smaller for larger screens */
+  .productdisplay-right-container {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .productdisplay-tabs {
+    flex-wrap: wrap;
   }
 }
 
-
-/* Responsive styles for small screens */
 @media (max-width: 768px) {
   .productdisplay {
     flex-direction: column;
