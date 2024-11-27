@@ -128,21 +128,12 @@ const AccountSettings = () => {
               Phone/Mobile <span>*</span>
             </label>
             <input
-              type="tel"
+              type="text"
               name="phone"
               id="phone"
               value={formData.phone}
               onChange={handleChange}
-              onInput={(e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-                if (e.target.value.length > 11) {
-                  e.target.value = e.target.value.slice(0, 11); // Limit to 11 digits
-                }
-              }}
-              maxLength="11" // Ensures no more than 11 characters can be entered
-              pattern="\d{11}" // Matches exactly 11 digits
               aria-required="true"
-              placeholder="Enter your 11-digit phone number"
             />
             {formErrors.phone && (
               <span className="account-settings__error">
