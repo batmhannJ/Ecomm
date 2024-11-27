@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const UserSideBar = ({ activepage }) => {
   return (
     <div className="usersidebar">
-      <Link to="/user/accountsettings" className="stylenone">
+      <Link to="/user/accountsettings" className="stylenone1">
         <div
           className={`s1 ${activepage === "accountsettings" ? "active" : ""}`}
         >
@@ -28,7 +28,7 @@ const UserSideBar = ({ activepage }) => {
         </div>
       </Link>
 
-      <Link to="/user/changepassword" className="stylenone">
+      <Link to="/user/changepassword" className="stylenone2">
         <div
           className={`s1 ${activepage === "changepassword" ? "active" : ""}`}
         >
@@ -55,7 +55,7 @@ const UserSideBar = ({ activepage }) => {
         </div>
       </Link>
 
-      <Link to="/user/address" className="stylenone">
+      <Link to="/user/address" className="stylenone3">
         <div className={`s1 ${activepage === "address" ? "active" : ""}`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
