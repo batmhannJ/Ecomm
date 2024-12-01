@@ -62,19 +62,16 @@ function SellerRequest() {
           },
         }
       );
-
-      if (response.data.success) {
-        toast.success(
-          `Admin ${response.data.admin.name} approved successfully.`
-        );
-        // Remove the approved seller from the list
-        setSellers(sellers.filter((seller) => seller._id !== id));
-        setOriginalSellers(
-          originalSellers.filter((seller) => seller._id !== id)
-        );
-      } else {
-        toast.error("Failed to approve admin.");
-      }
+      
+      toast.success(
+        `Admin ${response.data.admin.name} approved successfully.`
+      );
+      // Remove the approved seller from the list
+      setSellers(sellers.filter((seller) => seller._id !== id));
+      setOriginalSellers(
+        originalSellers.filter((seller) => seller._id !== id)
+      );
+    
     } catch (error) {
       console.error("Error approving admin:", error);
       toast.error("Error approving admin.");
