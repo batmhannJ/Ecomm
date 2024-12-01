@@ -23,6 +23,8 @@ const { signup } = require("./controllers/sellerController");
 const { getUsers } = require("./controllers/userController");
 const { searchAdmin } = require("./controllers/adminController");
 
+
+
 const { ObjectId } = require('mongodb');
 
 require("dotenv").config();
@@ -58,17 +60,6 @@ const allowedOrigins = [
   'http://localhost:46631',
   'http://localhost:47106',
   'https://tienda-han.onrender.com',
-  'https://tienda-frontend.onrender.com',
-  'https://tienda-admin.onrender.com',
-  'https://tienda-seller.onrender.com',
-  'http://localhost:4000',
-  'https://ip-tienda.onrender.com',
-  'https://ip-tienda-han-admin.onrender.com',
-  'https://ip-tienda-han-super-admin.onrender.com',
-  'https://ip-tienda-han-seller.onrender.com',
-  'https://ip-tienda-han.onrender.com',
-  'https://ip-tienda-seller.onrender.com',// This is the specific origin to allow
-  'https://ip-tienda-han-backend.onrender.com' 
 ];
 app.use(cors({
   origin: function (origin, callback) {
@@ -79,8 +70,6 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Specify the HTTP methods you want to allow
-  allowedHeaders: ["Content-Type", "Authorization"], // Specify headers needed for requests
   credentials: true // Allow credentials to be included in the request
 }));
 app.use(express.json());
@@ -105,7 +94,6 @@ app.get("/api/transactions", (req, res) => {
 app.get('/api/users/search', getUsers); // Define the route that uses getUsers
 app.get('/api/admin/search', searchAdmin);
 
-
 app.listen(port, (error) => {
   if (!error) {
     console.log("Server Running on Port: " + port);
@@ -129,20 +117,11 @@ const upload = multer({ storage: storage });
 
 // Creating Upload Endpoints for Images
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - Preflight Check`);
-
   res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Explicitly allow PATCH
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow required headers
-
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Include PATCH in response
-    return res.status(200).json({}); // Send a 200 OK response for preflight
-  }
-
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow specified methods
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specified headers
   next();
 });
-
 app.use("/images", express.static("upload/images"));
 app.use('/upload', express.static('upload'));
 app.use('/upload/images', express.static('upload/images'));
@@ -374,8 +353,8 @@ app.get("/newcollections", async (req, res) => {
     // Map through the products to construct the full image URL
     const updatedProducts = newcollection.map(product => {
       // Determine which image to display: edited or main
-      const mainImage = product.image ? `https://ip-tienda-han-backend.onrender.com/images/${product.image}` : null;
-      const editedImage = product.editedImage ? `https://ip-tienda-han-backend.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
+      const mainImage = product.image ? `http://localhost:4000/images/${product.image}` : null;
+      const editedImage = product.editedImage ? `http://localhost:4000/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
 
       // Choose the edited image if it exists; otherwise, use the main image
       const imageToDisplay = editedImage || mainImage;
@@ -404,8 +383,8 @@ app.get("/popularincrafts", async (req, res) => {
     // Map through the products to construct the full image URL
     const updatedProducts = popular_in_crafts.map(product => {
       // Determine which image to display: edited or main
-      const mainImage = product.image ? `https://ip-tienda-han-backend.onrender.com/images/${product.image}` : null;
-      const editedImage = product.editedImage ? `https://ip-tienda-han-backend.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
+      const mainImage = product.image ? `http://localhost:4000/images/${product.image}` : null;
+      const editedImage = product.editedImage ? `http://localhost:4000/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
 
       // Choose the edited image if it exists; otherwise, use the main image
       const imageToDisplay = editedImage || mainImage;
@@ -488,8 +467,8 @@ app.get("/relatedproducts/:category", async (req, res) => {
     // Map through the related products to construct the full image URL
     const updatedRelatedProducts = relatedProducts.map(product => {
       // Determine which image to display: edited or main
-      const mainImage = product.image ? `https://ip-tienda-han-backend.onrender.com/images/${product.image}` : null;
-      const editedImage = product.editedImage ? `https://ip-tienda-han-backend.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
+      const mainImage = product.image ? `http://localhost:4000/images/${product.image}` : null;
+      const editedImage = product.editedImage ? `http://localhost:4000/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
 
       // Choose the edited image if it exists; otherwise, use the main image
       const imageToDisplay = editedImage || mainImage;
@@ -1053,32 +1032,7 @@ app.delete('/api/cart/:userId/:productId', async (req, res) => {
   }
 });
 
-app.patch('/api/cart/:userId/:productId', async (req, res) => {
-  try {
-    const { userId, productId } = req.params; // Extracting userId and productId from the URL params
-    const { selectedSize } = req.query; // Extracting selectedSize from the query parameters
-
-    // Find the cart for this user and update the quantity of the selected product
-    const cart = await Cart.findOneAndUpdate(
-      { userId, "cartItems.productId": productId, "cartItems.selectedSize": selectedSize },
-      {
-        $inc: { "cartItems.$.quantity": 1 } // Increment the quantity of the selected product
-      },
-      { new: true } // Return the updated cart
-    );
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart item not found" });
-    }
-
-    res.status(200).json(cart);
-  } catch (error) {
-    console.error("Error updating cart:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-
+// Halimbawa ng search route
 app.get('/api/users/search', async (req, res) => {
   const searchTerm = req.query.term;
   
@@ -1093,23 +1047,6 @@ app.get('/api/users/search', async (req, res) => {
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ message: "Error fetching user" });
-  }
-});
-
-app.get('/api/products/:productId', async (req, res) => {
-  try {
-    const productId = req.params.productId;
-    // Find the product in the database by ID
-    const product = await Product.findOne({ id: productId });
-
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    res.status(200).json(product); // Send product data as response
-  } catch (error) {
-    console.error('Error fetching product:', error);
-    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -1311,13 +1248,113 @@ app.post('/check-user-address', async (req, res) => {
   }
 });
 
-app.use(express.static("public", { 
-  setHeaders: (res, path) => {
-    if (path.endsWith(".css")) {
-      res.setHeader("Content-Type", "text/css");
+app.post('/updateStock', async (req, res) => {
+  console.log("Received body:", req.body); // Log the entire body
+  const { name, size } = req.body;
+  const quantity = Number(req.body.quantity); // Ensure quantity is a number
+
+  try {
+    // Define the field name for the selected size
+    let sizeField;
+    switch (size) {
+      case 'S':
+        sizeField = 's_stock';
+        break;
+      case 'M':
+        sizeField = 'm_stock';
+        break;
+      case 'L':
+        sizeField = 'l_stock';
+        break;
+      case 'XL':
+        sizeField = 'xl_stock';
+        break;
+      default:
+        return res.status(400).send("Invalid size selected.");
     }
+
+    // Find the product by name
+    const product = await Product.findOne({ name: name });
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+
+    // Build the update query to decrement the specific size stock
+    const updateQuery = { $inc: { [sizeField]: -quantity, stock: -quantity } };
+    console.log("Update query:", updateQuery); // Log the update query
+
+    // Perform the update
+    const updatedProduct = await Product.findOneAndUpdate(
+      { name: name }, // Find by name
+      updateQuery,
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Stock updated successfully", updatedProduct });
+  } catch (error) {
+    res.status(500).send("Error updating stock: " + error.message);
   }
-}));
+});
+
+app.patch('/api/update-address/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { region, province, municipality, barangay, zip, street } = req.body;
+
+  try {
+    // Find the user by ID
+    const user = await Users.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update the address fields
+    user.address = {
+      region,
+      province,
+      municipality,
+      barangay,
+      zip,
+      street,
+    };
+
+    // Save the updated user information
+    await user.save();
+
+    res.status(200).json({ message: 'Address updated successfully', address: user.address });
+  } catch (error) {
+    console.error('Error updating address:', error);
+    res.status(500).json({ message: 'Failed to update address', error });
+  }
+});
+
+app.get('/api/products/:productId', async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    // Use the 'id' field to find the product
+    const product = await Product.findOne({ id: productId });
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/newproducts', async (req, res) => {
+  try {
+    const products = await Product.find({ available: true })
+      .sort({ date: -1 }) // Sort by date in descending order (latest first)
+      .limit(8); // Limit to 8 items
+    res.json(products); // Send the products as JSON
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
+});
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);
