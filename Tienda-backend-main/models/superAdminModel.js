@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const adminUserSchema = new mongoose.Schema(
+const SuperAdminUserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: false,
+      required: true,
     },
     phone: {
       type: String,
@@ -20,10 +20,12 @@ const adminUserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "admin",
+      default: "superadmin",
     },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("AdminUser", adminUserSchema);
+module.exports = mongoose.model("SuperAdminUser", SuperAdminUserSchema, "superAdminUser");

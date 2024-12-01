@@ -20,6 +20,8 @@ const productRoute = require("./routes/productRoute");
 const cartRoute = require("./routes/cartRoute");
 const { signup } = require("./controllers/sellerController");
 const { getUsers } = require("./controllers/userController");
+const { searchAdmin } = require("./controllers/adminController");
+
 const { ObjectId } = require('mongodb');
 
 require("dotenv").config();
@@ -99,6 +101,7 @@ app.get("/api/transactions", (req, res) => {
   res.json({ message: "This is the transactions endpoint" });
 });
 app.get('/api/users/search', getUsers); // Define the route that uses getUsers
+app.get('/api/admin/search', searchAdmin);
 
 
 app.listen(port, (error) => {
