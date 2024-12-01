@@ -23,8 +23,6 @@ const { signup } = require("./controllers/sellerController");
 const { getUsers } = require("./controllers/userController");
 const { searchAdmin } = require("./controllers/adminController");
 
-
-
 const { ObjectId } = require('mongodb');
 
 require("dotenv").config();
@@ -81,6 +79,8 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
+  methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Specify the HTTP methods you want to allow
+  allowedHeaders: ["Content-Type", "Authorization"], // Specify headers needed for requests
   credentials: true // Allow credentials to be included in the request
 }));
 app.use(express.json());
@@ -105,6 +105,7 @@ app.get("/api/transactions", (req, res) => {
 app.get('/api/users/search', getUsers); // Define the route that uses getUsers
 app.get('/api/admin/search', searchAdmin);
 
+
 app.listen(port, (error) => {
   if (!error) {
     console.log("Server Running on Port: " + port);
@@ -128,11 +129,20 @@ const upload = multer({ storage: storage });
 
 // Creating Upload Endpoints for Images
 app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Preflight Check`);
+
   res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow specified methods
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specified headers
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Explicitly allow PATCH
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow required headers
+
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Include PATCH in response
+    return res.status(200).json({}); // Send a 200 OK response for preflight
+  }
+
   next();
 });
+
 app.use("/images", express.static("upload/images"));
 app.use('/upload', express.static('upload'));
 app.use('/upload/images', express.static('upload/images'));
@@ -364,8 +374,8 @@ app.get("/newcollections", async (req, res) => {
     // Map through the products to construct the full image URL
     const updatedProducts = newcollection.map(product => {
       // Determine which image to display: edited or main
-      const mainImage = product.image ? `http://localhost:4000/images/${product.image}` : null;
-      const editedImage = product.editedImage ? `http://localhost:4000/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
+      const mainImage = product.image ? `https://ip-tienda-han-backend.onrender.com/images/${product.image}` : null;
+      const editedImage = product.editedImage ? `https://ip-tienda-han-backend.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
 
       // Choose the edited image if it exists; otherwise, use the main image
       const imageToDisplay = editedImage || mainImage;
@@ -394,8 +404,8 @@ app.get("/popularincrafts", async (req, res) => {
     // Map through the products to construct the full image URL
     const updatedProducts = popular_in_crafts.map(product => {
       // Determine which image to display: edited or main
-      const mainImage = product.image ? `http://localhost:4000/images/${product.image}` : null;
-      const editedImage = product.editedImage ? `http://localhost:4000/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
+      const mainImage = product.image ? `https://ip-tienda-han-backend.onrender.com/images/${product.image}` : null;
+      const editedImage = product.editedImage ? `https://ip-tienda-han-backend.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
 
       // Choose the edited image if it exists; otherwise, use the main image
       const imageToDisplay = editedImage || mainImage;
@@ -478,8 +488,8 @@ app.get("/relatedproducts/:category", async (req, res) => {
     // Map through the related products to construct the full image URL
     const updatedRelatedProducts = relatedProducts.map(product => {
       // Determine which image to display: edited or main
-      const mainImage = product.image ? `http://localhost:4000/images/${product.image}` : null;
-      const editedImage = product.editedImage ? `http://localhost:4000/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
+      const mainImage = product.image ? `https://ip-tienda-han-backend.onrender.com/images/${product.image}` : null;
+      const editedImage = product.editedImage ? `https://ip-tienda-han-backend.onrender.com/images/${product.editedImage}` : null; // Assuming editedImage is stored in the product object
 
       // Choose the edited image if it exists; otherwise, use the main image
       const imageToDisplay = editedImage || mainImage;
@@ -1043,7 +1053,32 @@ app.delete('/api/cart/:userId/:productId', async (req, res) => {
   }
 });
 
-// Halimbawa ng search route
+app.patch('/api/cart/:userId/:productId', async (req, res) => {
+  try {
+    const { userId, productId } = req.params; // Extracting userId and productId from the URL params
+    const { selectedSize } = req.query; // Extracting selectedSize from the query parameters
+
+    // Find the cart for this user and update the quantity of the selected product
+    const cart = await Cart.findOneAndUpdate(
+      { userId, "cartItems.productId": productId, "cartItems.selectedSize": selectedSize },
+      {
+        $inc: { "cartItems.$.quantity": 1 } // Increment the quantity of the selected product
+      },
+      { new: true } // Return the updated cart
+    );
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    res.status(200).json(cart);
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 app.get('/api/users/search', async (req, res) => {
   const searchTerm = req.query.term;
   
@@ -1058,6 +1093,23 @@ app.get('/api/users/search', async (req, res) => {
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ message: "Error fetching user" });
+  }
+});
+
+app.get('/api/products/:productId', async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    // Find the product in the database by ID
+    const product = await Product.findOne({ id: productId });
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(product); // Send product data as response
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -1259,6 +1311,36 @@ app.post('/check-user-address', async (req, res) => {
   }
 });
 
+app.use(express.static("public", { 
+  setHeaders: (res, path) => {
+    if (path.endsWith(".css")) {
+      res.setHeader("Content-Type", "text/css");
+    }
+  }
+}));
+
+// Check user address endpoint
+app.post('/check-user-address', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await Users.findOne({ email: email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.address) {
+      return res.status(200).json({ addressExists: false, message: "No address found. Please set up your address first." });
+    }
+
+    return res.status(200).json({ addressExists: true, address: user.address });
+  } catch (error) {
+    console.error("Error checking user address:", error);
+    return res.status(500).json({ message: "Error checking user address" });
+  }
+});
+
 app.post('/updateStock', async (req, res) => {
   console.log("Received body:", req.body); // Log the entire body
   const { name, size } = req.body;
@@ -1366,6 +1448,7 @@ app.get('/newproducts', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 });
+
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);

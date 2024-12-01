@@ -22,7 +22,10 @@ const adminUserSchema = new mongoose.Schema(
       type: String,
       default: "admin",
     },
-  },
+    isApproved: { 
+      type: Boolean, 
+      default: false },
+    },
   { timestamps: true }
 );
 
