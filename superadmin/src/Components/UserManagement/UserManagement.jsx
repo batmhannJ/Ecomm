@@ -58,14 +58,17 @@ function UserManagement() {
 
   const handleDeleteUser = async (id, index) => {
     try {
+      console.log("Attempting to delete admin with ID:", id); // Debugging log
       await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/deleteadmin/${id}`);
-      setUsers(users.filter((_, idx) => idx !== index));
+      setUsers(users.filter((_, idx) => idx !== index)); // Update the state
       toast.success("User deleted successfully.");
     } catch (error) {
-      toast.error("User delete error.");
-      console.error(error);
+      const errorMessage = error.response?.data?.errors?.[0] || "User delete error.";
+      toast.error(errorMessage); // Show specific error from backend
+      console.error("Error deleting user:", error);
     }
   };
+  
 
   const handleViewUser = (index) => {
     setViewUser(users[index]);

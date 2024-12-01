@@ -48,7 +48,7 @@ router.get("/approved/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // Extract the 'id' from the route parameters
     const deletedSeller = await AdminUser.findByIdAndDelete(id);
 
     if (!deletedSeller) {
@@ -59,9 +59,13 @@ router.delete("/:id", async (req, res) => {
 
     res.json({ success: true, message: "Admin declined successfully." });
   } catch (err) {
-    console.error("Error deleting admin:", err);
+    console.error("Error details:", {
+      message: err.message,
+      stack: err.stack,
+    });
     res.status(500).json({ success: false, errors: ["Server Error"] });
   }
 });
+
 
 module.exports = router;
