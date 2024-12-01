@@ -63,6 +63,7 @@ const allowedOrigins = [
   'http://localhost:4000',
   'https://ip-tienda.onrender.com',
   'https://ip-tienda-han-admin.onrender.com',
+  'https://ip-tienda-han-super-admin.onrender.com',
   'https://ip-tienda-han-seller.onrender.com',
   'https://ip-tienda-han.onrender.com',
   'https://ip-tienda-seller.onrender.com',// This is the specific origin to allow
