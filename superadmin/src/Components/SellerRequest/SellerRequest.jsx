@@ -52,7 +52,6 @@ function SellerRequest() {
       return;
 
     setApproving(true);
-    try {
       const response = await axios.patch(
         `https://ip-tienda-han-backend.onrender.com/api/superadmin/${id}/approve`, // Ensure this route matches your backend
         {},
@@ -72,12 +71,6 @@ function SellerRequest() {
         originalSellers.filter((seller) => seller._id !== id)
       );
     
-    } catch (error) {
-      console.error("Error approving admin:", error);
-      toast.error("Error approving admin.");
-    } finally {
-      setApproving(false);
-    }
   };
 
   const handleDeleteSeller = async (id) => {
