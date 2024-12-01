@@ -17,7 +17,7 @@ function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/admins");
+      const response = await axios.get("https://ip-tienda-han-backend.onrender.com/api/admins");
       const approvedUsers = response.data.filter(user => user.isApproved === true);
       setUsers(approvedUsers); // Set only approved users in state
 
@@ -42,7 +42,7 @@ function UserManagement() {
 
     try {
       const response = await axios.patch(
-        `http://localhost:4000/api/edituser/${users[editingUser]._id}`,
+        `https://ip-tienda-han-backend.onrender.com/api/edituser/${users[editingUser]._id}`,
         { name, email } 
       );
       setUsers(
@@ -58,7 +58,7 @@ function UserManagement() {
 
   const handleDeleteUser = async (id, index) => {
     try {
-      await axios.delete(`http://localhost:4000/api/deleteadmin/${id}`);
+      await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/deleteadmin/${id}`);
       setUsers(users.filter((_, idx) => idx !== index));
       toast.success("User deleted successfully.");
     } catch (error) {
@@ -78,7 +78,8 @@ function UserManagement() {
 
   const handleSearch = async (searchTerm) => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/admin/search?term=${searchTerm}`);
+      const response = await axios.get(`https://ip-tienda-han-backend.onre
+nder.com/api/admin/search?term=${searchTerm}`);
       setUsers(response.data);  // Update users state with search results
     } catch (error) {
       console.error("Error fetching data: ", error);

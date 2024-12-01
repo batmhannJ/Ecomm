@@ -28,7 +28,7 @@ function SellerRequest() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/superadmin/pending",
+        "https://ip-tienda-han-backend.onrender.com/api/superadmin/pending",
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -54,7 +54,7 @@ function SellerRequest() {
     setApproving(true);
     try {
       const response = await axios.patch(
-        `http://localhost:4000/api/superadmin/${id}/approve`, // Ensure this route matches your backend
+        `https://ip-tienda-han-backend.onrender.com/api/superadmin/${id}/approve`, // Ensure this route matches your backend
         {},
         {
           headers: {
@@ -88,7 +88,7 @@ function SellerRequest() {
 
     try {
       const response = await axios.delete(
-        `http://localhost:4000/api/admin/${id}`,
+        `https://ip-tienda-han-backend.onrender.com/api/admin/${id}`,
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
