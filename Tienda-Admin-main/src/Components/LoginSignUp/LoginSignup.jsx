@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { adminLogin } from '../../services/api';
+import { adminLogin, adminSignup } from '../../services/api'; // Add adminSignup API
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -10,15 +10,11 @@ const LoginSignup = () => {
     email: '',
     password: '',
   });
-  const [passwordError, setPasswordError] = useState('');
+  const [isSignup, setIsSignup] = useState(false); // Toggle between login and signup
+  const [showPassword, setShowPassword] = useState(false); // Password visibility
   const navigate = useNavigate();
 
-
-    // New state variable to handle password visibility
-   const [showPassword, setShowPassword] = useState(false);
-
-   const togglePasswordVisibility = () => {
-    console.log("Toggling password visibility");
+  const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
 
@@ -26,82 +22,106 @@ const LoginSignup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[A-Z]).{8,}$/;
-    return passwordRegex.test(password);
-  };
-
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validatePassword(formData.password)) {
-      setPasswordError('Password must be at least 8 characters long and include at least one capital letter.');
-      return;
-    } else {
-      setPasswordError('');
-    }
-    
-    try {
-      const responseData = await adminLogin(formData);
-      
-      console.log('Login Response:', responseData); // Log the response
+    const { email, password } = formData;
   
-      // Check if response contains both token and adminId
-      if (responseData.token && responseData.adminId) {
-        localStorage.setItem('admin_token', responseData.token);
-        localStorage.setItem('admin_userId', responseData.adminId); // Store adminId in localStorage
-        
-        console.log('Stored token and adminId');
-        navigate('/admin/dashboard');
-        window.location.reload();
+    if (!email || !password) {
+      toast.error('Please fill in all fields.');
+      return;
+    }
+  
+    try {
+      if (isSignup) {
+        // Signup logic
+        const response = await adminSignup({ email, password }); // Call the signup API
+        if (response.success) {
+          toast.success('Signup successful! Wait for the admin to approve your request.');
+          setIsSignup(false); // Switch to login mode after signup
+        } else {
+          toast.error(response.errors || 'Signup failed.'); // Use 'errors' here
+        }
       } else {
-        console.error('No adminId or token found in response');
+        // Login logic
+        const response = await adminLogin({ email, password }); // Call the login API
+        if (response.success) {
+          localStorage.setItem('admin_token', response.token); // Save token
+          toast.success('Login successful! Redirecting...');
+          navigate('/admin/dashboard'); // Navigate to admin dashboard
+          window.location.reload(); // Optional: Reload if necessary
+        } else {
+          toast.error(response.errors || 'Login failed.'); // Use 'errors' here
+        }
       }
     } catch (error) {
-      console.error('Frontend Error:', error);
-      toast.error(error.response?.data?.errors || 'An error occurred. Please try again.');
+      console.error('Error:', error);
+      toast.error(error.response?.data?.errors || 'An error occurred.'); // Use 'errors' here as well
     }
   };
-  
   
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1>Admin Login</h1>
-        <form onSubmit={onSubmit}>
+        <h1>{isSignup ? 'Admin Signup' : 'Admin Login'}</h1>
+        <form onSubmit={handleSubmit}>
           <div>
             <label>Email:</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
-          <div>
-          <div className="password-container" style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }}>
             <label>Password:</label>
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
             />
             <span
-                    className="eye-icon"
-                    onClick={togglePasswordVisibility}
-                    style={{
-                        cursor: 'pointer',
-                        position: 'absolute',
-                        right: '10px',
-                        top: '60%',
-                        transform: 'translateY(-50%)',
-                    }}
-                >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle eye icon */}
-                </span>
-            </div>
-            {passwordError && <p className="password-error">{passwordError}</p>}
+              onClick={togglePasswordVisibility}
+              style={{
+                cursor: 'pointer',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+              }}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
-          <button type="submit">Login</button>
+          <button type="submit">{isSignup ? 'Sign up' : 'Log in'}</button>
         </form>
+        <p>
+          {isSignup ? (
+            <>
+              Already have an account?{' '}
+              <span
+                className="link"
+                onClick={() => setIsSignup(false)}
+              >
+                Log in
+              </span>
+            </>
+          ) : (
+            <>
+              Don't have an account?{' '}
+              <span
+                className="link"
+                onClick={() => setIsSignup(true)}
+              >
+                Sign up
+              </span>
+            </>
+          )}
+        </p>
       </div>
     </div>
   );
