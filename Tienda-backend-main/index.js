@@ -11,6 +11,7 @@ const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
 
 // import routes
+const superAdminRoutes = require("./routes/superAdminRoute");
 const adminRoutes = require("./routes/adminRoute");
 const orderRouter = require("./routes/orderRoute");
 const sellerRouter = require("./routes/sellerRoute");
