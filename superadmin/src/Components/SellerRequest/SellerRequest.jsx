@@ -115,7 +115,7 @@ function SellerRequest() {
   return (
     <div className="seller-management-container">
       <h1>Manage Admin Requests</h1>
-      <SellerSearchBar sellers={originalSellers} onSearch={handleSearch} />{" "}
+      {/*<SellerSearchBar sellers={originalSellers} onSearch={handleSearch} />{" "}*/}
       {/* Pass sellers and search handler */}
       {loading ? (
         <p>Loading pending admins...</p>
