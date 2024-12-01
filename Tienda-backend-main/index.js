@@ -60,6 +60,17 @@ const allowedOrigins = [
   'http://localhost:46631',
   'http://localhost:47106',
   'https://tienda-han.onrender.com',
+  'https://tienda-frontend.onrender.com',
+  'https://tienda-admin.onrender.com',
+  'https://tienda-seller.onrender.com',
+  'http://localhost:4000',
+  'https://ip-tienda.onrender.com',
+  'https://ip-tienda-han-admin.onrender.com',
+  'https://ip-tienda-han-super-admin.onrender.com',
+  'https://ip-tienda-han-seller.onrender.com',
+  'https://ip-tienda-han.onrender.com',
+  'https://ip-tienda-seller.onrender.com',// This is the specific origin to allow
+  'https://ip-tienda-han-backend.onrender.com' 
 ];
 app.use(cors({
   origin: function (origin, callback) {
