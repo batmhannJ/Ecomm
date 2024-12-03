@@ -322,7 +322,7 @@ export const PlaceOrder = () => {
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
         date: new Date(),
-        name: `${data.name}`,
+        name: `${data.firstName} ${data.lastName}`,
         contact: data.phone,
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
