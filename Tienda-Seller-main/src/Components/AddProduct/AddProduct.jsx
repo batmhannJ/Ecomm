@@ -227,12 +227,13 @@ export const AddProduct = () => {
               category: "crafts",
               new_price: "",
               old_price: "",
-              s_stock: 0,
-              m_stock: 0,
-              l_stock: 0,
-              xl_stock: 0,
-              stock: 0,
+              s_stock: "",
+              m_stock: "",
+              l_stock: "",
+              xl_stock: "",
+              stock: "",
               description: "",
+              tags: "",
             });
             setImage(null); // Clear image
           }
