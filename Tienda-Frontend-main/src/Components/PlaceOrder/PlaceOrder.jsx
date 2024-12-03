@@ -57,8 +57,6 @@ export const PlaceOrder = () => {
 
   const [deliveryFee, setDeliveryFee] = useState(0);
 
-  // Fetch user data on component mount
-  // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
