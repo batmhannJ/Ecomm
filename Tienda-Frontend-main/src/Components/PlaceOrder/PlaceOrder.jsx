@@ -151,7 +151,7 @@ export const PlaceOrder = () => {
   const fetchCoordinates = async (address) => {
     const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY; // Set this in your .env file
     console.log("Position Stack API Key:", apiKey);
-    const url = `http://api.positionstack.com/v1/forward?access_key=1e898dd6e9c8d306350d701870c5e1a8&query=${address}`;
+    const url = `https://api.positionstack.com/v1/forward?access_key=1e898dd6e9c8d306350d701870c5e1a8&query=${address}`;
 
     try {
       const response = await axios.get(url);
@@ -228,6 +228,18 @@ export const PlaceOrder = () => {
     const value = event.target.value;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+  // async function submitOrder(orderData) {
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:4000/api/orderedItems/`,
+  //       orderData
+  //     );
+  //     console.log("Order created successfully:", response.data);
+  //   } catch (error) {
+  //     console.error("Error creating order:", error);
+  //   }
+  // }
 
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
@@ -424,7 +436,6 @@ export const PlaceOrder = () => {
   
     handlePaymentStatus();
   }, [location]);
-
 
   return (
     <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
