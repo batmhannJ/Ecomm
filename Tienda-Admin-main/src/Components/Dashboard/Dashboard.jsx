@@ -77,7 +77,7 @@ export const Dashboard = () => {
         }
   
         const data = await response.json();
-        console.log('Most Produced Product data:', data);
+        console.log('Most Purchased Product data:', data);
         setSalesData(prevData => ({
           ...prevData,
           mostProducedProduct: data,
@@ -287,7 +287,7 @@ const generatePDF = async () => {
   // Most Produced Product
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.text("Most Produced Product: ", margin, currentY);
+  doc.text("Most Purchased Product: ", margin, currentY);
   doc.setFont("helvetica", "normal");
   doc.text(`${salesData.mostProducedProduct || 'N/A'}`, margin + 50, currentY);
   currentY += 10;
