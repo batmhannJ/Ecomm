@@ -151,7 +151,7 @@ export const PlaceOrder = () => {
   const fetchCoordinates = async (address) => {
     const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY; // Set this in your .env file
     console.log("Position Stack API Key:", apiKey);
-    const url = `https://api.positionstack.com/v1/forward?access_key=1e898dd6e9c8d306350d701870c5e1a8&query=${address}`;
+    const url = `http://api.positionstack.com/v1/forward?access_key=1e898dd6e9c8d306350d701870c5e1a8&query=${address}`;
 
     try {
       const response = await axios.get(url);
@@ -229,18 +229,6 @@ export const PlaceOrder = () => {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // async function submitOrder(orderData) {
-  //   try {
-  //     const response = await axios.post(
-  //       `http://localhost:4000/api/orderedItems/`,
-  //       orderData
-  //     );
-  //     console.log("Order created successfully:", response.data);
-  //   } catch (error) {
-  //     console.error("Error creating order:", error);
-  //   }
-  // }
-
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
   
@@ -297,8 +285,8 @@ export const PlaceOrder = () => {
             payment_method_types: ["gcash", "grab_pay", "paymaya", "card"], // Allow multiple e-wallets
             livemode: false, // Set to true for production
             statement_descriptor: "Tienda",
-            success_redirect_url: `https://ip-tienda-han-backend.onrender.com/myorders?status=success&reference_number=${referenceNumber}`, // Redirect URL on success
-            cancel_redirect_url: `https://ip-tienda-han-backend.onrender.com/cart?status=canceled`, // Redirect URL on cancel
+            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?status=success&reference_number=${referenceNumber}`, // Redirect URL on success
+            cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?status=canceled`, // Redirect URL on cancel
             metadata: {
               reference_number: referenceNumber,
               delivery_fee: deliveryFee, // Include delivery fee in metadata
@@ -436,6 +424,7 @@ export const PlaceOrder = () => {
   
     handlePaymentStatus();
   }, [location]);
+
 
   return (
     <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
