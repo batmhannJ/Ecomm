@@ -17,8 +17,8 @@ const Footer = () => {
     <div className="footer">
       <div className="footer-sections">
         <div className="footer-column">
-          <h3>Customer Service</h3>
-          <ul>
+          <h3>TIENDA</h3>
+          {/*<ul>
             <li>
               <a href="#help">Help Center</a>
             </li>
@@ -37,7 +37,8 @@ const Footer = () => {
             <li>
               <a href="#shipping">Free Shipping</a>
             </li>
-          </ul>
+          </ul>*/}
+          <p>Bridging tradition and innovation,<br> empowering idigenous artisans</br><br>with integrity and community.</br> </p>
         </div>
         <div className="footer-column">
           <h3>About</h3>
@@ -47,15 +48,6 @@ const Footer = () => {
             </li>
             <li>
               <a href="Offices">Our Offices</a>
-            </li>
-            <li>
-              <a href="#careers">Tienda Careers</a>
-            </li>
-            <li>
-              <a href="#flash">Flash Deals</a>
-            </li>
-            <li>
-              <a href="#privacy">Privacy Policy</a>
             </li>
             <li>
               <a href="#terms">Terms of Service</a>
