@@ -51,7 +51,7 @@ const MyOrders = () => {
       setOrders(fetchedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
-      toast.error("Error fetching orders.");
+      toast.error("No orders found.");
     } finally {
       setLoading(false);
     }
