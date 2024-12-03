@@ -154,6 +154,9 @@ const LoginSignup = () => {
         //localStorage.setItem("auth-token", data.token);
         console.log("Before setState:", state);
         setState("Login");
+        console.log("Navigating to Login...");
+        // Redirect explicitly if needed
+        window.location.replace("/login");
         console.log("After setState:", state);
       } else {
         toast.error(data.errors);
