@@ -266,6 +266,7 @@ export const AddProduct = () => {
             type="text"
             name="old_price"
             placeholder="Type Here"
+            onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')} // Prevent non-numeric input
           />
           {errors.old_price && (
             <span className="error-text">{errors.old_price}</span>
@@ -279,6 +280,7 @@ export const AddProduct = () => {
             type="text"
             name="new_price"
             placeholder="Type Here"
+            onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
           />
           {errors.new_price && (
             <span className="error-text">{errors.new_price}</span>
