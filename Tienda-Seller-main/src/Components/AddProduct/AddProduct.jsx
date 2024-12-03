@@ -224,6 +224,7 @@ export const AddProduct = () => {
               position: "top-left",
             });
             setAddedProduct(product); // Set the added product details
+            window.location.reload();
           } else {
             toast.error("Failed", {
               position: "top-left",
