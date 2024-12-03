@@ -152,7 +152,9 @@ const LoginSignup = () => {
       if (data.success) {
         toast.success("Password successfully changed!");
         //localStorage.setItem("auth-token", data.token);
-        setState("Login"); 
+        console.log("Before setState:", state);
+        setState("Login");
+        console.log("After setState:", state);
       } else {
         toast.error(data.errors);
       }

@@ -148,6 +148,24 @@
   margin-bottom: 10px; /* Space below the description */
 }
 
+.phone-number-container {
+  display: flex;
+  align-items: center;
+}
+
+.country-code {
+  margin-right: 8px;
+  font-size: 14px;
+  color: #888;
+}
+
+input[name="phone"] {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+
+
 /* Media queries for responsiveness */
 @media (max-width: 1280px) {
   .loginsignup-container {
