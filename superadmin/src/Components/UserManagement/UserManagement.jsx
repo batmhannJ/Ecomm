@@ -81,8 +81,7 @@ function UserManagement() {
 
   const handleSearch = async (searchTerm) => {
     try {
-      const response = await axios.get(`https://ip-tienda-han-backend.onre
-nder.com/api/admin/search?term=${searchTerm}`);
+      const response = await axios.get(`https://ip-tienda-han-backend.onrender.com/api/admin/search?term=${searchTerm}`);
       setUsers(response.data);  // Update users state with search results
     } catch (error) {
       console.error("Error fetching data: ", error);
