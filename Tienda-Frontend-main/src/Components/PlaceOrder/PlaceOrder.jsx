@@ -62,7 +62,7 @@ export const PlaceOrder = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/users", {
+        const response = await axios.get("https://ip-tienda-han-backend.onrender.com/api/users", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -285,8 +285,8 @@ export const PlaceOrder = () => {
             payment_method_types: ["gcash", "grab_pay", "paymaya", "card"], // Allow multiple e-wallets
             livemode: false, // Set to true for production
             statement_descriptor: "Tienda",
-            success_redirect_url: `http://localhost:3000/myorders?status=success&reference_number=${referenceNumber}`, // Redirect URL on success
-            cancel_redirect_url: `http://localhost:3000/cart?status=canceled`, // Redirect URL on cancel
+            success_redirect_url: `https://ip-tienda-han-backend.onrender.com/myorders?status=success&reference_number=${referenceNumber}`, // Redirect URL on success
+            cancel_redirect_url: `https://ip-tienda-han-backend.onrender.com/cart?status=canceled`, // Redirect URL on cancel
             metadata: {
               reference_number: referenceNumber,
               delivery_fee: deliveryFee, // Include delivery fee in metadata
@@ -321,7 +321,7 @@ export const PlaceOrder = () => {
   
       // Save transaction details (including delivery fee)
       const userId = localStorage.getItem("userId");
-      await axios.post("http://localhost:4000/api/transactions", {
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
         date: new Date(),
         name: `${data.name}`,
@@ -336,7 +336,7 @@ export const PlaceOrder = () => {
       });
   
       // Update stock
-      await axios.post("http://localhost:4000/api/updateStock", {
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
         updates: cartDetails.map((item) => ({
           id: item.id.toString(),
           size: item.size,
@@ -392,7 +392,7 @@ export const PlaceOrder = () => {
           console.log(`Payment ${status}. Redirecting to orders...`);
           try {
             // Clear cart and redirect
-            await axios.delete(`http://localhost:4000/api/clear-cart/${localStorage.getItem("userId")}`);
+            await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/clear-cart/${localStorage.getItem("userId")}`);
             toast.success("Payment successful! Redirecting to My Orders...");
             setTimeout(() => {
               window.location.href = "/myorders"; // Redirect with delay
