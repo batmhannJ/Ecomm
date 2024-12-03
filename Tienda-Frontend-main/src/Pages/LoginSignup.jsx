@@ -385,23 +385,34 @@ const LoginSignup = () => {
                 placeholder="Email Address"
               />
               {/* Phone number input field */}
-              {state === "Sign Up" && (
-                <input
-                  name="phone"
-                  value={formData.phone}
-                  onChange={changeHandler}
-                  onInput={(e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-                    if (e.target.value.length > 11) {
-                      e.target.value = e.target.value.slice(0, 11); // Limit to 11 digits
-                    }
-                  }}
-                  type="tel" // Better type for phone numbers
-                  placeholder="Phone Number"
-                  maxLength="11" // Prevent input longer than 11 digits
-                  aria-required="true"
-                />
-              )}
+              {/* Phone number input field */}
+{state === "Sign Up" && (
+  <div className="phone-number-container">
+    <span className="country-code">+63</span>
+    <input
+      name="phone"
+      value={formData.phone}
+      onChange={changeHandler}
+      onInput={(e) => {
+        // Remove non-numeric characters
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+        // Ensure the phone number starts with '9' and is 10 digits long (excluding country code)
+        if (e.target.value.length > 10) {
+          e.target.value = e.target.value.slice(0, 10);
+        }
+        if (e.target.value && e.target.value[0] !== '9') {
+          e.target.value = '9' + e.target.value.slice(1);
+        }
+      }}
+      type="tel"
+      placeholder="Phone Number"
+      maxLength="10"
+      aria-required="true"
+    />
+  </div>
+)}
+
               <div
                 className="password-container"
                 style={{ position: "relative" }}
