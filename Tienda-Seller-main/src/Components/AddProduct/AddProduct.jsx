@@ -220,12 +220,23 @@ export const AddProduct = () => {
         .then((resp) => resp.json())
         .then((data) => {
           if (data.success) {
-            toast.success("Product Added", {
-              position: "top-left",
+            toast.success("Product Added", { position: "top-left" });
+            setProductDetails({
+              name: "",
+              image: "",
+              category: "crafts",
+              new_price: "",
+              old_price: "",
+              s_stock: 0,
+              m_stock: 0,
+              l_stock: 0,
+              xl_stock: 0,
+              stock: 0,
+              description: "",
             });
-            setAddedProduct(product); // Set the added product details
-            window.location.reload();
-          } else {
+            setImage(null); // Clear image
+          }
+           else {
             toast.error("Failed", {
               position: "top-left",
             });
