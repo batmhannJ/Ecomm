@@ -43,3 +43,41 @@
   margin-top: 20px;
   border-radius: 4px;
 }
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .place-order {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+    align-items: center; /* Center align items */
+  }
+
+  .place-order-left,
+  .place-order-right {
+    max-width: 90%; /* Make both sections 90% width on smaller screens */
+    margin-left: 0; /* Reset margin-left */
+    margin-right: 0; /* Reset margin-right */
+  }
+
+  .place-order-left .title {
+    font-size: 24px; /* Adjust title size for smaller screens */
+  }
+
+  .place-order-left input {
+    padding: 15px; /* Reduce padding for smaller screens */
+  }
+
+  .place-order-left .multi-fields {
+    flex-direction: column; /* Stack fields vertically */
+    gap: 10px; /* Reduce gap for smaller screens */
+  }
+
+  .place-order .cartitems-total button {
+    width: 100%; /* Make buttons full-width on small screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .place-order-left .title {
+    font-size: 20px; /* Further adjust title size for very small screens */
+  }
+}
