@@ -57,6 +57,8 @@ export const PlaceOrder = () => {
 
   const [deliveryFee, setDeliveryFee] = useState(0);
 
+  // Fetch user data on component mount
+  // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -149,7 +151,7 @@ export const PlaceOrder = () => {
   const fetchCoordinates = async (address) => {
     const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY; // Set this in your .env file
     console.log("Position Stack API Key:", apiKey);
-    const url = `https://api.positionstack.com/v1/forward?access_key=1e898dd6e9c8d306350d701870c5e1a8&query=${address}`;
+    const url = `http://api.positionstack.com/v1/forward?access_key=1e898dd6e9c8d306350d701870c5e1a8&query=${address}`;
 
     try {
       const response = await axios.get(url);
