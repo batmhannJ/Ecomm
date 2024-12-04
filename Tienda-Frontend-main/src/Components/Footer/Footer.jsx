@@ -20,16 +20,16 @@ const Footer = () => {
           <h3>TIENDA</h3>
           <ul>
             <li>
-              <a>Bridging tradition and</a>
+              Bridging tradition and
             </li>
             <li>
-              <a>innovation, empowering</a>
+              innovation, empowering
             </li>
             <li>
-              <a>indigenous artisans with</a>
+              indigenous artisans with
             </li>
             <li>
-              <a>integrity and community.</a>
+              integrity and community.
             </li>
           </ul>
           </div>
