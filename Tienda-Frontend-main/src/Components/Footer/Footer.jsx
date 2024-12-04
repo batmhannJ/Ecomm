@@ -18,28 +18,21 @@ const Footer = () => {
       <div className="footer-sections">
         <div className="footer-column">
           <h3>TIENDA</h3>
-          {/*<ul>
+          <ul>
             <li>
-              <a href="#help">Help Center</a>
+              <a>Bridging tradition and</a>
             </li>
             <li>
-              <a href="#payment">Payment Methods</a>
+              <a>innovation, empowering</a>
             </li>
             <li>
-              <a href="#cares">Tienda Cares PH</a>
+              <a>indigenous artisans with</a>
             </li>
             <li>
-              <a href="#order">Order Tracking</a>
+              <a>integrity and community.</a>
             </li>
-            <li>
-              <a href="#contact">Contact Us</a>
-            </li>
-            <li>
-              <a href="#shipping">Free Shipping</a>
-            </li>
-          </ul>*/}
-          <p><br>Bridging tradition and</br> <br>innovation, empowering</br> <br>indigenous artisans with</br> <br>integrity and community.</br></p>
-        </div>
+          </ul>
+          </div>
         <div className="footer-column">
           <h3>About</h3>
           <ul>
