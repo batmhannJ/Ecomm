@@ -285,8 +285,8 @@ export const PlaceOrder = () => {
             payment_method_types: ["gcash", "grab_pay", "paymaya", "card"], // Allow multiple e-wallets
             livemode: false, // Set to true for production
             statement_descriptor: "Tienda",
-            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?status=success&reference_number=${referenceNumber}`, // Redirect URL on success
-            cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?status=canceled`, // Redirect URL on cancel
+            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?transaction_id=${referenceNumber}&status=success`,
+            cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?status=canceled`,
             metadata: {
               reference_number: referenceNumber,
               delivery_fee: deliveryFee, // Include delivery fee in metadata
@@ -324,7 +324,7 @@ export const PlaceOrder = () => {
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
         date: new Date(),
-        name: `${data.firstName} ${data.lastName}`,
+        name: `${data.name}`,
         contact: data.phone,
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
