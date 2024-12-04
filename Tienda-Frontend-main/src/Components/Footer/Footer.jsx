@@ -18,7 +18,7 @@ const Footer = () => {
       <div className="footer-sections">
         <div className="footer-column">
           <h3>TIENDA</h3>
-          <ul>
+          {/*<ul>
             <li>
               <a href="#help">Help Center</a>
             </li>
@@ -37,7 +37,8 @@ const Footer = () => {
             <li>
               <a href="#shipping">Free Shipping</a>
             </li>
-          </ul>
+          </ul>*/}
+          <p><br>Bridging tradition and</br> <br>innovation, empowering</br> <br>indigenous artisans with</br> <br>integrity and community.</br></p>
         </div>
         <div className="footer-column">
           <h3>About</h3>
