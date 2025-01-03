@@ -9,7 +9,7 @@ const multer = require("multer");
 
 const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
-
+const helmet = require("helmet");
 // import routes
 const superAdminRoutes = require("./routes/superAdminRoute");
 const adminRoutes = require("./routes/adminRoute");
@@ -87,6 +87,24 @@ app.use(express.json());
 app.use("/api/transactions", transactionRoutes);
 app.use("/api", productRoute);
 app.use("/api/cart", cartRoute);
+app.use(helmet()); 
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://trusted-cdn.com"],
+      },
+    },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    permissionsPolicy: {
+      features: {
+        geolocation: ["self"],
+      },
+    },
+  })
+);
 
 // Database Connection
 mongoose
