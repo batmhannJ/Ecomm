@@ -112,7 +112,9 @@ app.use(
           "https://ip-tienda-han-seller.onrender.com",
           "https://ip-tienda-han.onrender.com",
           "https://ip-tienda-seller.onrender.com",
-          "https://ip-tienda-han-backend.onrender.com"
+          "https://ip-tienda-han-backend.onrender.com",
+          "https://ip-tienda-han-backend.onrender.com/newcollections",
+          "https://ip-tienda-han-backend.onrender.com/popularincrafts"
         ],
       },
     },
