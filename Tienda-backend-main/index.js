@@ -70,19 +70,23 @@ const allowedOrigins = [
   'https://ip-tienda-seller.onrender.com',// This is the specific origin to allow
   'https://ip-tienda-han-backend.onrender.com' 
 ];
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Specify the HTTP methods you want to allow
-  allowedHeaders: ["Content-Type", "Authorization"], // Specify headers needed for requests
-  credentials: true // Allow credentials to be included in the request
-}));
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, server-side scripts, etc.)
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Headers needed for requests
+    exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"], // Expose additional headers if needed
+    credentials: true, // Allow cookies or credentials in the request
+  })
+);
 app.use(express.json());
 app.use("/api/transactions", transactionRoutes);
 app.use("/api", productRoute);
