@@ -127,6 +127,7 @@ app.use(
           "https://ip-tienda-han.onrender.com",
           "https://ip-tienda-han-admin.onrender.com",
           "https://ip-tienda-seller.onrender.com",
+          "https://ip-tienda-han-backend.onrender.com",
         ],
       },
     },
@@ -192,6 +193,27 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "upload/images"), {
+    setHeaders: (res) => {
+      res.set("Access-Control-Allow-Origin", "*"); // Allow all origins for testing
+      res.set("Content-Security-Policy", "default-src 'self'; img-src * data: blob:;");
+    },
+  })
+);
+
+
+app.use(
+  "/upload",
+  express.static(path.join(__dirname, "upload"), {
+    setHeaders: (res) => {
+      res.set("Access-Control-Allow-Origin", "*"); // Allow all origins for testing
+      res.set("Content-Security-Policy", "default-src 'self'; img-src * data: blob:;");
+    },
+  })
+);
 
 app.use("/images", express.static("upload/images"));
 app.use('/upload', express.static('upload'));
