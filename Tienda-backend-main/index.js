@@ -116,6 +116,14 @@ app.use(
           "https://ip-tienda-han-backend.onrender.com/newcollections",
           "https://ip-tienda-han-backend.onrender.com/popularincrafts"
         ],
+        imgSrc: [
+          "'self'",
+          "data:", // Allow inline images (e.g., base64 data URIs)
+          "blob:", // Allow blob URLs for images, // Replace with your actual image CDN or domain
+          "https://ip-tienda-han.onrender.com",
+          "https://ip-tienda-han-admin.onrender.com",
+          "https://ip-tienda-seller.onrender.com",
+        ],
       },
     },
     referrerPolicy: { policy: "strict-origin-when-cross-origin" },
