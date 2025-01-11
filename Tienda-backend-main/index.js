@@ -1,6 +1,44 @@
 const port = 4000;
 const express = require("express");
 const app = express();
+
+const allowedOrigins = [  
+  'http://localhost:3000', 
+  'http://localhost:28429',
+  'http://localhost:5173', 
+  'http://localhost:5174', 
+  'http://localhost:46631',
+  'http://localhost:47106',
+  'https://tienda-han.onrender.com',
+  'https://tienda-frontend.onrender.com',
+  'https://tienda-admin.onrender.com',
+  'https://tienda-seller.onrender.com',
+  'http://localhost:4000',
+  'https://ip-tienda.onrender.com',
+  'https://ip-tienda-han-admin.onrender.com',
+  'https://ip-tienda-han-super-admin.onrender.com',
+  'https://ip-tienda-han-seller.onrender.com',
+  'https://ip-tienda-han.onrender.com',
+  'https://ip-tienda-seller.onrender.com',// This is the specific origin to allow
+  'https://ip-tienda-han-backend.onrender.com' 
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, server-side scripts, etc.)
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Headers needed for requests
+    exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"], // Expose additional headers if needed
+    credentials: true, // Allow cookies or credentials in the request
+  })
+);
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const path = require("path");
@@ -50,43 +88,6 @@ const sendEmail = async (to, subject, text) => {
     });
   });
 };
-const allowedOrigins = [  
-  'http://localhost:3000', 
-  'http://localhost:28429',
-  'http://localhost:5173', 
-  'http://localhost:5174', 
-  'http://localhost:46631',
-  'http://localhost:47106',
-  'https://tienda-han.onrender.com',
-  'https://tienda-frontend.onrender.com',
-  'https://tienda-admin.onrender.com',
-  'https://tienda-seller.onrender.com',
-  'http://localhost:4000',
-  'https://ip-tienda.onrender.com',
-  'https://ip-tienda-han-admin.onrender.com',
-  'https://ip-tienda-han-super-admin.onrender.com',
-  'https://ip-tienda-han-seller.onrender.com',
-  'https://ip-tienda-han.onrender.com',
-  'https://ip-tienda-seller.onrender.com',// This is the specific origin to allow
-  'https://ip-tienda-han-backend.onrender.com' 
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, server-side scripts, etc.)
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Allowed HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Headers needed for requests
-    exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"], // Expose additional headers if needed
-    credentials: true, // Allow cookies or credentials in the request
-  })
-);
 app.use(express.json());
 app.use("/api/transactions", transactionRoutes);
 app.use("/api", productRoute);
@@ -193,16 +194,6 @@ app.use((req, res, next) => {
 
   next();
 });
-
-app.use(
-  "/images",
-  express.static(path.join(__dirname, "upload/images"), {
-    setHeaders: (res) => {
-      res.set("Access-Control-Allow-Origin", "*"); // Allow all origins for testing
-      res.set("Content-Security-Policy", "default-src 'self'; img-src * data: blob:;");
-    },
-  })
-);
 
 
 app.use(
