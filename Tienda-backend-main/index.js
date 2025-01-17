@@ -118,7 +118,8 @@ app.use(
           "https://ip-tienda-seller.onrender.com",
           "https://ip-tienda-han-backend.onrender.com",
           "https://ip-tienda-han-backend.onrender.com/newcollections",
-          "https://ip-tienda-han-backend.onrender.com/popularincrafts"
+          "https://ip-tienda-han-backend.onrender.com/popularincrafts",
+          "https://ip-tienda-han-backend.onrender.com/images"
         ],
         imgSrc: [
           "'self'",
