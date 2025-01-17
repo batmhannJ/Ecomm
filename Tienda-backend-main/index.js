@@ -1271,6 +1271,7 @@ app.get('/get-user-details/:id', async (req, res) => {
     if (user) {
       console.log(user);
       return res.status(200).json({
+          id: user._id,
           name: user.name,
           email: user.email,
           phone: user.phone,
@@ -1357,36 +1358,6 @@ app.post('/updatepassword-mobile/:id', async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 });
-
-// Check user address endpoint
-app.post('/check-user-address', async (req, res) => {
-  const { email } = req.body;
-
-  try {
-    const user = await Users.findOne({ email: email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (!user.address) {
-      return res.status(200).json({ addressExists: false, message: "No address found. Please set up your address first." });
-    }
-
-    return res.status(200).json({ addressExists: true, address: user.address });
-  } catch (error) {
-    console.error("Error checking user address:", error);
-    return res.status(500).json({ message: "Error checking user address" });
-  }
-});
-
-app.use(express.static("public", { 
-  setHeaders: (res, path) => {
-    if (path.endsWith(".css")) {
-      res.setHeader("Content-Type", "text/css");
-    }
-  }
-}));
 
 // Check user address endpoint
 app.post('/check-user-address', async (req, res) => {
@@ -1515,6 +1486,184 @@ app.get('/newproducts', async (req, res) => {
     res.json(products); // Send the products as JSON
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch products' });
+  }
+});
+
+app.get('/product/:name', async (req, res) => {
+  const { name } = req.params;
+  try {
+    const product = await Product.findOne({ name });
+    if (!product) {
+      return res.status(404).send('Product not found');
+    }
+
+    // Ensure the response includes the 'id' field
+    const productResponse = {
+      id: product._id.toString(), // You can use _id as 'id' if needed
+      name: product.name,
+      image: product.image,
+      description: product.description,
+      category: product.category,
+      new_price: product.new_price,
+      old_price: product.old_price,
+      stock: product.stock,
+      available: product.available,
+      // Add other product fields you need
+    };
+
+    res.json(productResponse); // Return the modified response
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+app.get("/api/carts/:userId", getCartWithProductDetails); // API endpoint for fetching cart details
+
+app.delete('/api/cart/delete/:cartItemId', async (req, res) => {
+  const { cartItemId } = req.params;  // Capture cartItemId from the URL path
+  const { selectedSize, userId } = req.query;  // Capture selectedSize and userId from query params
+
+  try {
+    console.log('Received CartItemId:', cartItemId);
+    console.log('Selected Size:', selectedSize);
+    console.log('UserId:', userId);  // Log the userId
+
+    // Validate cartItemId format
+    if (!ObjectId.isValid(cartItemId)) {
+      return res.status(400).json({ message: 'Invalid cart item ID format' });
+    }
+
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    // Find the cart where the cartItemId, selectedSize, and userId match
+    const cart = await Cart.findOne({
+      userId: userId,
+      'cartItems.cartItemId': ObjectId(cartItemId),
+      'cartItems.selectedSize': selectedSize,
+    });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    // Remove the item from the cart
+    const updatedCart = await Cart.updateOne(
+      { _id: cart._id },
+      {
+        $pull: {
+          cartItems: { cartItemId: ObjectId(cartItemId), selectedSize },
+        },
+      }
+    );
+
+    if (updatedCart.modifiedCount === 0) {
+      return res.status(404).json({ message: 'Cart item not found' });
+    }
+
+    res.status(200).json({ message: 'Cart item deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting cart item:', err);
+    res.status(500).json({ message: 'Error deleting cart item', error: err });
+  }
+});
+
+app.post('/api/cart/save', async (req, res) => {
+  const { userId, cartItems } = req.body;
+  console.log('Received cart items:', req.body.cartItems);
+
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
+    return res.status(400).json({ message: "Cart items are required" });
+  }
+
+  for (const item of cartItems) {
+    if (!item.productId) {
+      return res
+        .status(400)
+        .json({ message: "Product ID is required for all cart items" });
+    }
+  }
+
+  try {
+    // Find the user's cart
+    let cart = await Cart.findOne({ userId });
+
+    if (!cart) {
+      // If no cart exists, create a new one
+      cart = new Cart({
+        userId,
+        cartItems: [],
+      });
+    }
+
+    // Add or update cart items
+    for (const item of cartItems) {
+      const existingItemIndex = cart.cartItems.findIndex(
+        (i) =>
+          i.productId === item.productId &&
+          i.selectedSize === item.selectedSize
+      );
+
+      if (existingItemIndex !== -1) {
+        // Update quantity and price if item exists
+        cart.cartItems[existingItemIndex].quantity += item.quantity;
+        cart.cartItems[existingItemIndex].adjustedPrice = item.adjustedPrice;
+      } else {
+        // Add new item
+        cart.cartItems.push({
+          productId: item.productId,
+          selectedSize: item.selectedSize,
+          adjustedPrice: item.adjustedPrice,
+          quantity: item.quantity,
+          cartItemId: new mongoose.Types.ObjectId(),
+        });
+      }
+    }
+
+    // Save the updated cart
+    await cart.save();
+    res.status(201).json({ message: 'Cart item saved successfully', cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to save cart item', error });
+  }
+});
+app.post('/api/cart/removeItems', async (req, res) => {
+  const { cartItemIds } = req.body;
+
+  if (!cartItemIds || !Array.isArray(cartItemIds) || cartItemIds.length === 0) {
+    return res.status(400).json({ message: "Invalid cartItemIds data." });
+  }
+
+  try {
+    const objectIds = cartItemIds
+      .filter((id) => mongoose.Types.ObjectId.isValid(id))
+      .map((id) => new mongoose.Types.ObjectId(id));
+
+    if (objectIds.length === 0) {
+      return res.status(400).json({ message: "No valid ObjectIds provided." });
+    }
+
+    // Use $pull to remove items from 'cartItems' array by 'cartItemId'
+    const result = await Cart.updateMany(
+      { "cartItems.cartItemId": { $in: objectIds } },
+      { $pull: { cartItems: { cartItemId: { $in: objectIds } } } }
+    );
+
+    if (result.modifiedCount > 0) {
+      return res.status(200).json({ message: "Items removed successfully." });
+    } else {
+      return res.status(404).json({ message: "No items found to remove." });
+    }
+  } catch (error) {
+    console.error("Error removing items from cart:", error);
+    return res.status(500).json({ message: "Failed to remove items from cart.", error });
   }
 });
 
