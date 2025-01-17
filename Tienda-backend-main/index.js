@@ -207,7 +207,12 @@ app.use(
   })
 );
 
-app.use("/images", express.static("upload/images"));
+app.use("/images", express.static("upload/images", {
+  setHeaders: (res) => {
+    res.set("Access-Control-Allow-Origin", "*"); // For testing
+    console.log("Headers set for image request:", res.getHeaders());
+  }
+}));
 app.use('/upload', express.static('upload'));
 app.use('/upload/images', express.static('upload/images'));
 
