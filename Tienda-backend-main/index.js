@@ -74,14 +74,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, server-side scripts, etc.)
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: '*', // Allow all origins for testing purposes
     methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Headers needed for requests
     exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"], // Expose additional headers if needed
