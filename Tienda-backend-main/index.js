@@ -92,7 +92,6 @@ app.use(express.json());
 app.use("/api/transactions", transactionRoutes);
 app.use("/api", productRoute);
 app.use("/api/cart", cartRoute);
-app.use(helmet()); 
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -120,13 +119,13 @@ app.use(
           "https://ip-tienda-han-backend.onrender.com",
           "https://ip-tienda-han-backend.onrender.com/newcollections",
           "https://ip-tienda-han-backend.onrender.com/popularincrafts",
-          "https://ip-tienda-han-backend.onrender.com/images"
+          "https://ip-tienda-han-backend.onrender.com/images",
         ],
         imgSrc: [
           "'self'",
-          "data:", // Allow inline images (e.g., base64 data URIs)
+          "data:",
           "blob:",
-          "*.onrender.com", // Allow blob URLs for images, // Replace with your actual image CDN or domain
+          "*.onrender.com",
           "https://ip-tienda-han.onrender.com",
           "https://ip-tienda-han-admin.onrender.com",
           "https://ip-tienda-seller.onrender.com",
@@ -138,6 +137,7 @@ app.use(
     permissionsPolicy: {
       geolocation: ["self"],
     },
+    frameguard: false, // Disable X-Frame-Options
   })
 );
 
