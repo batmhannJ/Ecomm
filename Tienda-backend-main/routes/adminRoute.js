@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+
+const AdminUser = require("../models/adminUserModel");
 const {
   signup,
   login,
@@ -66,6 +68,5 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ success: false, errors: ["Server Error"] });
   }
 });
-
 
 module.exports = router;
