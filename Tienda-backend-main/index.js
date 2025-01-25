@@ -74,7 +74,14 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: '*', // Allow all origins for testing purposes
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, server-side scripts, etc.)
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "DELETE", "PATCH", "PUT"], // Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Headers needed for requests
     exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"], // Expose additional headers if needed
@@ -85,52 +92,27 @@ app.use(express.json());
 app.use("/api/transactions", transactionRoutes);
 app.use("/api", productRoute);
 app.use("/api/cart", cartRoute);
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          "http://localhost:3000",
-          "http://localhost:28429",
-          "http://localhost:5173",
-          "http://localhost:5174",
-          "http://localhost:46631",
-          "http://localhost:47106",
-          "https://tienda-han.onrender.com",
-          "https://tienda-frontend.onrender.com",
-          "https://tienda-admin.onrender.com",
-          "https://tienda-seller.onrender.com",
-          "http://localhost:4000",
-          "https://ip-tienda.onrender.com",
-          "https://ip-tienda-han-admin.onrender.com",
-          "https://ip-tienda-han-super-admin.onrender.com",
-          "https://ip-tienda-han-seller.onrender.com",
-          "https://ip-tienda-han.onrender.com",
-          "https://ip-tienda-seller.onrender.com",
-          "https://ip-tienda-han-backend.onrender.com",
-          "https://ip-tienda-han-backend.onrender.com/newcollections",
-          "https://ip-tienda-han-backend.onrender.com/popularincrafts",
-          "https://ip-tienda-han-backend.onrender.com/images",
-        ],
-        imgSrc: [
-          "'self'",
-          "*", // Allow all sources
-          "data:", // Allow inline images like base64
-          "blob:", // Allow blob URLs
-          "https://*.onrender.com", // Allow subdomains on render.com
-        ],
-      },
-    },
-    referrerPolicy: { policy: "no-referrer" },
-    permissionsPolicy: {
-      geolocation: ["self"],
-    },
-    frameguard: false, // Disable X-Frame-Options
-  })
-);
+app.use((req, res, next) => {
+  // Enforce HTTPS
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
+  // Control Referrer Information
+  res.setHeader("Referrer-Policy", "no-referrer");
+
+  // Prevent MIME Sniffing
+  res.setHeader("X-Content-Type-Options", "nosniff");
+
+  // Prevent Clickjacking
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+
+  // Control Browser Permissions
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  );
+
+  next();
+});
 // Database Connection
 mongoose
   .connect(mongoURI)
@@ -141,7 +123,6 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Express App is Running");
 });
-
 
 app.get("/api/transactions", (req, res) => {
   res.json({ message: "This is the transactions endpoint" });
@@ -179,10 +160,10 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Explicitly allow PATCH
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow required headers
 
-  /*if (req.method === 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Include PATCH in response
     return res.status(200).json({}); // Send a 200 OK response for preflight
-  }*/
+  }
 
   next();
 });
