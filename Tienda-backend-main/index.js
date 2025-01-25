@@ -22,6 +22,7 @@ const cartRoute = require("./routes/cartRoute");
 const { signup } = require("./controllers/sellerController");
 const { getUsers } = require("./controllers/userController");
 const { searchAdmin } = require("./controllers/adminController");
+const { getCartWithProductDetails } = require("./controllers/cartController"); // Adjust path as necessary
 
 const { ObjectId } = require('mongodb');
 
