@@ -123,7 +123,7 @@ app.use(
         ],
       },
     },
-    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    referrerPolicy: { policy: "no-referrer" },
     permissionsPolicy: {
       geolocation: ["self"],
     },
