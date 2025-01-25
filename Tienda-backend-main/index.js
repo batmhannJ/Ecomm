@@ -93,22 +93,53 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api", productRoute);
 app.use("/api/cart", cartRoute);
 app.use(helmet()); 
-
-app.use((req, res, next) => {
-  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-  next();
-});
-app.use((req, res, next) => {
-  res.setHeader("Referrer-Policy", "no-referrer"); // Options: no-referrer, origin, etc.
-  next();
-});
-app.use((req, res, next) => {
-  res.setHeader(
-    "Permissions-Policy",
-    "microphone=(), camera=(), display-capture=()" // Example policy
-  );
-  next();
-});
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "http://localhost:3000",
+          "http://localhost:28429",
+          "http://localhost:5173",
+          "http://localhost:5174",
+          "http://localhost:46631",
+          "http://localhost:47106",
+          "https://tienda-han.onrender.com",
+          "https://tienda-frontend.onrender.com",
+          "https://tienda-admin.onrender.com",
+          "https://tienda-seller.onrender.com",
+          "http://localhost:4000",
+          "https://ip-tienda.onrender.com",
+          "https://ip-tienda-han-admin.onrender.com",
+          "https://ip-tienda-han-super-admin.onrender.com",
+          "https://ip-tienda-han-seller.onrender.com",
+          "https://ip-tienda-han.onrender.com",
+          "https://ip-tienda-seller.onrender.com",
+          "https://ip-tienda-han-backend.onrender.com",
+          "https://ip-tienda-han-backend.onrender.com/newcollections",
+          "https://ip-tienda-han-backend.onrender.com/popularincrafts",
+          "https://ip-tienda-han-backend.onrender.com/images"
+        ],
+        imgSrc: [
+          "'self'",
+          "data:", // Allow inline images (e.g., base64 data URIs)
+          "blob:",
+          "*.onrender.com", // Allow blob URLs for images, // Replace with your actual image CDN or domain
+          "https://ip-tienda-han.onrender.com",
+          "https://ip-tienda-han-admin.onrender.com",
+          "https://ip-tienda-seller.onrender.com",
+          "https://ip-tienda-han-backend.onrender.com",
+        ],
+      },
+    },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    permissionsPolicy: {
+      geolocation: ["self"],
+    },
+  })
+);
 
 
 // Database Connection
