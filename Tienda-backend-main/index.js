@@ -94,42 +94,7 @@ app.use("/api", productRoute);
 app.use("/api/cart", cartRoute);
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          "http://localhost:3000",
-          "http://localhost:28429",
-          "http://localhost:5173",
-          "http://localhost:5174",
-          "http://localhost:46631",
-          "http://localhost:47106",
-          "https://tienda-han.onrender.com",
-          "https://tienda-frontend.onrender.com",
-          "https://tienda-admin.onrender.com",
-          "https://tienda-seller.onrender.com",
-          "http://localhost:4000",
-          "https://ip-tienda.onrender.com",
-          "https://ip-tienda-han-admin.onrender.com",
-          "https://ip-tienda-han-super-admin.onrender.com",
-          "https://ip-tienda-han-seller.onrender.com",
-          "https://ip-tienda-han.onrender.com",
-          "https://ip-tienda-seller.onrender.com",
-          "https://ip-tienda-han-backend.onrender.com",
-          "https://ip-tienda-han-backend.onrender.com/newcollections",
-          "https://ip-tienda-han-backend.onrender.com/popularincrafts",
-          "https://ip-tienda-han-backend.onrender.com/images",
-        ],
-        imgSrc: [
-          "'self'",
-          "*", // Allow all sources
-          "data:", // Allow inline images like base64
-          "blob:", // Allow blob URLs
-          "https://*.onrender.com", // Allow subdomains on render.com
-        ],
-      },
-    },
+    contentSecurityPolicy: false, // Disable Content-Security-Policy
     referrerPolicy: { policy: "strict-origin-when-cross-origin" },
     permissionsPolicy: {
       geolocation: ["self"],
@@ -137,6 +102,7 @@ app.use(
     frameguard: false, // Disable X-Frame-Options
   })
 );
+
 
 // Database Connection
 mongoose
