@@ -123,13 +123,10 @@ app.use(
         ],
         imgSrc: [
           "'self'",
-          "data:",
-          "blob:",
-          "*.onrender.com",
-          "https://ip-tienda-han.onrender.com",
-          "https://ip-tienda-han-admin.onrender.com",
-          "https://ip-tienda-seller.onrender.com",
-          "https://ip-tienda-han-backend.onrender.com",
+          "*", // Allow all sources
+          "data:", // Allow inline images like base64
+          "blob:", // Allow blob URLs
+          "https://*.onrender.com", // Allow subdomains on render.com
         ],
       },
     },
@@ -140,7 +137,6 @@ app.use(
     frameguard: false, // Disable X-Frame-Options
   })
 );
-
 
 // Database Connection
 mongoose
