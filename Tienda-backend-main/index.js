@@ -179,10 +179,10 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Explicitly allow PATCH
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow required headers
 
-  if (req.method === 'OPTIONS') {
+  /*if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // Include PATCH in response
     return res.status(200).json({}); // Send a 200 OK response for preflight
-  }
+  }*/
 
   next();
 });
