@@ -311,6 +311,8 @@ export const PlaceOrder = () => {
       const checkoutSession = sessionResponse.data.data;
   
       if (checkoutSession.attributes.checkout_url) {
+        console.log("Storing userData in localStorage:", data);
+
         localStorage.setItem("referenceNumber", referenceNumber);
         localStorage.setItem("cartDetails", JSON.stringify(cartDetails));
         localStorage.setItem("deliveryFee", deliveryFee);

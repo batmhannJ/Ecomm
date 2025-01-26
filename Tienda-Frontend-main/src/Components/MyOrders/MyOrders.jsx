@@ -59,17 +59,20 @@ const handleTransactionStatus = (status) => {
     default:
   }
 };
+useEffect(() => {
+  // Fetch user data from localStorage
+  const storedUserData = localStorage.getItem("userData");
+  console.log("Fetched userData from localStorage:", storedUserData); // Debug log
 
-  useEffect(() => {
-    // Fetch user data from localStorage
-    const storedUserData = localStorage.getItem("userData");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setData(parsedUserData); // Set the `data` state
-    } else {
-      toast.error("User data not found. Please ensure you are logged in.");
-    }
-  }, []); 
+  if (storedUserData) {
+    const parsedUserData = JSON.parse(storedUserData);
+    setData(parsedUserData); // Set the `data` state
+  } else {
+    console.error("userData not found in localStorage.");
+    toast.error("User data not found. Please ensure you are logged in.");
+  }
+}, []);
+
 
   useEffect(() => {
     handleTransactionStatus(status);
