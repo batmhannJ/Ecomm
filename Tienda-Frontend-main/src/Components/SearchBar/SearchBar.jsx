@@ -11,9 +11,15 @@ const SearchBar = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     const filtered = searchTerm.trim()
-      ? all_product.filter((product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+      ? all_product.filter((product) => {
+          const inName = product.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          const inTags = product.tags?.some((tag) =>
+            tag.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          return inName || inTags;
+        })
       : all_product;
 
     navigate("/search-results", { state: { filteredProducts: filtered } });
