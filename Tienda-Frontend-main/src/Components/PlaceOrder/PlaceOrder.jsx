@@ -333,7 +333,7 @@ export const PlaceOrder = () => {
             payment_method_types: ["gcash", "grab_pay", "paymaya", "card"],
             livemode: false,
             statement_descriptor: "Tienda",
-            success_url: `https://ip-tienda-han.onrender.com/myorders?message=true&referenceNumber=${referenceNumber}`,
+            success_url: `https://ip-tienda-han.onrender.com/myorders?message=true`,
             cancel_url: `https://ip-tienda-han.onrender.com/cart?message=false`,
             metadata: {
               reference_number: referenceNumber,
