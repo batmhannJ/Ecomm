@@ -235,8 +235,10 @@ export const PlaceOrder = () => {
 
       if (urlParams.get("message") === "true") {
         const userId = localStorage.getItem("userId");
-        const referenceNumber = urlParams.get("referenceNumber"); // Ensure the reference number is passed in metadata
-
+        //const referenceNumber = urlParams.get("referenceNumber"); // Ensure the reference number is passed in metadata
+        const storedCheckoutData = JSON.parse(localStorage.getItem("checkoutData"));
+        const { data, itemDetails, referenceNumber } = storedCheckoutData || {};
+  
         try {
           // Save transaction details
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
@@ -270,6 +272,9 @@ export const PlaceOrder = () => {
         } catch (error) {
           console.error("Post-payment error:", error);
           toast.error("An error occurred while processing your transaction. Please contact support.");
+        }
+        finally {
+          localStorage.removeItem("checkoutData"); // Clean up stored data
         }
       }
     };
@@ -374,56 +379,6 @@ export const PlaceOrder = () => {
       navigate("/cart");
     }
   }, [navigate, getTotalCartAmount]);
-
-  /*useEffect(() => {
-    const handlePaymentStatus = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const transactionId = searchParams.get("transaction_id");
-      const status = searchParams.get("message");
-  
-      if (!transactionId) {
-        console.error("No Transaction ID found in URL");
-        return;
-      }
-  
-      switch (status) {
-        case "true":
-        case "true":
-          console.log(`Payment ${status}. Redirecting to orders...`);
-          try {
-            // Clear cart and redirect
-            await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/clear-cart/${localStorage.getItem("userId")}`);
-            toast.success("Payment successful! Redirecting to My Orders...");
-            setTimeout(() => {
-              window.location.href = "/myorders"; // Redirect with delay
-            }, 3000);
-          } catch (error) {
-            console.error("Error clearing cart:", error);
-            toast.error("Failed to process order. Contact support.");
-          }
-          break;
-  
-        case "failed":
-          toast.error("Payment failed. Redirecting to cart...");
-          setTimeout(() => {
-            window.location.href = "/cart";
-          }, 3000);
-          break;
-  
-        case "canceled":
-          toast.info("Payment canceled. Redirecting to cart...");
-          setTimeout(() => {
-            window.location.href = "/cart";
-          }, 3000);
-          break;
-  
-        default:
-          console.error("Unhandled payment status:", status);
-      }
-    };
-  
-    handlePaymentStatus();
-  }, [location]);*/
 
 
   return (
