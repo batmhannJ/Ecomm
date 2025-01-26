@@ -10,10 +10,8 @@ import {
   cities,
   barangays,
 } from "select-philippines-address";
-//import { v4 as uuidv4 } from "uuid";
 
 const generateReferenceNumber = () => {
-  // Using timestamp + random number for simplicity
   return `REF-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 };
 
@@ -57,8 +55,6 @@ export const PlaceOrder = () => {
 
   const [deliveryFee, setDeliveryFee] = useState(0);
 
-  // Fetch user data on component mount
-  // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -75,7 +71,6 @@ export const PlaceOrder = () => {
         );
 
         if (loggedInUser) {
-          // Extracting address details
           const {
             barangay,
             municipality,
@@ -86,16 +81,12 @@ export const PlaceOrder = () => {
             country,
           } = loggedInUser.address;
 
-          // Get names from the imported data
           const barangayName = await barangays(municipality);
-          const cityData = await cities(province); // Replace with province_code or id
-          //const regionsData = await regions();
+          const cityData = await cities(province);
           const provincesData = await provincesByCode(region);
-          // Debugging Logs
           console.log("Province Data:", provincesData); // See the structure of the provinceData array
           console.log("Province Code:", province);
 
-          // Assuming these functions return arrays, map the correct names
           const selectedBarangay =
             barangayName.find((b) => b.brgy_code === barangay)?.brgy_name || "";
           const selectedCity =
@@ -178,20 +169,16 @@ export const PlaceOrder = () => {
         coordinates.longitude
       );
 
-      // Convert distance to miles
       const distanceMiles = distanceKm * 0.621371;
 
-      // Determine region (Example: Assuming you know how to identify NCR)
       const isSameRegion =
         data.state === "Metro Manila" || data.region === "NCR";
 
-      // Adjust base fee and fee per mile depending on the region
       let baseFee = isSameRegion ? 20 : 40; // Lower base fee within NCR
       let feePerMile = isSameRegion ? 2 : 3; // Lower fee per mile within NCR
 
       let totalFee = baseFee + feePerMile * Math.ceil(distanceMiles);
 
-      // Capping the delivery fee to avoid extreme values
       const maxDeliveryFee = isSameRegion ? 100 : 200; // Lower cap for same region
       totalFee = totalFee > maxDeliveryFee ? maxDeliveryFee : totalFee;
 
@@ -307,44 +294,41 @@ export const PlaceOrder = () => {
       const checkoutSession = sessionResponse.data.data;
   
       if (checkoutSession.attributes.checkout_url) {
-        window.location.href = checkoutSession.attributes.checkout_url;
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("message") === "true") {
+          const userId = localStorage.getItem("userId");
+    
+          await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
+            transactionId: referenceNumber,
+            date: new Date(),
+            name: `${data.name}`,
+            contact: data.phone,
+            item: cartDetails.map((item) => item.name).join(", "),
+            quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
+            amount: getTotalCartAmount() + deliveryFee,
+            deliveryFee: deliveryFee,
+            address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
+            status: "Cart Processing",
+            userId: userId,
+          });
+    
+          await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
+            updates: cartDetails.map((item) => ({
+              id: item.id.toString(),
+              size: item.size,
+              quantity: item.quantity,
+            })),
+          });
+    
+          clearCart();
+        }
+        //window.location.href = checkoutSession.attributes.checkout_url;
         toast.success("Redirecting to payment gateway...");
       } else {
         toast.error("Failed to create checkout session. Please try again.");
       }
   
-      // If redirected URL has message=true, execute additional operations
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("message") === "true") {
-        const userId = localStorage.getItem("userId");
-  
-        // Save transaction details
-        await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
-          transactionId: referenceNumber,
-          date: new Date(),
-          name: `${data.name}`,
-          contact: data.phone,
-          item: cartDetails.map((item) => item.name).join(", "),
-          quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
-          amount: getTotalCartAmount() + deliveryFee,
-          deliveryFee: deliveryFee,
-          address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
-          status: "Cart Processing",
-          userId: userId,
-        });
-  
-        // Update stock
-        await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
-          updates: cartDetails.map((item) => ({
-            id: item.id.toString(),
-            size: item.size,
-            quantity: item.quantity,
-          })),
-        });
-  
-        // Clear cart
-        clearCart();
-      }
+     
     } catch (error) {
       if (error.response?.data?.errors) {
         const errorDetails = error.response.data.errors[0]?.detail;
