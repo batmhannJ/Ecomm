@@ -232,13 +232,20 @@ export const PlaceOrder = () => {
   useEffect(() => {
     const executePostPaymentActions = async () => {
       const urlParams = new URLSearchParams(window.location.search);
+      console.log("URL Params:", urlParams.toString()); // Debug
 
       if (urlParams.get("message") === "true") {
+        console.log("Message is true"); // Debug
+
         const userId = localStorage.getItem("userId");
         //const referenceNumber = urlParams.get("referenceNumber"); // Ensure the reference number is passed in metadata
         const storedCheckoutData = JSON.parse(localStorage.getItem("checkoutData"));
         const { data, itemDetails, referenceNumber } = storedCheckoutData || {};
   
+if (!storedCheckoutData) {
+  console.error("No checkout data found in localStorage");
+  return;
+}
         try {
           // Save transaction details
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
@@ -280,7 +287,7 @@ export const PlaceOrder = () => {
     };
 
     executePostPaymentActions();
-  }, []); // Empty dependency array ensures this runs once on component load
+  }, [navigate]); // Empty dependency array ensures this runs once on component load
 
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
@@ -361,7 +368,15 @@ export const PlaceOrder = () => {
       const sessionResponse = await axios.post(`${paymongoUrl}/checkout_sessions`, checkoutSessionPayload, { headers });
 
       const checkoutSession = sessionResponse.data.data;
-
+      localStorage.setItem(
+        "checkoutData",
+        JSON.stringify({
+          data,
+          itemDetails,
+          referenceNumber,
+        })
+      );
+      
       if (checkoutSession.attributes.checkout_url) {
         window.location.href = checkoutSession.attributes.checkout_url;
         toast.success("Redirecting to payment gateway...");
