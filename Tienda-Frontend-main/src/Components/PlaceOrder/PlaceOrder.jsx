@@ -355,7 +355,7 @@ export const PlaceOrder = () => {
           }));
   
           // Save transaction to the backend
-          await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
+          const transactionResponse = await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
             transactionId,
             date: new Date(),
             name: `${data.name}`,
@@ -368,16 +368,19 @@ export const PlaceOrder = () => {
             status: "Completed",
             userId,
           });
+          console.log("Transaction response:", transactionResponse.data);
+
   
           // Update stock
-          await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
+          const stockResponse = await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
             updates: cartDetails.map((item) => ({
               id: item.id.toString(),
               size: item.size,
               quantity: item.quantity,
             })),
           });
-  
+          console.log("Stock response:", stockResponse.data);
+
           // Clear cart
           await axios.delete(
             `https://ip-tienda-han-backend.onrender.com/api/clear-cart/${userId}`
