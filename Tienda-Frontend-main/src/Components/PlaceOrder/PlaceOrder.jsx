@@ -520,8 +520,6 @@ export const PlaceOrder = () => {
             </div>
           </div>
           <button type="submit">PROCEED TO PAYMENT</button>
-          <button onClick={executePostPaymentActions}>Test Post Payment</button>
-
         </div>
       </div>
     </form>
