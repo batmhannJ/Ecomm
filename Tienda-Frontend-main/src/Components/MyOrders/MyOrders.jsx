@@ -63,7 +63,7 @@ const MyOrders = () => {
     fetchOrders();
 
     // Initialize Socket.IO
-    const socket = io("https://ip-tienda-han-backend.onrender.com:4000");
+    const socket = io("https://ip-tienda-han-backend.onrender.com/myorders?message=true");
 
     // Listen for real-time updates on order status
     socket.on("orderUpdated", (updatedOrder) => {
