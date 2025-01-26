@@ -38,6 +38,7 @@ export const PlaceOrder = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { itemDetails } = location.state || {};
+  const [deliveryFee, setDeliveryFee] = useState(0);
 
   const [transactionId, setTransactionId] = useState(null);
   const [data, setData] = useState({
@@ -55,10 +56,6 @@ export const PlaceOrder = () => {
     provinces: [],
   });
 
-  const [deliveryFee, setDeliveryFee] = useState(0);
-
-  // Fetch user data on component mount
-  // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -379,51 +376,63 @@ export const PlaceOrder = () => {
     const handlePaymentStatus = async () => {
       const searchParams = new URLSearchParams(window.location.search);
       const transactionId = searchParams.get("transaction_id");
-      const status = searchParams.get("status");
+      const message = searchParams.get("message");
   
       if (!transactionId) {
         console.error("No Transaction ID found in URL");
         return;
       }
   
-      switch (status) {
-        case "success":
-        case "authorized":
-          console.log(`Payment ${status}. Redirecting to orders...`);
-          try {
-            // Clear cart and redirect
-            await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/clear-cart/${localStorage.getItem("userId")}`);
-            toast.success("Payment successful! Redirecting to My Orders...");
-            setTimeout(() => {
-              window.location.href = "/myorders"; // Redirect with delay
-            }, 3000);
-          } catch (error) {
-            console.error("Error clearing cart:", error);
-            toast.error("Failed to process order. Contact support.");
-          }
-          break;
-  
-        case "failed":
-          toast.error("Payment failed. Redirecting to cart...");
-          setTimeout(() => {
-            window.location.href = "/cart";
-          }, 3000);
-          break;
-  
-        case "canceled":
-          toast.info("Payment canceled. Redirecting to cart...");
-          setTimeout(() => {
-            window.location.href = "/cart";
-          }, 3000);
-          break;
-  
-        default:
-          console.error("Unhandled payment status:", status);
+      if (message === "true") {
+        console.log("Payment success detected.");
+        try {
+          const userId = localStorage.getItem("userId");
+
+          // Save transaction
+          const transactionPayload = {
+            userId,
+            items: cartItems,
+            totalAmount: getTotalCartAmount() + deliveryFee,
+            status: "Completed",
+            date: new Date(),
+          };
+          await axios.post(
+            "https://your-backend-url/api/transactions",
+            transactionPayload
+          );
+
+          // Update stock
+          const stockUpdates = cartItems.map((item) => ({
+            productId: item.id,
+            size: item.size,
+            quantity: item.quantity,
+          }));
+          await axios.post(
+            "https://your-backend-url/api/updateStock",
+            { updates: stockUpdates }
+          );
+
+          // Clear cart
+          await axios.delete(
+            `https://your-backend-url/api/clear-cart/${userId}`
+          );
+          clearCart();
+
+          toast.success("Payment successful! Order placed.");
+          navigate("/myorders");
+        } catch (error) {
+          console.error("Error processing payment success:", error);
+          toast.error("Failed to process your order. Please contact support.");
+        }
+      } else if (message === "false") {
+        console.log("Payment failed.");
+        toast.error("Payment failed. Please try again.");
+        navigate("/cart");
       }
     };
   
     handlePaymentStatus();
-  }, [location]);
+  }, [location.search, getTotalCartAmount, cartItems, deliveryFee, navigate, clearCart]);
 
 
   return (
