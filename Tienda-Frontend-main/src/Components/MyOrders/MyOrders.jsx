@@ -14,6 +14,7 @@ const getUserIdFromToken = () => {
 };
 
 const MyOrders = () => {
+  const { getTotalCartAmount, all_product, cartItems, clearCart } = useContext(ShopContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const currentUrl = window.location.href;
@@ -22,6 +23,18 @@ const MyOrders = () => {
   const userId = getUserIdFromToken();
   const status = params.get("status");
   const message = params.get("message");
+// Define the `data` state to hold user details
+const [data, setData] = useState({
+  firstName: "",
+  lastName: "",
+  email: "",
+  street: "",
+  city: "",
+  state: "",
+  zipcode: "",
+  country: "",
+  phone: "",
+});
 
   useEffect(() => {
     handleTransactionStatus(status);
@@ -85,6 +98,8 @@ const MyOrders = () => {
           quantity: item.quantity,
         })),
       });
+
+      clearCart();
 
       // Clear local storage and show success message
       localStorage.removeItem("cartDetails");
