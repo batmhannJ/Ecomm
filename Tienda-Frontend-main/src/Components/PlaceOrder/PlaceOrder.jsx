@@ -294,6 +294,8 @@ export const PlaceOrder = () => {
       const checkoutSession = sessionResponse.data.data;
   
       if (checkoutSession.attributes.checkout_url) {
+        window.location.href = checkoutSession.attributes.checkout_url;
+
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get("message") === "true") {
           const userId = localStorage.getItem("userId");
@@ -322,7 +324,6 @@ export const PlaceOrder = () => {
     
           clearCart();
         }
-        //window.location.href = checkoutSession.attributes.checkout_url;
         toast.success("Redirecting to payment gateway...");
       } else {
         toast.error("Failed to create checkout session. Please try again.");
