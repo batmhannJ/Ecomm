@@ -228,29 +228,28 @@ export const PlaceOrder = () => {
     const value = event.target.value;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
-
+  
   useEffect(() => {
-    console.log("Executing useEffect in PlaceOrder...");
-
-    const executePostPaymentActions = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      console.log("URL Params:", urlParams.toString()); // Debug
-
-      if (urlParams.get("message") === "true") {
-        console.log("Message is true"); // Debug
-
-        const userId = localStorage.getItem("userId");
-        //const referenceNumber = urlParams.get("referenceNumber"); // Ensure the reference number is passed in metadata
+    // Get the query parameters from the current URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasMessage = urlParams.get("message");
+  
+    // Execute the logic only if message=true
+    if (hasMessage === "true") {
+      console.log("Payment success detected: message=true");
+  
+      const executePostPaymentActions = async () => {
         const storedCheckoutData = JSON.parse(localStorage.getItem("checkoutData"));
-        const { data, itemDetails, referenceNumber } = storedCheckoutData || {};
-          
         if (!storedCheckoutData) {
           console.error("No checkout data found in localStorage");
           return;
         }
-
+  
+        const { data, itemDetails, referenceNumber } = storedCheckoutData;
+  
         try {
           // Save transaction details
+          console.log("Saving transaction details...");
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
             transactionId: referenceNumber,
             date: new Date(),
@@ -259,13 +258,15 @@ export const PlaceOrder = () => {
             item: itemDetails.map((item) => item.name).join(", "),
             quantity: itemDetails.reduce((sum, item) => sum + item.quantity, 0),
             amount: getTotalCartAmount() + deliveryFee,
-            deliveryFee: deliveryFee,
+            deliveryFee,
             address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
             status: "Cart Processing",
-            userId: userId,
+            userId: localStorage.getItem("userId"),
           });
-
+          console.log("Transaction saved successfully");
+  
           // Update stock
+          console.log("Updating stock...");
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
             updates: itemDetails.map((item) => ({
               id: item.id.toString(),
@@ -273,27 +274,28 @@ export const PlaceOrder = () => {
               quantity: item.quantity,
             })),
           });
-
+          console.log("Stock updated successfully");
+  
           // Clear cart
           clearCart();
-
+          console.log("Cart cleared successfully");
+  
           toast.success("Transaction successful! Redirecting to your orders...");
           navigate("/myorders");
         } catch (error) {
-          console.error("Post-payment error:", error);
+          console.error("Error during post-payment actions:", error);
           toast.error("An error occurred while processing your transaction. Please contact support.");
+        } finally {
+          localStorage.removeItem("checkoutData");
         }
-        finally {
-          localStorage.removeItem("checkoutData"); // Clean up stored data
-        }
-      }
-      else {
-        console.log("message=true not found in URL");
-      }
-    };
-
-    executePostPaymentActions();
-  }, [navigate]); // Empty dependency array ensures this runs once on component load
+      };
+  
+      executePostPaymentActions();
+    } else {
+      console.log("No valid message in URL, skipping post-payment actions.");
+    }
+  }, [navigate, getTotalCartAmount, deliveryFee, clearCart]);
+   // Empty dependency array ensures this runs once on component load
 
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
