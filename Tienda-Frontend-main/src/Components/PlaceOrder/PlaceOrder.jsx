@@ -214,7 +214,8 @@ export const PlaceOrder = () => {
     const name = event.target.name;
     const value = event.target.value;
     setData((prevData) => ({ ...prevData, [name]: value }));
-  };const handleProceedToCheckout = async (event) => {
+  };
+  const handleProceedToCheckout = async (event) => {
     event.preventDefault();
   
     if (!data.street || !data.city || !data.state || !data.zipcode) {
@@ -288,64 +289,23 @@ export const PlaceOrder = () => {
         },
       };
   
-      const sessionResponse = await axios.post(`${paymongoUrl}/checkout_sessions`, checkoutSessionPayload, { headers });
-      console.log("Checkout Session Response:", sessionResponse.data);
+      const sessionResponse = await axios.post(
+        `${paymongoUrl}/checkout_sessions`,
+        checkoutSessionPayload,
+        { headers }
+      );
   
       const checkoutSession = sessionResponse.data.data;
   
       if (checkoutSession.attributes.checkout_url) {
         window.location.href = checkoutSession.attributes.checkout_url;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get("message") === "true") {
-          const userId = localStorage.getItem("userId");
-    
-          await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
-            transactionId: referenceNumber,
-            date: new Date(),
-            name: `${data.name}`,
-            contact: data.phone,
-            item: cartDetails.map((item) => item.name).join(", "),
-            quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
-            amount: getTotalCartAmount() + deliveryFee,
-            deliveryFee: deliveryFee,
-            address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
-            status: "Cart Processing",
-            userId: userId,
-          });
-    
-          await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
-            updates: cartDetails.map((item) => ({
-              id: item.id.toString(),
-              size: item.size,
-              quantity: item.quantity,
-            })),
-          });
-    
-          clearCart();
-        }
         toast.success("Redirecting to payment gateway...");
       } else {
         toast.error("Failed to create checkout session. Please try again.");
       }
-  
-     
     } catch (error) {
-      if (error.response?.data?.errors) {
-        const errorDetails = error.response.data.errors[0]?.detail;
-        if (errorDetails.includes("authorized")) {
-          toast.error("Payment authorized but an error occurred. Please check your orders.");
-        } else if (errorDetails.includes("fail")) {
-          toast.error("Payment failed. Please try again.");
-        } else if (errorDetails.includes("expire")) {
-          toast.error("Payment expired. Please initiate a new payment.");
-        } else {
-          toast.error("Failed to process payment. Please try again.");
-        }
-      } else {
-        console.error("Checkout Error:", error.response || error);
-        toast.error("Failed to process payment. Please try again.");
-      }
+      console.error("Checkout Error:", error.response || error);
+      toast.error("Failed to process payment. Please try again.");
     }
   };
   

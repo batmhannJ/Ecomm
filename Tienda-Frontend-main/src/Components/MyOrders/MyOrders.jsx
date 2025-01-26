@@ -21,10 +21,14 @@ const MyOrders = () => {
   const params = url.searchParams;
   const userId = getUserIdFromToken();
   const status = params.get("status");
+  const message = params.get("message");
 
   useEffect(() => {
     handleTransactionStatus(status);
-  }, [status]);
+    if (message === "true") {
+      handlePostPaymentActions();
+    }
+  }, [status, message]);
 
   const handleTransactionStatus = (status) => {
     switch (status) {
@@ -38,6 +42,47 @@ const MyOrders = () => {
         toast.info("The transaction has been cancelled.");
         break;
       default:
+    }
+  };
+
+  const handlePostPaymentActions = async () => {
+    const referenceNumber = localStorage.getItem("referenceNumber");
+    const cartDetails = JSON.parse(localStorage.getItem("cartDetails"));
+    const deliveryFee = parseFloat(localStorage.getItem("deliveryFee"));
+
+    try {
+      // Save transaction details to the backend
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
+        transactionId: referenceNumber,
+        date: new Date(),
+        name: `${data.name}`,
+        contact: data.phone,
+        item: cartDetails.map((item) => item.name).join(", "),
+        quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
+        amount: getTotalCartAmount() + deliveryFee,
+        deliveryFee: deliveryFee,
+        address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
+        status: "Cart Processing",
+        userId: userId,
+      });
+
+      // Update stock information
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
+        updates: cartDetails.map((item) => ({
+          id: item.id.toString(),
+          size: item.size,
+          quantity: item.quantity,
+        })),
+      });
+
+      // Clear local storage and show success message
+      localStorage.removeItem("cartDetails");
+      localStorage.removeItem("referenceNumber");
+      localStorage.removeItem("deliveryFee");
+      toast.success("Order successfully placed!");
+    } catch (error) {
+      console.error("Post-payment error:", error);
+      toast.error("Failed to process order. Please contact support.");
     }
   };
 
