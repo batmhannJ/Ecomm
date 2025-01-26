@@ -333,8 +333,8 @@ export const PlaceOrder = () => {
             payment_method_types: ["gcash", "grab_pay", "paymaya", "card"],
             livemode: false,
             statement_descriptor: "Tienda",
-            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?message=true&referenceNumber=${referenceNumber}`,
-            cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?message=false`,
+            success_url: `https://ip-tienda-han.onrender.com/myorders?message=true&referenceNumber=${referenceNumber}`,
+            cancel_url: `https://ip-tienda-han.onrender.com/cart?message=false`,
             metadata: {
               reference_number: referenceNumber,
               delivery_fee: deliveryFee,
@@ -375,7 +375,7 @@ export const PlaceOrder = () => {
     }
   }, [navigate, getTotalCartAmount]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const handlePaymentStatus = async () => {
       const searchParams = new URLSearchParams(window.location.search);
       const transactionId = searchParams.get("transaction_id");
@@ -423,7 +423,7 @@ export const PlaceOrder = () => {
     };
   
     handlePaymentStatus();
-  }, [location]);
+  }, [location]);*/
 
 
   return (
