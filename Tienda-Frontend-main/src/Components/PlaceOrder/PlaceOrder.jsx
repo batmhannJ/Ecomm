@@ -228,20 +228,69 @@ export const PlaceOrder = () => {
     const value = event.target.value;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+  useEffect(() => {
+    const executePostPaymentActions = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+
+      if (urlParams.get("message") === "true") {
+        const userId = localStorage.getItem("userId");
+        const referenceNumber = urlParams.get("referenceNumber"); // Ensure the reference number is passed in metadata
+
+        try {
+          // Save transaction details
+          await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
+            transactionId: referenceNumber,
+            date: new Date(),
+            name: `${data.name}`,
+            contact: data.phone,
+            item: itemDetails.map((item) => item.name).join(", "),
+            quantity: itemDetails.reduce((sum, item) => sum + item.quantity, 0),
+            amount: getTotalCartAmount() + deliveryFee,
+            deliveryFee: deliveryFee,
+            address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
+            status: "Cart Processing",
+            userId: userId,
+          });
+
+          // Update stock
+          await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
+            updates: itemDetails.map((item) => ({
+              id: item.id.toString(),
+              size: item.size,
+              quantity: item.quantity,
+            })),
+          });
+
+          // Clear cart
+          clearCart();
+
+          toast.success("Transaction successful! Redirecting to your orders...");
+          navigate("/myorders");
+        } catch (error) {
+          console.error("Post-payment error:", error);
+          toast.error("An error occurred while processing your transaction. Please contact support.");
+        }
+      }
+    };
+
+    executePostPaymentActions();
+  }, []); // Empty dependency array ensures this runs once on component load
+
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
-  
+
     if (!data.street || !data.city || !data.state || !data.zipcode) {
       toast.error("Please provide your complete address to proceed with checkout.");
       return;
     }
-  
+
     if (!token) {
       toast.error("You are not logged in. Please log in to proceed.");
       navigate("/login");
       return;
     }
-  
+
     const referenceNumber = generateReferenceNumber();
     const cartDetails = itemDetails.map((item) => ({
       id: item.id,
@@ -250,20 +299,22 @@ export const PlaceOrder = () => {
       quantity: item.quantity,
       size: item.size,
     }));
-  
+
     const paymongoUrl = "https://api.paymongo.com/v1";
     const secretKey = process.env.REACT_APP_PAYMONGO_SECRET_KEY;
+
     if (!secretKey) {
       toast.error("Payment configuration error. Please contact support.");
       return;
     }
+
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Basic ${btoa(secretKey)}`,
     };
-  
+
     const totalAmount = (getTotalCartAmount() + deliveryFee) * 100; // Amount in cents
-  
+
     try {
       const deliveryFeeItem = {
         name: "Delivery Fee",
@@ -272,7 +323,7 @@ export const PlaceOrder = () => {
         quantity: 1,
         currency: "PHP",
       };
-  
+
       const checkoutSessionPayload = {
         data: {
           attributes: {
@@ -282,7 +333,7 @@ export const PlaceOrder = () => {
             payment_method_types: ["gcash", "grab_pay", "paymaya", "card"],
             livemode: false,
             statement_descriptor: "Tienda",
-            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?message=true`,
+            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?message=true&referenceNumber=${referenceNumber}`,
             cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?message=false`,
             metadata: {
               reference_number: referenceNumber,
@@ -301,70 +352,22 @@ export const PlaceOrder = () => {
           },
         },
       };
-  
+
       const sessionResponse = await axios.post(`${paymongoUrl}/checkout_sessions`, checkoutSessionPayload, { headers });
-      console.log("Checkout Session Response:", sessionResponse.data);
-  
+
       const checkoutSession = sessionResponse.data.data;
-  
+
       if (checkoutSession.attributes.checkout_url) {
         window.location.href = checkoutSession.attributes.checkout_url;
         toast.success("Redirecting to payment gateway...");
       } else {
         toast.error("Failed to create checkout session. Please try again.");
       }
-  
-      // If redirected URL has message=true, execute additional operations
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("message") === "true") {
-        const userId = localStorage.getItem("userId");
-  
-        // Save transaction details
-        await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
-          transactionId: referenceNumber,
-          date: new Date(),
-          name: `${data.name}`,
-          contact: data.phone,
-          item: cartDetails.map((item) => item.name).join(", "),
-          quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
-          amount: getTotalCartAmount() + deliveryFee,
-          deliveryFee: deliveryFee,
-          address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
-          status: "Cart Processing",
-          userId: userId,
-        });
-  
-        // Update stock
-        await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
-          updates: cartDetails.map((item) => ({
-            id: item.id.toString(),
-            size: item.size,
-            quantity: item.quantity,
-          })),
-        });
-  
-        // Clear cart
-        clearCart();
-      }
     } catch (error) {
-      if (error.response?.data?.errors) {
-        const errorDetails = error.response.data.errors[0]?.detail;
-        if (errorDetails.includes("authorized")) {
-          toast.error("Payment authorized but an error occurred. Please check your orders.");
-        } else if (errorDetails.includes("fail")) {
-          toast.error("Payment failed. Please try again.");
-        } else if (errorDetails.includes("expire")) {
-          toast.error("Payment expired. Please initiate a new payment.");
-        } else {
-          toast.error("Failed to process payment. Please try again.");
-        }
-      } else {
-        console.error("Checkout Error:", error.response || error);
-        toast.error("Failed to process payment. Please try again.");
-      }
+      console.error("Checkout Error:", error.response || error);
+      toast.error("Failed to process payment. Please try again.");
     }
   };
-  
 
   useEffect(() => {
     if (getTotalCartAmount() === 0) {
@@ -376,7 +379,7 @@ export const PlaceOrder = () => {
     const handlePaymentStatus = async () => {
       const searchParams = new URLSearchParams(window.location.search);
       const transactionId = searchParams.get("transaction_id");
-      const status = searchParams.get("status");
+      const status = searchParams.get("message");
   
       if (!transactionId) {
         console.error("No Transaction ID found in URL");
@@ -384,8 +387,8 @@ export const PlaceOrder = () => {
       }
   
       switch (status) {
-        case "success":
-        case "authorized":
+        case "true":
+        case "true":
           console.log(`Payment ${status}. Redirecting to orders...`);
           try {
             // Clear cart and redirect
