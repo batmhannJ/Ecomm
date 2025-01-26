@@ -225,7 +225,6 @@ export const PlaceOrder = () => {
     const value = event.target.value;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
-
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
   
@@ -255,6 +254,7 @@ export const PlaceOrder = () => {
       toast.error("Payment configuration error. Please contact support.");
       return;
     }
+  
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Basic ${btoa(secretKey)}`,
@@ -263,7 +263,6 @@ export const PlaceOrder = () => {
     const totalAmount = (getTotalCartAmount() + deliveryFee) * 100; // Amount in cents
   
     try {
-      // Step 1: Add Delivery Fee to Line Items
       const deliveryFeeItem = {
         name: "Delivery Fee",
         description: "Delivery to your address",
@@ -272,23 +271,21 @@ export const PlaceOrder = () => {
         currency: "PHP",
       };
   
-      // Step 2: Create a Checkout Session
       const checkoutSessionPayload = {
         data: {
           attributes: {
-            amount: totalAmount, // Optional if `line_items` is detailed
+            amount: totalAmount,
             description: `Payment for Order ${referenceNumber}`,
             currency: "PHP",
-            payment_method_types: ["gcash", "grab_pay", "paymaya", "card"], // Allow multiple e-wallets
-            livemode: false, // Set to true for production
+            payment_method_types: ["gcash", "grab_pay", "paymaya", "card"],
+            livemode: false,
             statement_descriptor: "Tienda",
-            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?transaction_id=${referenceNumber}&status=success`,
-            cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?status=canceled`,
+            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?message=true&transaction_id=${referenceNumber}`,
+            cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?message=false`,
             metadata: {
               reference_number: referenceNumber,
-              delivery_fee: deliveryFee, // Include delivery fee in metadata
+              delivery_fee: deliveryFee,
             },
-            // Include line_items with delivery fee
             line_items: [
               ...cartDetails.map((item) => ({
                 name: item.name,
@@ -303,64 +300,23 @@ export const PlaceOrder = () => {
         },
       };
   
-      const sessionResponse = await axios.post(`${paymongoUrl}/checkout_sessions`, checkoutSessionPayload, { headers });
-      console.log("Checkout Session Response:", sessionResponse.data);
+      const sessionResponse = await axios.post(
+        `${paymongoUrl}/checkout_sessions`,
+        checkoutSessionPayload,
+        { headers }
+      );
   
       const checkoutSession = sessionResponse.data.data;
   
-      // Redirect to Checkout URL
       if (checkoutSession.attributes.checkout_url) {
         window.location.href = checkoutSession.attributes.checkout_url;
         toast.success("Redirecting to payment gateway...");
       } else {
         toast.error("Failed to create checkout session. Please try again.");
       }
-  
-      // Save transaction details (including delivery fee)
-      const userId = localStorage.getItem("userId");
-      await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
-        transactionId: referenceNumber,
-        date: new Date(),
-        name: `${data.name}`,
-        contact: data.phone,
-        item: cartDetails.map((item) => item.name).join(", "),
-        quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
-        amount: getTotalCartAmount() + deliveryFee,
-        deliveryFee: deliveryFee, // Include delivery fee
-        address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
-        status: "Cart Processing",
-        userId: userId,
-      });
-  
-      // Update stock
-      await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
-        updates: cartDetails.map((item) => ({
-          id: item.id.toString(),
-          size: item.size,
-          quantity: item.quantity,
-        })),
-      });
-  
-      clearCart();
     } catch (error) {
-      if (error.response?.data?.errors) {
-        console.error("Response Data:", error.response.data);
-        console.error("Response Status:", error.response.status);
-        console.error("Response Headers:", error.response.headers);
-        const errorDetails = error.response.data.errors[0]?.detail;
-        if (errorDetails.includes("authorized")) {
-          toast.error("Payment authorized but an error occurred. Please check your orders.");
-        } else if (errorDetails.includes("fail")) {
-          toast.error("Payment failed. Please try again.");
-        } else if (errorDetails.includes("expire")) {
-          toast.error("Payment expired. Please initiate a new payment.");
-        } else {
-          toast.error("Failed to process payment. Please try again.");
-        }
-      } else {
-        console.error("Checkout Error:", error.response || error);
-        toast.error("Failed to process payment. Please try again.");
-      }
+      console.error("Checkout Error:", error);
+      toast.error("Failed to process payment. Please try again.");
     }
   };
   
@@ -371,7 +327,6 @@ export const PlaceOrder = () => {
       navigate("/cart");
     }
   }, [navigate, getTotalCartAmount]);
-
   useEffect(() => {
     const handlePaymentStatus = async () => {
       const searchParams = new URLSearchParams(window.location.search);
@@ -387,7 +342,7 @@ export const PlaceOrder = () => {
         console.log("Payment success detected.");
         try {
           const userId = localStorage.getItem("userId");
-
+  
           // Save transaction
           const transactionPayload = {
             userId,
@@ -396,28 +351,36 @@ export const PlaceOrder = () => {
             status: "Completed",
             date: new Date(),
           };
-          await axios.post(
-            "https://your-backend-url/api/transactions",
-            transactionPayload
-          );
-
+          await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
+            transactionId: referenceNumber,
+            date: new Date(),
+            name: `${data.name}`,
+            contact: data.phone,
+            item: cartDetails.map((item) => item.name).join(", "),
+            quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
+            amount: getTotalCartAmount() + deliveryFee,
+            deliveryFee: deliveryFee, // Include delivery fee
+            address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
+            status: "Cart Processing",
+            userId: userId,
+          });
+      
+  
           // Update stock
           const stockUpdates = cartItems.map((item) => ({
             productId: item.id,
             size: item.size,
             quantity: item.quantity,
           }));
-          await axios.post(
-            "https://your-backend-url/api/updateStock",
-            { updates: stockUpdates }
-          );
-
-          // Clear cart
-          await axios.delete(
-            `https://your-backend-url/api/clear-cart/${userId}`
-          );
+          await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
+            updates: cartDetails.map((item) => ({
+              id: item.id.toString(),
+              size: item.size,
+              quantity: item.quantity,
+            })),
+          });
+  
           clearCart();
-
           toast.success("Payment successful! Order placed.");
           navigate("/myorders");
         } catch (error) {
@@ -433,8 +396,7 @@ export const PlaceOrder = () => {
   
     handlePaymentStatus();
   }, [location.search, getTotalCartAmount, cartItems, deliveryFee, navigate, clearCart]);
-
-
+  
   return (
     <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
       <div className="place-order-left">
