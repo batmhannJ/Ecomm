@@ -228,13 +228,10 @@ export const PlaceOrder = () => {
     const value = event.target.value;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
-  
   useEffect(() => {
-    // Get the query parameters from the current URL
     const urlParams = new URLSearchParams(window.location.search);
     const hasMessage = urlParams.get("message");
   
-    // Execute the logic only if message=true
     if (hasMessage === "true") {
       console.log("Payment success detected: message=true");
   
@@ -248,7 +245,6 @@ export const PlaceOrder = () => {
         const { data, itemDetails, referenceNumber } = storedCheckoutData;
   
         try {
-          // Save transaction details
           console.log("Saving transaction details...");
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
             transactionId: referenceNumber,
@@ -265,7 +261,6 @@ export const PlaceOrder = () => {
           });
           console.log("Transaction saved successfully");
   
-          // Update stock
           console.log("Updating stock...");
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
             updates: itemDetails.map((item) => ({
@@ -276,7 +271,6 @@ export const PlaceOrder = () => {
           });
           console.log("Stock updated successfully");
   
-          // Clear cart
           clearCart();
           console.log("Cart cleared successfully");
   
@@ -295,7 +289,7 @@ export const PlaceOrder = () => {
       console.log("No valid message in URL, skipping post-payment actions.");
     }
   }, [navigate, getTotalCartAmount, deliveryFee, clearCart]);
-   // Empty dependency array ensures this runs once on component load
+  
 
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
