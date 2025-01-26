@@ -115,9 +115,7 @@ useEffect(() => {
           id: item.id.toString(),
           size: item.size,
           quantity: item.quantity,
-        }))
-        .then(response => console.log('Stock Updated:', response.data))
-        .catch(error => console.error('Error updating stock:', error))
+        })),
       });
 
       clearCart();
@@ -155,7 +153,7 @@ useEffect(() => {
     fetchOrders();
 
     // Initialize Socket.IO
-    const socket = io("https://ip-tienda-han-backend.onrender.com/myorders?message=true");
+    const socket = io("https://ip-tienda-han-backend.onrender.com/myorders");
 
     // Listen for real-time updates on order status
     socket.on("orderUpdated", (updatedOrder) => {
