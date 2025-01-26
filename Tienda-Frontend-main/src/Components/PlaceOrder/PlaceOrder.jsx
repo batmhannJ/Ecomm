@@ -327,16 +327,16 @@ export const PlaceOrder = () => {
       navigate("/cart");
     }
   }, [navigate, getTotalCartAmount]);
-
   useEffect(() => {
     const handlePaymentStatus = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const transactionId = searchParams.get("transaction_id");
-      const message = searchParams.get("message");
-      const referenceNumber = generateReferenceNumber();
-
-      if (!transactionId) {
-        console.error("No Transaction ID found in URL");
+      // Extract query parameters from the URL
+      const url = new URL(window.location.href);
+      const message = url.searchParams.get("message");
+      const paymentIntentId = url.searchParams.get("payment_intent_id");
+      const transactionId = paymentIntentId || generateReferenceNumber(); // Use paymentIntentId if available
+  
+      if (!message) {
+        console.error("No message parameter found in the URL.");
         return;
       }
   
@@ -345,36 +345,31 @@ export const PlaceOrder = () => {
         try {
           const userId = localStorage.getItem("userId");
   
-          // Save transaction
-          const cartDetails = itemDetails.map((item) => ({
+          // Prepare cart details for transaction
+          const cartDetails = cartItems.map((item) => ({
             id: item.id,
             name: item.name,
             price: item.price || item.adjustedPrice,
             quantity: item.quantity,
             size: item.size,
           }));
-
+  
+          // Save transaction to the backend
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
-            transactionId: referenceNumber,
+            transactionId,
             date: new Date(),
             name: `${data.name}`,
             contact: data.phone,
             item: cartDetails.map((item) => item.name).join(", "),
             quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
             amount: getTotalCartAmount() + deliveryFee,
-            deliveryFee: deliveryFee, // Include delivery fee
+            deliveryFee,
             address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
-            status: "Cart Processing",
-            userId: userId,
+            status: "Completed",
+            userId,
           });
-      
   
           // Update stock
-          const stockUpdates = cartItems.map((item) => ({
-            productId: item.id,
-            size: item.size,
-            quantity: item.quantity,
-          }));
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
             updates: cartDetails.map((item) => ({
               id: item.id.toString(),
@@ -383,7 +378,12 @@ export const PlaceOrder = () => {
             })),
           });
   
+          // Clear cart
+          await axios.delete(
+            `https://ip-tienda-han-backend.onrender.com/api/clear-cart/${userId}`
+          );
           clearCart();
+  
           toast.success("Payment successful! Order placed.");
           navigate("/myorders");
         } catch (error) {
@@ -398,7 +398,7 @@ export const PlaceOrder = () => {
     };
   
     handlePaymentStatus();
-  }, [location.search, getTotalCartAmount, cartItems, deliveryFee, navigate, clearCart]);
+  }, [location.search, cartItems, data, deliveryFee, navigate, clearCart, getTotalCartAmount]);
   
   return (
     <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
