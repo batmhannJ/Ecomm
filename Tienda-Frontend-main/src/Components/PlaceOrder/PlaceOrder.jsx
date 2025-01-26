@@ -298,10 +298,16 @@ export const PlaceOrder = () => {
         checkoutSessionPayload,
         { headers }
       );
+
+      
   
       const checkoutSession = sessionResponse.data.data;
   
       if (checkoutSession.attributes.checkout_url) {
+        localStorage.setItem("referenceNumber", referenceNumber);
+        localStorage.setItem("cartDetails", JSON.stringify(cartDetails));
+        localStorage.setItem("deliveryFee", deliveryFee);
+        localStorage.setItem("userData", JSON.stringify(data));
         window.location.href = checkoutSession.attributes.checkout_url;
         toast.success("Redirecting to payment gateway...");
       } else {

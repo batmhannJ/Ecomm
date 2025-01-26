@@ -14,8 +14,15 @@ const getUserIdFromToken = () => {
   return null;
 };
 
+
+const getTotalCartAmount = () => {
+  const cartDetails = JSON.parse(localStorage.getItem("cartDetails"));
+  if (!cartDetails) return 0;
+  return cartDetails.reduce((total, item) => total + item.price * item.quantity, 0);
+};
+
 const MyOrders = () => {
-  const { getTotalCartAmount, all_product, cartItems, clearCart } = useContext(ShopContext);
+  const { all_product, cartItems, clearCart } = useContext(ShopContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const currentUrl = window.location.href;
@@ -37,6 +44,33 @@ const [data, setData] = useState({
   phone: "",
 });
 
+
+const handleTransactionStatus = (status) => {
+  switch (status) {
+    case "failed":
+      toast.warn("The transaction Failed.");
+      break;
+    case "success":
+      toast.success("The transaction has been processed successfully.");
+      break;
+    case "cancelled":
+      toast.info("The transaction has been cancelled.");
+      break;
+    default:
+  }
+};
+
+  useEffect(() => {
+    // Fetch user data from localStorage
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      setData(parsedUserData); // Set the `data` state
+    } else {
+      toast.error("User data not found. Please ensure you are logged in.");
+    }
+  }, []); 
+
   useEffect(() => {
     handleTransactionStatus(status);
     if (message === "true") {
@@ -44,37 +78,16 @@ const [data, setData] = useState({
     }
   }, [status, message]);
 
-  const handleTransactionStatus = (status) => {
-    switch (status) {
-      case "failed":
-        toast.warn("The transaction Failed.");
-        break;
-      case "success":
-        toast.success("The transaction has been processed successfully.");
-        break;
-      case "cancelled":
-        toast.info("The transaction has been cancelled.");
-        break;
-      default:
-    }
-  };
-
-  useEffect(() => {
-    // Fetch user data from localStorage
-    const storedUserData = localStorage.getItem("userData");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setData(parsedUserData);
-    } else {
-      toast.error("User data not found. Please ensure you are logged in.");
-    }
-  }, []);
-
   const handlePostPaymentActions = async () => {
     const referenceNumber = localStorage.getItem("referenceNumber");
     const cartDetails = JSON.parse(localStorage.getItem("cartDetails"));
     const deliveryFee = parseFloat(localStorage.getItem("deliveryFee"));
 
+    console.log("Reference Number:", referenceNumber);
+    console.log("Cart Details:", cartDetails);
+    console.log("Delivery Fee:", deliveryFee);
+    console.log("User Data:", data);
+  
     try {
       // Save transaction details to the backend
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
