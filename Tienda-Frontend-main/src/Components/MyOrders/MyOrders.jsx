@@ -115,7 +115,9 @@ useEffect(() => {
           id: item.id.toString(),
           size: item.size,
           quantity: item.quantity,
-        })),
+        }))
+        .then(response => console.log('Stock Updated:', response.data))
+        .catch(error => console.error('Error updating stock:', error))
       });
 
       clearCart();
