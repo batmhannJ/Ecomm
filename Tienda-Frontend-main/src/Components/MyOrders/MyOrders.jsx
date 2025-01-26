@@ -45,6 +45,17 @@ const MyOrders = () => {
     }
   };
 
+  useEffect(() => {
+    // Fetch user data from localStorage
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      setData(parsedUserData);
+    } else {
+      toast.error("User data not found. Please ensure you are logged in.");
+    }
+  }, []);
+
   const handlePostPaymentActions = async () => {
     const referenceNumber = localStorage.getItem("referenceNumber");
     const cartDetails = JSON.parse(localStorage.getItem("cartDetails"));
@@ -55,7 +66,7 @@ const MyOrders = () => {
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
         date: new Date(),
-        name: `${data.name}`,
+        name: `${data.firstName} ${data.lastName}`,
         contact: data.phone,
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),

@@ -97,7 +97,7 @@ export const PlaceOrder = () => {
 
           console.log("Selected Province:", selectedProvince);
 
-          setData({
+          const userData = {
             firstName: loggedInUser.name.split(" ")[0] || "",
             lastName: loggedInUser.name.split(" ")[1] || "",
             email: loggedInUser.email || "",
@@ -108,7 +108,11 @@ export const PlaceOrder = () => {
             zipcode: zip || "",
             country: country || "Philippines",
             phone: loggedInUser.phone || "",
-          });
+          };
+          setData(userData);
+
+          // Store the user data in localStorage
+          localStorage.setItem("userData", JSON.stringify(userData));
         } else {
           console.error("Logged-in user not found.");
           toast.error("Error fetching logged-in user's data.");
