@@ -327,12 +327,14 @@ export const PlaceOrder = () => {
       navigate("/cart");
     }
   }, [navigate, getTotalCartAmount]);
+
   useEffect(() => {
     const handlePaymentStatus = async () => {
       const searchParams = new URLSearchParams(window.location.search);
       const transactionId = searchParams.get("transaction_id");
       const message = searchParams.get("message");
-  
+      const referenceNumber = generateReferenceNumber();
+
       if (!transactionId) {
         console.error("No Transaction ID found in URL");
         return;
@@ -344,13 +346,14 @@ export const PlaceOrder = () => {
           const userId = localStorage.getItem("userId");
   
           // Save transaction
-          const transactionPayload = {
-            userId,
-            items: cartItems,
-            totalAmount: getTotalCartAmount() + deliveryFee,
-            status: "Completed",
-            date: new Date(),
-          };
+          const cartDetails = itemDetails.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price || item.adjustedPrice,
+            quantity: item.quantity,
+            size: item.size,
+          }));
+          
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
             transactionId: referenceNumber,
             date: new Date(),
