@@ -58,18 +58,21 @@ export const PlaceOrder = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("https://ip-tienda-han-backend.onrender.com/api/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "https://ip-tienda-han-backend.onrender.com/api/users",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const allUsersData = response.data;
         const loggedInUserId = localStorage.getItem("userId");
-
+  
         const loggedInUser = allUsersData.find(
           (user) => user._id === loggedInUserId
         );
-
+  
         if (loggedInUser) {
           const {
             barangay,
@@ -79,14 +82,13 @@ export const PlaceOrder = () => {
             street,
             zip,
             country,
-          } = loggedInUser.address;
-
-          const barangayName = await barangays(municipality);
-          const cityData = await cities(province);
-          const provincesData = await provincesByCode(region);
-          console.log("Province Data:", provincesData); // See the structure of the provinceData array
-          console.log("Province Code:", province);
-
+          } = loggedInUser.address || {}; // Safely access address fields
+  
+          // Fetch barangay, city, and province names
+          const barangayName = municipality ? await barangays(municipality) : [];
+          const cityData = province ? await cities(province) : [];
+          const provincesData = region ? await provincesByCode(region) : [];
+  
           const selectedBarangay =
             barangayName.find((b) => b.brgy_code === barangay)?.brgy_name || "";
           const selectedCity =
@@ -94,12 +96,10 @@ export const PlaceOrder = () => {
           const selectedProvince =
             provincesData.find((p) => p.province_code === province)
               ?.province_name || "";
-
-          console.log("Selected Province:", selectedProvince);
-
+  
           const userData = {
-            firstName: loggedInUser.name.split(" ")[0] || "",
-            lastName: loggedInUser.name.split(" ")[1] || "",
+            firstName: loggedInUser.name?.split(" ")[0] || "",
+            lastName: loggedInUser.name?.split(" ")[1] || "",
             email: loggedInUser.email || "",
             street: street || "",
             barangay: selectedBarangay || "",
@@ -109,9 +109,10 @@ export const PlaceOrder = () => {
             country: country || "Philippines",
             phone: loggedInUser.phone || "",
           };
+  
+          // Log and store userData
+          console.log("Fetched User Data:", userData);
           setData(userData);
-
-          // Store the user data in localStorage
           localStorage.setItem("userData", JSON.stringify(userData));
         } else {
           console.error("Logged-in user not found.");
@@ -122,26 +123,32 @@ export const PlaceOrder = () => {
         toast.error("Error fetching user data.");
       }
     };
-
+  
     const fetchProvinceData = async () => {
       try {
-        const regionCode = "some-region-code"; // Replace with the actual region code
+        const regionCode = "some-region-code"; // Ensure regionCode is dynamically fetched
         const provincesData = await provincesByCode(regionCode);
-        setData((prevData) => ({ ...prevData, provinces: provincesData }));
-        console.log("Provinces Data:", provincesData);
+  
+        if (provincesData) {
+          setData((prevData) => ({ ...prevData, provinces: provincesData }));
+          console.log("Provinces Data:", provincesData);
+        } else {
+          console.error("No provinces data found for region:", regionCode);
+        }
       } catch (error) {
         console.error("Error fetching province data:", error);
       }
     };
-
+  
     if (token) {
       fetchUserData(); // Call to fetch user data
-      fetchProvinceData(); // Fetch province data here
+      fetchProvinceData(); // Call to fetch province data
     } else {
       toast.error("Please log in to proceed.");
       navigate("/login");
     }
   }, [token, navigate]);
+  
 
   const fetchCoordinates = async (address) => {
     const apiKey = process.env.REACT_APP_POSITION_STACK_API_KEY; // Set this in your .env file
