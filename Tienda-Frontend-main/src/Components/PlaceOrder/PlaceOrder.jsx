@@ -230,6 +230,8 @@ export const PlaceOrder = () => {
   };
 
   useEffect(() => {
+    console.log("Executing useEffect in PlaceOrder...");
+
     const executePostPaymentActions = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       console.log("URL Params:", urlParams.toString()); // Debug
@@ -241,11 +243,12 @@ export const PlaceOrder = () => {
         //const referenceNumber = urlParams.get("referenceNumber"); // Ensure the reference number is passed in metadata
         const storedCheckoutData = JSON.parse(localStorage.getItem("checkoutData"));
         const { data, itemDetails, referenceNumber } = storedCheckoutData || {};
-  
-if (!storedCheckoutData) {
-  console.error("No checkout data found in localStorage");
-  return;
-}
+          
+        if (!storedCheckoutData) {
+          console.error("No checkout data found in localStorage");
+          return;
+        }
+
         try {
           // Save transaction details
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
@@ -283,6 +286,9 @@ if (!storedCheckoutData) {
         finally {
           localStorage.removeItem("checkoutData"); // Clean up stored data
         }
+      }
+      else {
+        console.log("message=true not found in URL");
       }
     };
 
@@ -514,6 +520,8 @@ if (!storedCheckoutData) {
             </div>
           </div>
           <button type="submit">PROCEED TO PAYMENT</button>
+          <button onClick={executePostPaymentActions}>Test Post Payment</button>
+
         </div>
       </div>
     </form>
