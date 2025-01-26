@@ -280,7 +280,7 @@ export const PlaceOrder = () => {
             payment_method_types: ["gcash", "grab_pay", "paymaya", "card"],
             livemode: false,
             statement_descriptor: "Tienda",
-            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?message=true&transaction_id=${referenceNumber}`,
+            success_redirect_url: `https://ip-tienda-han.onrender.com/myorders?message=true`,
             cancel_redirect_url: `https://ip-tienda-han.onrender.com/cart?message=false`,
             metadata: {
               reference_number: referenceNumber,
@@ -353,7 +353,7 @@ export const PlaceOrder = () => {
             quantity: item.quantity,
             size: item.size,
           }));
-          
+
           await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
             transactionId: referenceNumber,
             date: new Date(),
