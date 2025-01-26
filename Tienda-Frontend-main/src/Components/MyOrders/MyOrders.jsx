@@ -85,24 +85,26 @@ useEffect(() => {
     const referenceNumber = localStorage.getItem("referenceNumber");
     const cartDetails = JSON.parse(localStorage.getItem("cartDetails"));
     const deliveryFee = parseFloat(localStorage.getItem("deliveryFee"));
+    const storedUserData = localStorage.getItem("userData");
 
     console.log("Reference Number:", referenceNumber);
     console.log("Cart Details:", cartDetails);
     console.log("Delivery Fee:", deliveryFee);
-    console.log("User Data:", data);
-  
+    console.log("User Data:", storedUserData);
+    const userData = storedUserData ? JSON.parse(storedUserData) : null;
+
     try {
       // Save transaction details to the backend
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
         date: new Date(),
-        name: `${data.firstName} ${data.lastName}`,
-        contact: data.phone,
+        name: `${userData.firstName} ${userData.lastName}`,
+        contact: userData.phone,
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
         amount: getTotalCartAmount() + deliveryFee,
         deliveryFee: deliveryFee,
-        address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
+        address: `${userData.street} ${userData.city} ${userData.state} ${userData.zipcode} ${userData.country}`,
         status: "Cart Processing",
         userId: userId,
       });
