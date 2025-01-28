@@ -57,6 +57,9 @@ function UserManagement() {
   };
 
   const handleDeleteUser = async (id, index) => {
+    const confirmation = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmation) return; // Exit if the user cancels the confirmation
+  
     try {
       console.log("Attempting to delete admin with ID:", id); // Debugging log
       await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/deleteadmin/${id}`);
@@ -68,6 +71,7 @@ function UserManagement() {
       console.error("Error deleting user:", error);
     }
   };
+  
   
 
   const handleViewUser = (index) => {
