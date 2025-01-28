@@ -99,7 +99,7 @@ router.post('/send-otp', async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: process.env.EMAIL,
+      from: process.env.EMAIL_USER,
       to: email,
       subject: 'Your OTP Code',
       text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
