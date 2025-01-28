@@ -73,30 +73,31 @@ router.delete("/:id", async (req, res) => {
 
 router.post('/send-otp', async (req, res) => {
   const { email } = req.body;
-
+  console.log('Received request to send OTP to:', email);
+  console.log('Generated OTP:', otp);
   if (!email) {
     return res.status(400).json({ success: false, message: 'Email is required' });
   }
 
-  try {
+
     // Generate OTP (6 digits)
     const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
     const otp = generateOtp();
     console.log(`Generated OTP: ${otp}`);
 
     otpStore[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // 5-minute expiry
-
-    // Save OTP in database (optional: set expiration time)
-    //await AdminUser.updateOne({ email }, { otp, otpExpiry: Date.now() + 10 * 60 * 1000 }); // Expires in 10 minutes
-
-    // Send OTP via email
+  try {
+    console.log('Setting up transporter...');
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // true for 465, false for other ports
       auth: {
         user: process.env.EMAIL_USER, // Your email
         pass: process.env.EMAIL_PASSWORD, // Your email password
       },
     });
+    console.log('Sending email...');
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -104,8 +105,7 @@ router.post('/send-otp', async (req, res) => {
       subject: 'Your OTP Code',
       text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
     });
-
-
+    console.log('Email sent successfully');
     res.json({ success: true, message: 'OTP sent successfully' });
   } catch (error) {
     console.error('Error sending OTP:', error);
