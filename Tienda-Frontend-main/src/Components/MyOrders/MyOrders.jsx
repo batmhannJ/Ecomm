@@ -1,4 +1,4 @@
-import React, { useLocation, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ShopContext } from "../../Context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -151,14 +151,6 @@ useEffect(() => {
 
   // Initial fetch and real-time update listener setup
   useEffect(() => {
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const message = params.get("message");
-  
-    // Fetch orders immediately if redirected with message=true
-    if (message === "true") {
-      fetchOrders();
-    }
     // Initial fetch of orders
     fetchOrders();
 
