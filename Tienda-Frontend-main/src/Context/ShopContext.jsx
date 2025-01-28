@@ -298,7 +298,7 @@ const ShopContextProvider = (props) => {
       console.log("Cart cleared successfully.");
     } catch (error) {
       console.error("Error clearing cart:", error);
-      toast.error("Failed to clear cart. Please try again.");
+      //toast.error("Failed to clear cart. Please try again.");
     }
   };
   
