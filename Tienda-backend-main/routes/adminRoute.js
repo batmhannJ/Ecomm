@@ -81,8 +81,8 @@ router.post('/send-otp', async (req, res) => {
   try {
     // Generate OTP (6 digits)
     const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`Generated OTP: ${otp}`);
     const otp = generateOtp();
+    console.log(`Generated OTP: ${otp}`);
 
     otpStore[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // 5-minute expiry
 
@@ -105,7 +105,7 @@ router.post('/send-otp', async (req, res) => {
       text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
     });
 
-    
+
     res.json({ success: true, message: 'OTP sent successfully' });
   } catch (error) {
     console.error('Error sending OTP:', error);
