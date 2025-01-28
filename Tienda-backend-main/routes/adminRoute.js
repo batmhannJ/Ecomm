@@ -69,4 +69,72 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.post('/send-otp', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email is required' });
+  }
+
+  try {
+    // Generate OTP (6 digits)
+    const otp = crypto.randomInt(100000, 999999);
+
+    // Save OTP in database (optional: set expiration time)
+    await AdminUser.updateOne({ email }, { otp, otpExpiry: Date.now() + 10 * 60 * 1000 }); // Expires in 10 minutes
+
+    // Send OTP via email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER, // Your email
+        pass: process.env.EMAIL_PASSWORD, // Your email password
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'Your OTP Code',
+      text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
+    });
+
+    res.json({ success: true, message: 'OTP sent successfully' });
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).json({ success: false, message: 'Error sending OTP' });
+  }
+});
+
+router.post('/verify-otp', async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ success: false, message: 'Email and OTP are required' });
+  }
+
+  try {
+    // Find admin by email
+    const admin = await AdminUser.findOne({ email });
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: 'Admin not found' });
+    }
+
+    // Check OTP and expiration
+    if (admin.otp === otp && admin.otpExpiry > Date.now()) {
+      // Clear OTP after successful verification
+      await AdminUser.updateOne({ email }, { $unset: { otp: '', otpExpiry: '' } });
+
+      res.json({ success: true, message: 'OTP verified successfully' });
+    } else {
+      res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    res.status(500).json({ success: false, message: 'Error verifying OTP' });
+  }
+});
+
+
 module.exports = router;

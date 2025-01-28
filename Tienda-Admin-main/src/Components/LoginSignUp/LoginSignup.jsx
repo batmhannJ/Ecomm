@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { adminLogin, adminSignup } from '../../services/api'; // Add adminSignup API
+import { adminLogin, adminSignup, sendOtp, verifyOtp } from '../../services/api'; // Add adminSignup API
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
