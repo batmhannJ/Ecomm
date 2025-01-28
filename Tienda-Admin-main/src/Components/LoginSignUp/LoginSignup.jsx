@@ -30,6 +30,15 @@ const LoginSignup = () => {
       toast.error('Please fill in all fields.');
       return;
     }
+
+    if (isSignup) {
+      // Password validation (only during Sign Up)
+      const passwordRegex = /^(?=.*[A-Z]).{8,20}$/; // At least one uppercase, 8-20 characters
+      if (!passwordRegex.test(password)) {
+        toast.error('Password must be between 8 and 20 characters and contain at least one uppercase letter.');
+        return;
+      }
+    }
   
     try {
       if (isSignup) {
