@@ -71,10 +71,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 router.post('/send-otp', async (req, res) => {
   const { email } = req.body;
 
@@ -84,8 +80,11 @@ router.post('/send-otp', async (req, res) => {
 
   try {
     // Generate OTP (6 digits)
-    const otp = getRandomInt(100000, 999999); // Generate 6-digit OTP
+    const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
     console.log(`Generated OTP: ${otp}`);
+    const otp = generateOtp();
+
+    otpStore[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // 5-minute expiry
 
     // Save OTP in database (optional: set expiration time)
     await AdminUser.updateOne({ email }, { otp, otpExpiry: Date.now() + 10 * 60 * 1000 }); // Expires in 10 minutes
@@ -112,7 +111,6 @@ router.post('/send-otp', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error sending OTP' });
   }
 });
-
 router.post('/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
 
@@ -120,28 +118,21 @@ router.post('/verify-otp', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Email and OTP are required' });
   }
 
-  try {
-    // Find admin by email
-    const admin = await AdminUser.findOne({ email });
+  const storedOtpData = otpStore[email];
 
-    if (!admin) {
-      return res.status(404).json({ success: false, message: 'Admin not found' });
-    }
+  if (!storedOtpData) {
+    return res.status(400).json({ success: false, message: 'No OTP found for this email' });
+  }
 
-    // Check OTP and expiration
-    if (admin.otp === otp && admin.otpExpiry > Date.now()) {
-      // Clear OTP after successful verification
-      await AdminUser.updateOne({ email }, { $unset: { otp: '', otpExpiry: '' } });
-
-      res.json({ success: true, message: 'OTP verified successfully' });
-    } else {
-      res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
-    }
-  } catch (error) {
-    console.error('Error verifying OTP:', error);
-    res.status(500).json({ success: false, message: 'Error verifying OTP' });
+  if (storedOtpData.otp === otp && storedOtpData.expiresAt > Date.now()) {
+    // Clear OTP after successful verification
+    delete otpStore[email];
+    return res.json({ success: true, message: 'OTP verified successfully' });
+  } else {
+    return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
   }
 });
+
 
 
 module.exports = router;
