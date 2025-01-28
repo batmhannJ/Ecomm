@@ -275,10 +275,33 @@ const ShopContextProvider = (props) => {
     }
   };
 
-  const clearCart = () => {
-    setCartItems({}); // Assuming you're using an object to store cart items by productId
+  const clearCart = async () => {
+    try {
+      const userId = localStorage.getItem("userId"); // Retrieve user ID
+      if (!userId) {
+        console.error("User ID is missing. Cannot clear cart.");
+        return;
+      }
+  
+      // Call backend API to clear cart items in the database
+      await axios.delete(`https://ip-tienda-han-backend.onrender.com/api/cart/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+        },
+      });
+  
+      // Clear cart items in the context state
+      setCartItems({});
+  
+      // Remove cart details from local storage
+      localStorage.removeItem("cartDetails");
+      console.log("Cart cleared successfully.");
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+      toast.error("Failed to clear cart. Please try again.");
+    }
   };
-
+  
   const increaseItemQuantity = async (productId, selectedSize) => {
     const userId = localStorage.getItem("userId");
   

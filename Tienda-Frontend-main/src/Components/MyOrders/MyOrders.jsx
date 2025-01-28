@@ -118,8 +118,10 @@ useEffect(() => {
         })),
       });
 
+      console.log("Clearing cart...");
       clearCart();
-
+      console.log("Cart cleared");
+      
       // Clear local storage and show success message
       localStorage.removeItem("cartDetails");
       localStorage.removeItem("referenceNumber");
