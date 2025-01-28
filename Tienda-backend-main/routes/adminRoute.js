@@ -82,7 +82,7 @@ router.post('/send-otp', async (req, res) => {
 
     // Generate OTP (6 digits)
     const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
-    const otp = generateOtp();
+    //const otp = generateOtp();
     console.log(`Generated OTP: ${otp}`);
 
     otpStore[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // 5-minute expiry
