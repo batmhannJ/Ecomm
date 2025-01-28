@@ -71,69 +71,80 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 router.post('/send-otp', async (req, res) => {
   const { email } = req.body;
-  console.log('Received request to send OTP to:', email);
-  console.log('Generated OTP:', otp);
+
   if (!email) {
     return res.status(400).json({ success: false, message: 'Email is required' });
   }
 
-
+  try {
     // Generate OTP (6 digits)
-    const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
-    //const otp = generateOtp();
+    const otp = getRandomInt(100000, 999999); // Generate 6-digit OTP
     console.log(`Generated OTP: ${otp}`);
 
-    otpStore[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // 5-minute expiry
-  try {
-    console.log('Setting up transporter...');
+    // Save OTP in database (optional: set expiration time)
+    await AdminUser.updateOne({ email }, { otp, otpExpiry: Date.now() + 10 * 60 * 1000 }); // Expires in 10 minutes
+
+    // Send OTP via email
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false, // true for 465, false for other ports
+      service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER, // Your email
         pass: process.env.EMAIL_PASSWORD, // Your email password
       },
     });
-    console.log('Sending email...');
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: process.env.EMAIL,
       to: email,
       subject: 'Your OTP Code',
       text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
     });
-    console.log('Email sent successfully');
+
     res.json({ success: true, message: 'OTP sent successfully' });
   } catch (error) {
     console.error('Error sending OTP:', error);
     res.status(500).json({ success: false, message: 'Error sending OTP' });
   }
 });
+
 router.post('/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
-
+  console.log('Stored OTP:', admin.otp);
+  console.log('Provided OTP:', otp);
+  console.log('Expiry:', admin.otpExpiry, 'Current Time:', Date.now());
+  
   if (!email || !otp) {
     return res.status(400).json({ success: false, message: 'Email and OTP are required' });
   }
 
-  const storedOtpData = otpStore[email];
+  try {
+    // Find admin by email
+    const admin = await AdminUser.findOne({ email });
 
-  if (!storedOtpData) {
-    return res.status(400).json({ success: false, message: 'No OTP found for this email' });
-  }
+    if (!admin) {
+      return res.status(404).json({ success: false, message: 'Admin not found' });
+    }
 
-  if (storedOtpData.otp === otp && storedOtpData.expiresAt > Date.now()) {
-    // Clear OTP after successful verification
-    delete otpStore[email];
-    return res.json({ success: true, message: 'OTP verified successfully' });
-  } else {
-    return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    // Check OTP and expiration
+    if (admin.otp === otp && admin.otpExpiry > Date.now()) {
+      // Clear OTP after successful verification
+      await AdminUser.updateOne({ email }, { $unset: { otp: '', otpExpiry: '' } });
+
+      res.json({ success: true, message: 'OTP verified successfully' });
+    } else {
+      res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    res.status(500).json({ success: false, message: 'Error verifying OTP' });
   }
 });
-
 
 
 module.exports = router;
