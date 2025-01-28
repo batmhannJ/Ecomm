@@ -105,6 +105,7 @@ router.post('/send-otp', async (req, res) => {
       text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
     });
 
+    
     res.json({ success: true, message: 'OTP sent successfully' });
   } catch (error) {
     console.error('Error sending OTP:', error);
