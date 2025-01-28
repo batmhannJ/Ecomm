@@ -14,16 +14,16 @@ const Orders = () => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const sortedOrders = Array.isArray(data)
-      ? data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      : [];
-    setOrders(sortedOrders);
+      const filteredOrders = data
+        .filter((order) => order.status !== "pending")
+        .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort from latest to oldest
+      setOrders(filteredOrders); // Ensure data is an array
     } catch (error) {
       console.error("Error fetching orders:", error);
       toast.error("Error fetching orders");
     }
   };
-
+  
   // Update the order status
   const statusHandler = async (event, transactionId) => {
     const newStatus = event.target.value;
