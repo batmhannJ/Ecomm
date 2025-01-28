@@ -227,10 +227,10 @@ export const AddProduct = () => {
               category: "crafts",
               new_price: "",
               old_price: "",
-              s_stock: "",
-              m_stock: "",
-              l_stock: "",
-              xl_stock: "",
+              s_stock: 0,
+              m_stock: 0,
+              l_stock: 0,
+              xl_stock: 0,
               stock: "",
               description: "",
               tags: "",
@@ -266,6 +266,7 @@ export const AddProduct = () => {
           name="description"
           rows="6"
           placeholder="Write description here"
+          value={productDetails.description} // Bind to state
           onChange={changeHandler}
           required
         ></textarea>
