@@ -14,7 +14,10 @@ const Orders = () => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      setOrders(Array.isArray(data) ? data : []); // Ensure data is an array
+      const sortedOrders = Array.isArray(data)
+      ? data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      : [];
+    setOrders(sortedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
       toast.error("Error fetching orders");
