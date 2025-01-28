@@ -281,14 +281,32 @@ const handleResetPassword = async (e) => {
             </div>
             <div>
               <div className="password-container" style={{ position: 'relative' }}>
-                <label>Password:</label>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
+              <label>Password:</label>
+      <input
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={(e) => {
+          let password = e.target.value; // Get the password input value
+          
+          // Restrict the password to 20 characters
+          if (password.length > 20) {
+            password = password.slice(0, 20); // Truncate to 20 characters
+          }
+
+          // Update the form data
+          handleChange({ target: { name: 'password', value: password } });
+
+          // Validate the password
+          const isValidPassword = validatePassword(password);
+          if (!isValidPassword) {
+            setPasswordError('Password must be between 8 and 20 characters and contain at least one uppercase letter.');
+          } else {
+            setPasswordError(''); // Clear error if password is valid
+          }
+        }}
+        required
+      />
                 <span
                   className="eye-icon"
                   onClick={togglePasswordVisibility}
