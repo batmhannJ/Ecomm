@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import './SLoginSignup.css'; // Import your CSS file
 import axios from 'axios';
+import loginImage from "../../assets/login_image.png";
 
 
 const SLoginSignup = () => {
@@ -173,7 +174,9 @@ const handleResetPassword = async (e) => {
 
 
   return (
-    <div className="login-container">
+    <div className="login-container" style={{
+      backgroundImage: `url(${loginImage})`,
+    }}>
       <div className="login-box">
         <h1>{isLogin ? 'Seller Login' : 'Sign up as Seller'}</h1>
 
