@@ -151,6 +151,14 @@ useEffect(() => {
 
   // Initial fetch and real-time update listener setup
   useEffect(() => {
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const message = params.get("message");
+  
+    // Fetch orders immediately if redirected with message=true
+    if (message === "true") {
+      fetchOrders();
+    }
     // Initial fetch of orders
     fetchOrders();
 
