@@ -87,7 +87,7 @@ router.post('/send-otp', async (req, res) => {
     otpStore[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // 5-minute expiry
 
     // Save OTP in database (optional: set expiration time)
-    await AdminUser.updateOne({ email }, { otp, otpExpiry: Date.now() + 10 * 60 * 1000 }); // Expires in 10 minutes
+    //await AdminUser.updateOne({ email }, { otp, otpExpiry: Date.now() + 10 * 60 * 1000 }); // Expires in 10 minutes
 
     // Send OTP via email
     const transporter = nodemailer.createTransport({
