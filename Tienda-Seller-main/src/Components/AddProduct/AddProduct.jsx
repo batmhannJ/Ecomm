@@ -311,6 +311,7 @@ export const AddProduct = () => {
                 type="number"
                 name="s_stock"
                 min="0"
+                value={productDetails.s_stock} // Bind to state
                 onChange={changeHandler}
               ></input>
             </label>
@@ -320,6 +321,7 @@ export const AddProduct = () => {
                 type="number"
                 name="m_stock"
                 min="0"
+                value={productDetails.m_stock} // Bind to state
                 onChange={changeHandler}
               ></input>
             </label>
@@ -329,6 +331,7 @@ export const AddProduct = () => {
                 type="number"
                 name="l_stock"
                 min="0"
+                value={productDetails.l_stock} // Bind to state
                 onChange={changeHandler}
               ></input>
             </label>
@@ -338,6 +341,7 @@ export const AddProduct = () => {
                 type="number"
                 name="xl_stock"
                 min="0"
+                value={productDetails.xl_stock} // Bind to state
                 onChange={changeHandler}
               ></input>
             </label>
