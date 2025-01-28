@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const crypto = require('crypto');
 
 const AdminUser = require("../models/adminUserModel");
 const {
@@ -69,6 +70,10 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 router.post('/send-otp', async (req, res) => {
   const { email } = req.body;
 
@@ -78,7 +83,8 @@ router.post('/send-otp', async (req, res) => {
 
   try {
     // Generate OTP (6 digits)
-    const otp = crypto.randomInt(100000, 999999);
+    const otp = getRandomInt(100000, 999999); // Generate 6-digit OTP
+    console.log(`Generated OTP: ${otp}`);
 
     // Save OTP in database (optional: set expiration time)
     await AdminUser.updateOne({ email }, { otp, otpExpiry: Date.now() + 10 * 60 * 1000 }); // Expires in 10 minutes
