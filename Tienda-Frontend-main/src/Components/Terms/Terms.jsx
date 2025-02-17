@@ -22,6 +22,7 @@ const Terms = () => {
     user_accounts: {
       title: 'User Accounts',
       description: `
+      <div style="text-align: justify;">
       To use certain features on Tienda, you may be required to create an account. By doing so, you agree to:
 
         <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
@@ -29,20 +30,27 @@ const Terms = () => {
           <li>Keep your account details confidential and secure.
           </li>
           <li>Be responsible for all activities under your account.</li>
-        </ul>`
+        </ul>
+        </div>
+        `
     },
     product_listing: {
       title: 'Product Listing',
       description: `
+      <div style="text-align: justify;">
         <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>Tienda is a platform that allows indigenous people to sell their products directly to buyers. Product descriptions, images, and prices are provided by the sellers.
           </li>
           <li>Tienda is not responsible for the accuracy of the product listings, though we strive to ensure that all items meet our standards.</li>
-        </ul>`
+        </ul>
+        </div>
+      `
     },
     purchases_and_payments: {
       title: 'Purchases and Payments',
       description: `
+      <div style="text-align: justify;">
+
         <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>When you make a purchase on Tienda, you agree to pay the listed price, including applicable taxes and shipping fees.
           </li>
@@ -50,11 +58,15 @@ const Terms = () => {
           </li>
           <li>All transactions are subject to Tienda’s payment processing terms
           </li>
-        </ul>`
+        </ul>
+        </div>
+        `
     },    
     contact_info: {
       title: 'Contact Information',
       description: `
+      <div style="text-align: justify;">
+
       For questions or concerns regarding these Terms of Service, please contact us at:
         <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>Email: Email: chairperson@ncip.gov.ph
@@ -63,7 +75,9 @@ const Terms = () => {
           </li>
           <li>Address: 6th and 7th Floors, Sunnymede IT Center, 1614 Quezon Avenue, South Triangle, Quezon City 1103, Philippines.
           </li>
-        </ul>`
+        </ul>
+        </div>
+        `
     }
   
   };
