@@ -10,19 +10,40 @@ const Terms = () => {
       title: 'Terms of Use',
       description: `Welcome to Tienda! By accessing or using our website, you agree to comply with and be bound by these Terms of Service. Please read them carefully. By using Tienda’s platform, you agree to these Terms of Service, which govern your use of our website, including all content, features, and services offered on or through the site.`
     },
-    user_eligibility: {
+    user_accounts: {
       title: 'User Accounts',
       description: `
         <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
-          <li><strong>To use certain features on Tienda, you may be required to create an account. By doing so, you agree to:
+          <li>To use certain features on Tienda, you may be required to create an account. By doing so, you agree to:
           </li>
-          <li><strong>Provide accurate, current, and complete information about yourself.</li>
-          <li><strong>Keep your account details confidential and secure.
+          <li>Provide accurate, current, and complete information about yourself.</li>
+          <li>Keep your account details confidential and secure.
           </li>
-          <li><strong>Be responsible for all activities under your account.</li>
+          <li>Be responsible for all activities under your account.</li>
         </ul>`
     },
-    // Add other sections as needed...
+    product_listing: {
+      title: 'Product Listing',
+      description: `
+        <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
+          <li>Tienda is a platform that allows indigenous people to sell their products directly to buyers. Product descriptions, images, and prices are provided by the sellers.
+          </li>
+          <li>Tienda is not responsible for the accuracy of the product listings, though we strive to ensure that all items meet our standards.</li>
+        </ul>`
+    },
+    purchases_and_payments: {
+      title: 'Purchases and Payments',
+      description: `
+        <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
+          <li>When you make a purchase on Tienda, you agree to pay the listed price, including applicable taxes and shipping fees.
+          </li>
+          <li>Payment will be processed through the selected payment gateway.
+          </li>
+          <li>All transactions are subject to Tienda’s payment processing terms
+          </li>
+        </ul>`
+    },    
+  
   };
 
   const handleTabClick = (tabId) => {
@@ -37,7 +58,7 @@ const Terms = () => {
       <div className="terms">
         <div className="terms-container">
           <div className="sidebar">
-            {['terms_of_use', 'user_accounts', 'account_security', 'rights_responsibilities', 'privacy_data_protection', 'code_of_conduct', 'restrictions_on_use', 'liability', 'suspension_termination', 'contact_info'].map(tab => (
+            {['terms_of_use', 'user_accounts', 'product_listing', 'purchases_and_payments', 'contact_info'].map(tab => (
               <div
                 key={tab}
                 className={`tab ${activeTab === tab ? 'active' : ''}`}
