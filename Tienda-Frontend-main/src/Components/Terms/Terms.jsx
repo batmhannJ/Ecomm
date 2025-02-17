@@ -23,7 +23,9 @@ const Terms = () => {
   };
 
   const handleTabClick = (tabId) => {
-    setActiveTab(tabId);
+    if (content[tabId]) { // Check if tab content exists
+      setActiveTab(tabId);
+    }
   };
 
   return (
@@ -45,7 +47,11 @@ const Terms = () => {
 
           <div className="content">
             <h3>{content[activeTab]?.title}</h3>
-            <p dangerouslySetInnerHTML={{ __html: content[activeTab]?.description }}></p>
+            {content[activeTab]?.description ? (
+              <p dangerouslySetInnerHTML={{ __html: content[activeTab]?.description }}></p>
+            ) : (
+              <p>No content available for this section.</p> // Error handling for missing content
+            )}
           </div>
         </div>
       </div>
