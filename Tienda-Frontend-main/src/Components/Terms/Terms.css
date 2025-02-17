@@ -1155,17 +1155,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition effects */
   }
-  
-  /* Specific background images */
-  .blog {
-    background-image: url("images/pla/1.png");
-  }
-  
-  .blog1 {
-    background-image: url("images/pla/2.png");
-  }
-
-
+ 
 /* Media Queries for Responsiveness */
 
 /* For tablets and smaller desktops */
