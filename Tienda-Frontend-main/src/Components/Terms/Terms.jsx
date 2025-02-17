@@ -8,12 +8,19 @@ const Terms = () => {
   const content = {
     terms_of_use: {
       title: 'Terms of Use',
-      description: `Welcome to Tienda! By accessing or using our website, you agree to comply with and be bound by these Terms of Service. Please read them carefully. By using Tienda’s platform, you agree to these Terms of Service, which govern your use of our website, including all content, features, and services offered on or through the site.`
+      description: `
+          Welcome to Tienda! By accessing or using our website, you agree to comply with and be bound by these Terms of Service. Please read them carefully. 
+          By using Tienda’s platform, you agree to these Terms of Service, which govern your use of our website, including all content, features, and services offered on or through the site. 
+          These Terms are a legally binding agreement between you and Tienda. If you do not agree with any part of these Terms, you must immediately discontinue using the website. 
+          Tienda reserves the right to modify or update these Terms at any time, so please review them regularly. Any changes will be effective upon posting on this page. 
+          Your continued use of the website after any such changes constitutes your acceptance of the new Terms. 
+          If you have any questions or concerns regarding these Terms of Service, please contact us for further clarification.
+        `
     },
     user_accounts: {
       title: 'User Accounts',
       description: `
-        <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
+        <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>To use certain features on Tienda, you may be required to create an account. By doing so, you agree to:
           </li>
           <li>Provide accurate, current, and complete information about yourself.</li>
@@ -43,6 +50,20 @@ const Terms = () => {
           </li>
         </ul>`
     },    
+    contact_info: {
+      title: 'Contact Information',
+      description: `
+        <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
+          <li>For questions or concerns regarding these Terms of Service, please contact us at:
+          </li>
+          <li>Email: support@tienda.com
+          </li>
+          <li>Phone: [Your Phone Number]
+          </li>
+          <li>Address: [Your Office Address]
+          </li>
+        </ul>`
+    }
   
   };
 
