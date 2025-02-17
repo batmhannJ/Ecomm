@@ -9,20 +9,21 @@ const Terms = () => {
     terms_of_use: {
       title: 'Terms of Use',
       description: `
-          <div style={{ textAlign: 'left' }}>
-            Welcome to Tienda! By accessing or using our website, you agree to comply with and be bound by these Terms of Service. Please read them carefully. 
-            By using Tienda’s platform, you agree to these Terms of Service, which govern your use of our website, including all content, features, and services offered on or through the site. 
-            These Terms are a legally binding agreement between you and Tienda. If you do not agree with any part of these Terms, you must immediately discontinue using the website. 
-            Tienda reserves the right to modify or update these Terms at any time, so please review them regularly. Any changes will be effective upon posting on this page. 
-            Your continued use of the website after any such changes constitutes your acceptance of the new Terms. 
-            If you have any questions or concerns regarding these Terms of Service, please contact us for further clarification.
-          </div>
-        `
-    },
+        <div style="text-align: justify;">
+          Welcome to Tienda! By accessing or using our website, you agree to comply with and be bound by these Terms of Service. Please read them carefully. 
+          By using Tienda’s platform, you agree to these Terms of Service, which govern your use of our website, including all content, features, and services offered on or through the site. 
+          These Terms are a legally binding agreement between you and Tienda. If you do not agree with any part of these Terms, you must immediately discontinue using the website. 
+          Tienda reserves the right to modify or update these Terms at any time, so please review them regularly. Any changes will be effective upon posting on this page. 
+          Your continued use of the website after any such changes constitutes your acceptance of the new Terms. 
+          If you have any questions or concerns regarding these Terms of Service, please contact us for further clarification.
+        </div>
+      `
+    },    
     user_accounts: {
       title: 'User Accounts',
       description: `
       To use certain features on Tienda, you may be required to create an account. By doing so, you agree to:
+
         <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>Provide accurate, current, and complete information about yourself.</li>
           <li>Keep your account details confidential and secure.
@@ -56,11 +57,11 @@ const Terms = () => {
       description: `
       For questions or concerns regarding these Terms of Service, please contact us at:
         <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
-          <li>Email: support@tienda.com
+          <li>Email: Email: chairperson@ncip.gov.ph
           </li>
-          <li>Phone: [Your Phone Number]
+          <li>Landline: (02) 8575 – 1200
           </li>
-          <li>Address: [Your Office Address]
+          <li>Address: 6th and 7th Floors, Sunnymede IT Center, 1614 Quezon Avenue, South Triangle, Quezon City 1103, Philippines.
           </li>
         </ul>`
     }
