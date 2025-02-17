@@ -41,7 +41,7 @@ const Terms = () => {
                 className={`tab ${activeTab === tab ? 'active' : ''}`}
                 onClick={() => handleTabClick(tab)}
               >
-                {tab.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+{tab.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
               </div>
             ))}
           </div>
