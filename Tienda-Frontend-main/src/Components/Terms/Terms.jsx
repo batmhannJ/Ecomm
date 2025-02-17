@@ -4,9 +4,10 @@ import "./Terms.css";
 const Terms = () => {
   const [activeTab, setActiveTab] = useState('terms_of_use');
 
+  // Define the content for each section
   const content = {
     terms_of_use: {
-      title: 'Terms of use',
+      title: 'Terms of Use',
       description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. At fugit praesentium reiciendis aut debitis minima earum fugiat quam aspernatur qui.`
     },
     user_eligibility: {
@@ -19,11 +20,11 @@ const Terms = () => {
           <li><strong>Fraudulent Activities:</strong> vosys.org reserves the right to revoke or suspend voting rights for fraudulent activities.</li>
         </ul>`
     },
-    // Add other tabs content similarly...
+    // Add other sections as needed...
   };
 
   const handleTabClick = (tabId) => {
-    if (content[tabId]) { // Check if tab content exists
+    if (content[tabId]) { // Check if the tab content exists
       setActiveTab(tabId);
     }
   };
@@ -48,7 +49,7 @@ const Terms = () => {
           <div className="content">
             <h3>{content[activeTab]?.title}</h3>
             {content[activeTab]?.description ? (
-              <p dangerouslySetInnerHTML={{ __html: content[activeTab]?.description }}></p>
+              <div dangerouslySetInnerHTML={{ __html: content[activeTab]?.description }}></div>
             ) : (
               <p>No content available for this section.</p> // Error handling for missing content
             )}
