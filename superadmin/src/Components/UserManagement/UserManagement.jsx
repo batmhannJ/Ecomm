@@ -57,7 +57,7 @@ function UserManagement() {
   };
 
   const handleDeleteUser = async (id, index) => {
-    const confirmation = window.confirm("Are you sure you want to delete this user?");
+    const confirmation = window.confirm("Are you sure you want to delete this admin?");
     if (!confirmation) return; // Exit if the user cancels the confirmation
   
     try {
