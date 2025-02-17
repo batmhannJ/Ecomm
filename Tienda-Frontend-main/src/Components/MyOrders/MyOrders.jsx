@@ -133,7 +133,6 @@ useEffect(() => {
     }
   };
 
-  // Function to fetch all user orders
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
@@ -141,9 +140,9 @@ useEffect(() => {
       );
       const fetchedOrders = Array.isArray(response.data) ? response.data : [];
   
-      // Sort orders by date (assuming there is a `createdAt` field)
+      // Sort orders by date (assuming there is a `date` field in 'YYYY-MM-DD' format)
       const sortedOrders = fetchedOrders.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        (a, b) => new Date(b.date) - new Date(a.date) // Sort descending (latest first)
       );
   
       setOrders(sortedOrders);
@@ -154,6 +153,7 @@ useEffect(() => {
       setLoading(false);
     }
   };
+  
   
 
   // Initial fetch and real-time update listener setup
