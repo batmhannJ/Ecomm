@@ -349,12 +349,13 @@ router.post("/updateTransactionStatus/:id", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 router.get("/userTransactions/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const transactions = await Transaction.find({ userId: userId });
+    // Sort transactions by date in descending order (latest first)
+    const transactions = await Transaction.find({ userId: userId })
+      .sort({ date: -1 });
 
     if (transactions.length === 0) {
       return res
@@ -368,5 +369,6 @@ router.get("/userTransactions/:userId", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 module.exports = router;

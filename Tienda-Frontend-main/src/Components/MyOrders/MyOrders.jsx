@@ -140,9 +140,9 @@ useEffect(() => {
       );
       const fetchedOrders = Array.isArray(response.data) ? response.data : [];
   
-      // Sort orders by date (assuming there is a `date` field in 'YYYY-MM-DD' format)
+      // Sort orders by date in descending order (latest first)
       const sortedOrders = fetchedOrders.sort(
-        (a, b) => new Date(b.date) - new Date(a.date) // Sort descending (latest first)
+        (a, b) => new Date(b.date) - new Date(a.date)
       );
   
       setOrders(sortedOrders);
@@ -152,9 +152,7 @@ useEffect(() => {
     } finally {
       setLoading(false);
     }
-  };
-  
-  
+  };  
 
   // Initial fetch and real-time update listener setup
   useEffect(() => {
