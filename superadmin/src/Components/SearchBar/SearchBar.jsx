@@ -8,6 +8,12 @@ const UserSearchBar = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!searchTerm.trim()) {
+      toast.warning("Please enter a search term."); // Notify user
+      return; // Stop function execution
+    }
+
     onSearch(searchTerm); // Call the onSearch function passed from props
   };
 

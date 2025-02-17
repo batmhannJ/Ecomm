@@ -95,7 +95,7 @@ function UserManagement() {
   
   return (
     <div className="user-management-container">
-      <h1>Manage Users</h1>
+      <h1>Manage Admin</h1>
       <UserSearchBar onSearch={handleSearch} />
       <table className="user-table">
   <thead>
