@@ -177,7 +177,7 @@ const ProductDisplay = (props) => {
             </div>
           </div>
           <div className="productdisplay-stock">
-            <p>No. of Stock: {currentStock}</p>
+            <p>No. of Stock: {currentStock || 0}</p>
           </div>
           <h2>Select Size</h2>
           <div className="productdisplay-right-sizes">
