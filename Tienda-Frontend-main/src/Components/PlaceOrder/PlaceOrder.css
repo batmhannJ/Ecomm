@@ -43,6 +43,7 @@
 .place-order-right {
   width: 100%;
   max-width: 500px; /* Limits the maximum width */
+  margin-right: auto;
 }
 
 .place-order .cartitems-total button {
