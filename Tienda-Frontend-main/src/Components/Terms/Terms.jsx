@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Terms.css";
 
 const Terms = () => {
-  const [activeTab, setActiveTab] = useState('terms_of use');
+  const [activeTab, setActiveTab] = useState('terms_of_use');
 
   // Define the content for each section
   const content = {
@@ -35,7 +35,7 @@ const Terms = () => {
       <div className="terms">
         <div className="terms-container">
           <div className="sidebar">
-            {['terms_of use', 'user_eligibility', 'account_security', 'rights_responsibilities', 'privacy_data_protection', 'code_of_conduct', 'restrictions_on_use', 'liability', 'suspension_termination', 'contact_info'].map(tab => (
+            {['terms_of_use', 'user_eligibility', 'account_security', 'rights_responsibilities', 'privacy_data_protection', 'code_of_conduct', 'restrictions_on_use', 'liability', 'suspension_termination', 'contact_info'].map(tab => (
               <div
                 key={tab}
                 className={`tab ${activeTab === tab ? 'active' : ''}`}
