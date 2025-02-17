@@ -237,7 +237,7 @@ const handleFileChange = (e) => {
           id="s-stock"
           type="number"
           value={formData.s_stock}
-          onChange={(e) => setFormData({ ...formData, s_stock: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, s_stock: e.target.value || 0})}
           placeholder="Small Stock"
         />
       </div>
@@ -248,7 +248,7 @@ const handleFileChange = (e) => {
           id="m-stock"
           type="number"
           value={formData.m_stock}
-          onChange={(e) => setFormData({ ...formData, m_stock: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, m_stock: e.target.value || 0})}
           placeholder="Medium Stock"
         />
       </div>
@@ -259,7 +259,7 @@ const handleFileChange = (e) => {
           id="l-stock"
           type="number"
           value={formData.l_stock}
-          onChange={(e) => setFormData({ ...formData, l_stock: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, l_stock: e.target.value || 0})}
           placeholder="Large Stock"
         />
       </div>
@@ -270,7 +270,7 @@ const handleFileChange = (e) => {
           id="xl-stock"
           type="number"
           value={formData.xl_stock}
-          onChange={(e) => setFormData({ ...formData, xl_stock: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, xl_stock: e.target.value || 0})}
           placeholder="XL Stock"
         />
       </div>
