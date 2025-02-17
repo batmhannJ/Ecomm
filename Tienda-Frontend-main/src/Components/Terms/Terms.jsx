@@ -9,20 +9,21 @@ const Terms = () => {
     terms_of_use: {
       title: 'Terms of Use',
       description: `
-          Welcome to Tienda! By accessing or using our website, you agree to comply with and be bound by these Terms of Service. Please read them carefully. 
-          By using Tienda’s platform, you agree to these Terms of Service, which govern your use of our website, including all content, features, and services offered on or through the site. 
-          These Terms are a legally binding agreement between you and Tienda. If you do not agree with any part of these Terms, you must immediately discontinue using the website. 
-          Tienda reserves the right to modify or update these Terms at any time, so please review them regularly. Any changes will be effective upon posting on this page. 
-          Your continued use of the website after any such changes constitutes your acceptance of the new Terms. 
-          If you have any questions or concerns regarding these Terms of Service, please contact us for further clarification.
+          <div style={{ textAlign: 'left' }}>
+            Welcome to Tienda! By accessing or using our website, you agree to comply with and be bound by these Terms of Service. Please read them carefully. 
+            By using Tienda’s platform, you agree to these Terms of Service, which govern your use of our website, including all content, features, and services offered on or through the site. 
+            These Terms are a legally binding agreement between you and Tienda. If you do not agree with any part of these Terms, you must immediately discontinue using the website. 
+            Tienda reserves the right to modify or update these Terms at any time, so please review them regularly. Any changes will be effective upon posting on this page. 
+            Your continued use of the website after any such changes constitutes your acceptance of the new Terms. 
+            If you have any questions or concerns regarding these Terms of Service, please contact us for further clarification.
+          </div>
         `
     },
     user_accounts: {
       title: 'User Accounts',
       description: `
+      To use certain features on Tienda, you may be required to create an account. By doing so, you agree to:
         <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
-          <li>To use certain features on Tienda, you may be required to create an account. By doing so, you agree to:
-          </li>
           <li>Provide accurate, current, and complete information about yourself.</li>
           <li>Keep your account details confidential and secure.
           </li>
@@ -32,7 +33,7 @@ const Terms = () => {
     product_listing: {
       title: 'Product Listing',
       description: `
-        <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
+        <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>Tienda is a platform that allows indigenous people to sell their products directly to buyers. Product descriptions, images, and prices are provided by the sellers.
           </li>
           <li>Tienda is not responsible for the accuracy of the product listings, though we strive to ensure that all items meet our standards.</li>
@@ -41,7 +42,7 @@ const Terms = () => {
     purchases_and_payments: {
       title: 'Purchases and Payments',
       description: `
-        <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
+        <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>When you make a purchase on Tienda, you agree to pay the listed price, including applicable taxes and shipping fees.
           </li>
           <li>Payment will be processed through the selected payment gateway.
@@ -53,9 +54,8 @@ const Terms = () => {
     contact_info: {
       title: 'Contact Information',
       description: `
-        <ul style="text-align: justify; list-style-type: none; padding-left: 0;">
-          <li>For questions or concerns regarding these Terms of Service, please contact us at:
-          </li>
+      For questions or concerns regarding these Terms of Service, please contact us at:
+        <ul style="text-align: justify; list-style-type: disc; padding-left: 0;">
           <li>Email: support@tienda.com
           </li>
           <li>Phone: [Your Phone Number]
