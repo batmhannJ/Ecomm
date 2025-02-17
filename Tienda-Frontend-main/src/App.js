@@ -16,6 +16,7 @@ import Food_Banner from "./Components/Assets/Food_Banner.png";
 import Verify from "./Components/Verify/Verify";
 import MyOrders from "./Components/MyOrders/MyOrders";
 import About from "./Components/About/About";
+import Terms from "./Components/Terms/Terms";
 import UserProfile from "./Pages/User/UserProfile";
 import UserSideBar from "./Components/UserProfile/UserSideBar";
 import AccountSettings from "./Components/UserProfile/AccountSettings";
@@ -101,6 +102,7 @@ function App() {
         <Route path="usersidebar" element={<UserSideBar />} />
         <Route path="accountsettings" element={<AccountSettings />} />
         <Route path="/offices" element={<Offices />} /> {/* Add this route */}
+        <Route path="/terms" element={<Terms />} /> {/* Add this route */}
         <Route path="/" element={<SearchBar />} />
         <Route path="/search-results" element={<SearchResults />} />
       </Routes>
