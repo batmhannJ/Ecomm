@@ -140,7 +140,13 @@ useEffect(() => {
         `https://ip-tienda-han-backend.onrender.com/api/transactions/userTransactions/${userId}`
       );
       const fetchedOrders = Array.isArray(response.data) ? response.data : [];
-      setOrders(fetchedOrders);
+  
+      // Sort orders by date (assuming there is a `createdAt` field)
+      const sortedOrders = fetchedOrders.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+  
+      setOrders(sortedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
       toast.error("No orders found.");
@@ -148,6 +154,7 @@ useEffect(() => {
       setLoading(false);
     }
   };
+  
 
   // Initial fetch and real-time update listener setup
   useEffect(() => {
