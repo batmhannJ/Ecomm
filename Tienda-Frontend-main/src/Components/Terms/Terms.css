@@ -61,7 +61,7 @@
   .section__container {
     max-width: var(--max-width);
     margin: auto;
-    padding: 8rem 1rem;
+    padding: 3rem 1rem;
   }
   
   .section__header {
@@ -113,7 +113,7 @@
 
 /* Sidebar styles - making sure tabs are at the top */
 .sidebar {
-  background-color: maroon; /* Greenish color for the sidebar */
+  background-color: #435036; /* Greenish color for the sidebar */
   padding: 20px;
   width: 250px;
   display: flex;
@@ -146,11 +146,11 @@
 }
 
 .tab:hover {
-  background-color: rgb(185, 3, 3);
+  background-color: #6d7e67;
 }
 
 .tab.active {
-  background-color: rgb(86, 2, 2);
+  background-color: #2f3e2d;
   color: #fff;
 }
 
