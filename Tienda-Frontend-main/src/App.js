@@ -103,6 +103,7 @@ function App() {
         <Route path="accountsettings" element={<AccountSettings />} />
         <Route path="/offices" element={<Offices />} /> {/* Add this route */}
         <Route path="/terms" element={<Terms />} /> {/* Add this route */}
+        <Route path="/about" element={<About />} /> {/* Add this route */}
         <Route path="/" element={<SearchBar />} />
         <Route path="/search-results" element={<SearchResults />} />
       </Routes>
