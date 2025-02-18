@@ -5,18 +5,18 @@ const updateProductStock = async (id, size, quantity) => {
   try {
     console.log(`Received ID: ${id}`);
 
-    const productId = parseInt(id, 10);
-    if (isNaN(productId)) {
+    // Check if ID is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error("Invalid ID format");
     }
 
-    // Convert ID to a number
+    // Find the product by MongoDB ObjectId
+    const product = await productModel.findOne({ _id: id }); // MongoDB uses _id
 
-    // Find and update the product stock
-    const product = await productModel.findOne({ id: productId }); // Adjust query based on your schema
     if (!product) {
       throw new Error("Product not found");
     }
+
     // Update stock based on size
     switch (size) {
       case "S":
