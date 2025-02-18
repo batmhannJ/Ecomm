@@ -72,7 +72,8 @@ const allowedOrigins = [
   'https://ip-tienda-han-backend.onrender.com',
   'https://ip-tienda-han-backend.onrender.com:4000',
   'https://ip-tienda-han-backend.onrender.com/myorders?message=true',
-  'https://ip-tienda-han-backend.onrender.com/api/admin/send-otp' 
+  'https://ip-tienda-han-backend.onrender.com/api/admin/send-otp',
+  'https://ip-tienda-han-backend.onrender.com/images/', 
 ];
 
 app.use(
@@ -1654,6 +1655,15 @@ app.post('/api/cart/removeItems', async (req, res) => {
   }
 });
 
+app.get("/redirect", (req, res) => {
+  const deepLink = req.query.deep_link;
+
+  if (deepLink) {
+      res.redirect(deepLink);
+  } else {
+      res.status(400).send("Missing deep_link parameter");
+  }
+});
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);
