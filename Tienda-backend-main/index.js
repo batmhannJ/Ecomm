@@ -1657,9 +1657,11 @@ app.post('/api/cart/removeItems', async (req, res) => {
 
 app.get("/redirect", (req, res) => {
   const deepLink = req.query.deep_link;
+  const message = req.query.message; // Capture the 'message' parameter
 
   if (deepLink) {
-      res.redirect(deepLink);
+      console.log(`Redirecting with deep link: ${deepLink} and message: ${message}`);
+      res.redirect(deepLink);  // Redirect as before
   } else {
       res.status(400).send("Missing deep_link parameter");
   }
