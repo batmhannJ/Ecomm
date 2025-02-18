@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { updateProductStock } = require("../controllers/productController");
+const Product = require("../models/productModels");
 
 // Route to update stock levels
 router.post("/updateStock", async (req, res) => {
