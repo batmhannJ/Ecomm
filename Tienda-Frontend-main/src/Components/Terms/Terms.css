@@ -69,6 +69,7 @@
     font-weight: 700;
     font-size: 40px;
     color: var(--text-dark);
+    text-align: center;
   }
   
   /* Wrapper for the whole content */

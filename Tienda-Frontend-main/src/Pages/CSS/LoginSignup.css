@@ -122,6 +122,11 @@
   height: 15px;
 }
 
+.loginsignup-agree a{
+  color:#0056b3;
+  text-decoration: underline;
+}
+
 /* reCAPTCHA styling */
 .recaptcha-container {
   margin-top: 10px; /* Increase margin-top for more space above */
