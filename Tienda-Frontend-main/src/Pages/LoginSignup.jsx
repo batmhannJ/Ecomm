@@ -520,7 +520,7 @@ const LoginSignup = () => {
                 checked={formData.agreed}
                 onChange={checkboxHandler}
               />
-              <p>By continuing I agree to the <a href="Terms">terms of use & privacy policy</a></p>
+              <p>By continuing I agree to the   <a href="Terms" style="color: blue; text-decoration: underline;">terms of use & privacy policy</a></p>
             </div>
           </>
         )}

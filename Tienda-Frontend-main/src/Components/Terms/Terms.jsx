@@ -90,7 +90,7 @@ const Terms = () => {
 
   return (
     <section id="terms" className="section__container location__container">
-      <h2 className="section__header">Terms of Service</h2>
+      <h2 className="section__header" style="text-align: center;">Terms of Service</h2>
       <div className="terms">
         <div className="terms-container">
           <div className="sidebar">
