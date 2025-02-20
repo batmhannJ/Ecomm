@@ -16,7 +16,9 @@ const updateProductStock = async (id, size, quantity) => {
     }
 
     // Find the product by MongoDB ObjectId
-    const product = await productModel.findOne({ _id: id }); // MongoDB uses _id
+    //const product = await productModel.findOne({ _id: id }); // MongoDB uses _id
+
+    const product = await productModel.findOne({ id: productId }); // Adjust query based on your schema
 
     if (!product) {
       throw new Error("Product not found");
