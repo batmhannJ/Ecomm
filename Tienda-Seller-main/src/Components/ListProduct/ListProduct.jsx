@@ -73,10 +73,10 @@ export const ListProduct = () => {
       old_price: product.old_price,
       new_price: product.new_price,
       category: product.category,
-      s_stock: product.s_stock || 0,
-      m_stock: product.m_stock || 0,
-      l_stock: product.l_stock || 0,
-      xl_stock: product.xl_stock || 0,
+      s_stock: product.s_stock || '',
+      m_stock: product.m_stock || '',
+      l_stock: product.l_stock || '',
+      xl_stock: product.xl_stock || '',
       image: product.image || null
     });
     setIsModalOpen(true);
