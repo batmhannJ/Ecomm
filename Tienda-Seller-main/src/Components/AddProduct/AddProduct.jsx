@@ -57,7 +57,7 @@ export const AddProduct = () => {
       }
       setProductDetails((prevDetails) => ({
         ...prevDetails,
-        [name]: parseInt(value) || 0, // Update stock value or set to 0 if empty
+        [name]: value === "" ? "" : parseInt(value) || 0, // Allow empty input
       }));
     } else if (name === "old_price" || name === "new_price") {
       if (!/^\d*\.?\d*$/.test(value)) {
