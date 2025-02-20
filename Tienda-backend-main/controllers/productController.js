@@ -6,7 +6,12 @@ const updateProductStock = async (id, size, quantity) => {
     console.log(`Received ID: ${id}`);
 
     // Check if ID is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    /*if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error("Invalid ID format");
+    }*/
+
+    const productId = parseInt(id, 10);
+    if (isNaN(productId)) {
       throw new Error("Invalid ID format");
     }
 
