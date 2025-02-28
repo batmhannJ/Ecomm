@@ -37,7 +37,9 @@ export const PlaceOrder = () => {
   const location = useLocation();
   const { itemDetails } = location.state || {};
 
+  const [loading, setLoading] = useState(false);
   const [transactionId, setTransactionId] = useState(null);
+  
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -335,6 +337,48 @@ export const PlaceOrder = () => {
     }
   }, [navigate, getTotalCartAmount]);
 
+  const clientId = "AZHXvh50TSv6IaOBD6EDYYjAIYXKB3MhH6MnYeUL6cSCk5a-Cg01hJi5jGcKHyyCDy2B1HcgQn4um5JT";
+  const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+  const handlePayment = async () => {
+    setLoading(true);
+    try {
+      const totalAmount = getTotalCartAmount();
+      const response = await axios.post(
+        "https://api-m.paypal.com/v2/checkout/orders",
+        {
+          intent: "CAPTURE",
+          purchase_units: [
+            {
+              amount: {
+                currency_code: "USD",
+                value: totalAmount.toFixed(2),
+              },
+            },
+          ],
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Basic ${auth}`,
+          },
+        }
+      );
+
+      const { id, links } = response.data;
+      setTransactionId(id);
+
+      const approvalUrl = links.find((link) => link.rel === "approve").href;
+      window.location.href = approvalUrl;
+    } catch (error) {
+      console.error("Payment Error:", error);
+      toast.error("Failed to initiate payment.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
@@ -453,7 +497,10 @@ export const PlaceOrder = () => {
               </h3>
             </div>
           </div>
-          <button type="submit">PROCEED TO PAYMENT</button>
+          {/*<button type="submit">PROCEED TO PAYMENT</button>*/}
+          <button onClick={handlePayment} disabled={loading}>
+        {loading ? "Processing..." : "Pay with PayPal"}
+      </button>
         </div>
       </div>
     </form>
