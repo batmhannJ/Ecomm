@@ -339,8 +339,7 @@ export const PlaceOrder = () => {
 
   const clientId = "AZHXvh50TSv6IaOBD6EDYYjAIYXKB3MhH6MnYeUL6cSCk5a-Cg01hJi5jGcKHyyCDy2B1HcgQn4um5JT";
   const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
-  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
-
+  const auth = btoa(`${clientId}:${clientSecret}`);
   const handlePayment = async () => {
     setLoading(true);
     try {
