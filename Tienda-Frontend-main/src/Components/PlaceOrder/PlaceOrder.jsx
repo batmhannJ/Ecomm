@@ -351,7 +351,7 @@ export const PlaceOrder = () => {
           purchase_units: [
             {
               amount: {
-                currency_code: "USD",
+                currency_code: "PHP",
                 value: totalAmount.toFixed(2),
               },
             },
