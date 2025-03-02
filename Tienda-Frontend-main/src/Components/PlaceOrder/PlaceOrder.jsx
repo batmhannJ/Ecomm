@@ -364,15 +364,15 @@ export const PlaceOrder = () => {
           },
         }
       );
-
+  
       const { id, links } = response.data;
       setTransactionId(id);
-
+  
       const approvalUrl = links.find((link) => link.rel === "approve").href;
       window.location.href = approvalUrl;
     } catch (error) {
-      console.error("Payment Error:", error);
-      toast.error("Failed to initiate payment.");
+      console.error("Payment Error:", error.response ? error.response.data : error);
+      toast.error("Failed to initiate payment. Please check your PayPal credentials and try again.");
     } finally {
       setLoading(false);
     }
