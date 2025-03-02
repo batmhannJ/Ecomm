@@ -365,10 +365,14 @@ export const PlaceOrder = () => {
         }
       );
   
+      console.log("PayPal API Response:", response.data);
+  
       const { id, links } = response.data;
       setTransactionId(id);
   
       const approvalUrl = links.find((link) => link.rel === "approve").href;
+      console.log("Approval URL:", approvalUrl);
+  
       window.location.href = approvalUrl;
     } catch (error) {
       console.error("Payment Error:", error.response ? error.response.data : error);
