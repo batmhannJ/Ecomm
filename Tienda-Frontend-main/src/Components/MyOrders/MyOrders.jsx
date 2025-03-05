@@ -201,7 +201,7 @@ useEffect(() => {
       console.log("📡 Sending GET request to:", `https://ip-tienda-han-backend.onrender.com/api/transactions/paypal/${orderId}`);
       
       const transactionResponse = await axios.get(
-        `https://ip-tienda-han-backend.onrender.com/api/transactions/${orderId}`
+        `https://ip-tienda-han-backend.onrender.com/api/transactions/paypal/${orderId}`
       );
   
       console.log("✅ Transaction Response:", transactionResponse.data); // ✅ Debugging line
