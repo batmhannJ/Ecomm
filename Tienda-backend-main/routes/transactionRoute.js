@@ -370,11 +370,10 @@ router.get("/userTransactions/:userId", async (req, res) => {
   }
 });
 
-
 router.get("/transactions/:transactionId", async (req, res) => {
   try {
     const { transactionId } = req.params;
-    console.log(`🔍 Fetching transaction with ID: ${transactionId}`); // ✅ Log transaction ID
+    console.log(`🔍 Fetching transaction with ID: ${transactionId}`); // ✅ Debugging log
 
     // Ensure MongoDB connection is active
     if (!Transaction) {
@@ -390,15 +389,11 @@ router.get("/transactions/:transactionId", async (req, res) => {
       return res.status(404).json({ success: false, message: "Transaction not found." });
     }
 
-    console.log("✅ Transaction found:", JSON.stringify(transaction, null, 2)); // ✅ Log transaction details
+    console.log("✅ Transaction found:", JSON.stringify(transaction, null, 2)); // ✅ Debugging log
 
-    res.json({
-      transactionId: transaction.transactionId, // ✅ Make sure this is included
-      amount: transaction.amount,
-      status: transaction.status,
-    });
-      } catch (error) {
-    console.error("❌ Error fetching transaction:", error);
+    res.json(transaction);
+  } catch (error) {
+    console.error("❌ Error fetching transaction:", error); // ✅ Log full error details
     res.status(500).json({ 
       success: false, 
       message: "Internal Server Error", 
