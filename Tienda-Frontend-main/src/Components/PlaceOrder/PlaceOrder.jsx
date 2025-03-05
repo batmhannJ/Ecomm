@@ -392,7 +392,7 @@ export const PlaceOrder = () => {
   
       // Redirect to My Orders
       alert("Order successfully placed!");
-      navigate("/myorders");
+      //navigate("/myorders");
     } catch (error) {
       console.error("Post-payment error:", error);
       alert("Failed to process order. Please contact support.");
