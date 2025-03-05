@@ -346,6 +346,41 @@ export const PlaceOrder = () => {
   const clientId = "AZHXvh50TSv6IaOBD6EDYYjAIYXKB3MhH6MnYeUL6cSCk5a-Cg01hJi5jGcKHyyCDy2B1HcgQn4um5JT";
   const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
   const auth = btoa(`${clientId}:${clientSecret}`);
+
+  const handlePaymentSuccess = async (paymentDetails) => {
+    console.log("Payment Details:", paymentDetails);
+  
+    try {
+      // Save Transaction
+      await axios.post("https://your-api.com/saveTransaction", {
+        userId: localStorage.getItem("userId"),
+        transactionId: paymentDetails.id,
+        amount: paymentDetails.purchase_units[0].amount.value,
+        status: "completed",
+      });
+  
+      // Update Stock
+      await axios.post("https://your-api.com/updateStock", {
+        cartItems,
+      });
+  
+      // Delete Cart
+      await axios.post("https://your-api.com/deleteCart", {
+        userId: localStorage.getItem("userId"),
+      });
+  
+      // Clear cart locally
+      clearCart();
+  
+      alert("Order placed successfully!");
+      navigate("/myorders");
+    } catch (error) {
+      console.error("Error processing post-payment actions:", error);
+      alert("There was an issue processing your order. Please contact support.");
+    }
+  };
+
+  
   const handlePayment = async () => {
     setLoading(true);
     try {
@@ -510,7 +545,7 @@ export const PlaceOrder = () => {
           </div>
           {/*<button type="submit">PROCEED TO PAYMENT</button>*/}
 
-          <PayPalCheckout totalAmount={totalAmount} />
+          <PayPalCheckout totalAmount={totalAmount} onPaymentSuccess={handlePaymentSuccess} />
           <button onClick={handlePayment} disabled={loading}>
         {loading ? "Processing..." : "Pay with PayPal"}
       </button>
