@@ -230,6 +230,9 @@ export const PlaceOrder = () => {
     const value = event.target.value;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+  const totalAmount = (getTotalCartAmount() + deliveryFee); // Amount in cents
+
   const handleProceedToCheckout = async (event) => {
     event.preventDefault();
   
