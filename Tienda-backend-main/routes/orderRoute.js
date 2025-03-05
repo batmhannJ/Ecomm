@@ -86,7 +86,7 @@ router.post("/paypal/payout", async (req, res) => {
 
   router.post("/paypal/authorize", async (req, res) => {
     console.log("Received authorization request:", req.body);
-    const { totalAmount } = req.body;
+    const { totalAmount, transactionId } = req.body; // ✅ Receive transactionId
   
     const accessToken = await getPayPalAccessToken();
     if (!accessToken) {
@@ -100,6 +100,7 @@ router.post("/paypal/payout", async (req, res) => {
           intent: "AUTHORIZE", // ✅ Hold funds, do not capture yet
           purchase_units: [
             {
+            reference_id: transactionId, // ✅ Use transactionId as PayPal Order ID
               amount: {
                 currency_code: "PHP",
                 value: totalAmount.toFixed(2),
@@ -114,11 +115,44 @@ router.post("/paypal/payout", async (req, res) => {
           },
         }
       );
-  
-      res.json({ success: true, orderId: orderResponse.data.id });
+      console.log("✅ PayPal Authorization Successful:", orderResponse.data); // ✅ Debug log
+
+      res.json({ success: true, orderId: transactionId }); // ✅ Return transactionId as PayPal order ID
     } catch (error) {
       console.error("PayPal Authorization Error:", error.response?.data || error);
       res.status(500).json({ success: false, message: "Failed to authorize PayPal payment." });
+    }
+  });
+  
+
+  router.post("/paypal/capture", async (req, res) => {
+    console.log("🔍 Capturing PayPal Payment:", req.body); // ✅ Debug log
+  
+    const { orderId } = req.body; // ✅ transactionId is used as orderId
+  
+    const accessToken = await getPayPalAccessToken();
+    if (!accessToken) {
+      return res.status(500).json({ success: false, message: "Failed to authenticate with PayPal." });
+    }
+  
+    try {
+      const captureResponse = await axios.post(
+        `${PAYPAL_API}/v2/checkout/orders/${orderId}/capture`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      console.log("✅ PayPal Capture Successful:", captureResponse.data); // ✅ Debug log
+  
+      res.json({ success: true, details: captureResponse.data });
+    } catch (error) {
+      console.error("❌ PayPal Capture Error:", error.response?.data || error);
+      res.status(500).json({ success: false, message: "Failed to capture PayPal payment." });
     }
   });
   

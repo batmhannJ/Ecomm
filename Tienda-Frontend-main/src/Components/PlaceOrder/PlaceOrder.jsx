@@ -335,6 +335,8 @@ export const PlaceOrder = () => {
   const clientId = "AZHXvh50TSv6IaOBD6EDYYjAIYXKB3MhH6MnYeUL6cSCk5a-Cg01hJi5jGcKHyyCDy2B1HcgQn4um5JT";
   const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
   const auth = btoa(`${clientId}:${clientSecret}`);
+
+
   const handleCashOnDelivery = async () => {
     const referenceNumber = generateReferenceNumber(); // Generate unique transaction ID
   
@@ -350,6 +352,7 @@ export const PlaceOrder = () => {
       // Step 1: Request an Order ID from PayPal
       const paypalResponse = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/authorize", {
         totalAmount,
+        transactionId: referenceNumber, // ✅ Use transactionId as PayPal Order ID
       });
   
       if (!paypalResponse.data.success) {
