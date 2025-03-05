@@ -337,7 +337,10 @@ export const PlaceOrder = () => {
   const auth = btoa(`${clientId}:${clientSecret}`);
 
 
-  const saveTransaction = async (transactionId, status) => {
+  const handleCashOnDelivery = async (paymentDetails) => {
+    console.log("Payment Details:", paymentDetails);
+  
+    const referenceNumber = paymentDetails.id;
     const cartDetails = itemDetails.map((item) => ({
       id: item.id.toString(),
       name: item.name,
@@ -345,8 +348,9 @@ export const PlaceOrder = () => {
       quantity: item.quantity,
       size: item.size,
     }));
-
+  
     try {
+      // Save Transaction
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
         date: new Date(),
@@ -357,7 +361,7 @@ export const PlaceOrder = () => {
         amount: totalAmount,
         deliveryFee: deliveryFee,
         address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
-        status: "Cart Processing",
+        status: "Pending",
         userId: localStorage.getItem("userId"),
       });
   
@@ -371,17 +375,12 @@ export const PlaceOrder = () => {
       });
   
       clearCart();
-      toast.success(`Order placed successfully! (${status})`);
-      navigate("/myorders");
+  
+      alert("Order successfully placed!");
     } catch (error) {
-      console.error("Transaction error:", error);
-      toast.error("Failed to place order. Please try again.");
+      console.error("Post-payment error:", error);
+      alert("Failed to process order. Please contact support.");
     }
-  };
-
-  const handleCashOnDelivery = async () => {
-    const referenceNumber = generateReferenceNumber();
-    await saveTransaction(referenceNumber, "Pending");
   };
 
   const handlePaymentSuccess = async (paymentDetails) => {
