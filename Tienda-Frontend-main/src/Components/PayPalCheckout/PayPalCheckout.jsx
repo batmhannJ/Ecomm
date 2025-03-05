@@ -21,21 +21,17 @@ const PayPalCheckout = ({ totalAmount, onPaymentSuccess }) => {
           return actions.order.capture().then(async (details) => {
             console.log("Transaction completed by " + details.payer.name.given_name);
             alert("Payment successful! Thank you for your purchase.");
-
-            // Call the parent function to handle post-payment actions
             if (onPaymentSuccess) {
               await onPaymentSuccess(details);
             }
 
             setTimeout(() => {
               if (window.opener) {
-                // If PayPal opened a new window, close it
                 window.close();
               } else {
-                // If it's a modal, force refresh to close it
-                window.location.href = "/myorders?orderSuccess=true"; // Redirect to orders page
+                window.location.href = "/myorders?orderSuccess=true"; 
               }
-            }, 5000); // 5 seconds delay
+            }, 5000);
             
           });
         }}

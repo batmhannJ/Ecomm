@@ -192,6 +192,27 @@ useEffect(() => {
     };
   }, [userId]);
 
+  const handleConfirmOrderReceived = async (orderId, amount) => {
+    try {
+      const response = await axios.post("https://ip-tienda-han-backend.onrender.com/api/paypal/payout", {
+        orderId,
+        amount,
+        userId: getUserIdFromToken(),
+      });
+  
+      if (response.data.success) {
+        toast.success("Payment successfully processed!");
+        fetchOrders(); // Refresh orders
+      } else {
+        toast.error("Payment failed. Please contact support.");
+      }
+    } catch (error) {
+      console.error("Error processing payment:", error);
+      toast.error("Failed to process payment.");
+    }
+  };
+  
+
   return (
     <div className="my-order-container">
       <h1>My Orders</h1>
@@ -207,6 +228,7 @@ useEffect(() => {
               <th>Quantity</th>
               <th>Amount</th>
               <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -219,11 +241,18 @@ useEffect(() => {
                   <td>{order.quantity}</td>
                   <td>{order.amount}</td>
                   <td>{order.status}</td>
+                  <td>
+          {order.status === "Pending" && order.paymentMethod === "cod" && (
+            <button onClick={() => handleConfirmOrderReceived(order.transactionId, order.amount)}>
+              Order Received
+            </button>
+          )}
+        </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6">No orders found</td>
+                <td colSpan="7">No orders found</td>
               </tr>
             )}
           </tbody>

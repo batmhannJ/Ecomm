@@ -17,15 +17,6 @@ const generateReferenceNumber = () => {
   return `REF-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 };
 
-const getUserIdFromToken = () => {
-  const authToken = localStorage.getItem("auth-token");
-  if (authToken) {
-    const payload = JSON.parse(atob(authToken.split(".")[1]));
-    return payload.user.id;
-  }
-  return null;
-};
-
 const MAIN_OFFICE_COORDINATES = {
   latitude: 14.628488, // Sunnymede IT Center latitude
   longitude: 121.03342,
@@ -345,6 +336,53 @@ export const PlaceOrder = () => {
   const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
   const auth = btoa(`${clientId}:${clientSecret}`);
 
+  const handleCashOnDelivery = async () => {
+    const referenceNumber = generateReferenceNumber();
+    await saveTransaction(referenceNumber, "Pending");
+  };
+
+  const saveTransaction = async (transactionId, status) => {
+    const cartDetails = itemDetails.map((item) => ({
+      id: item.id.toString(),
+      name: item.name,
+      price: item.price || item.adjustedPrice,
+      quantity: item.quantity,
+      size: item.size,
+    }));
+
+    try {
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
+        transactionId,
+        date: new Date(),
+        name: `${localStorage.getItem("firstName")} ${localStorage.getItem("lastName")}`,
+        contact: localStorage.getItem("phone"),
+        item: cartDetails.map((item) => item.name).join(", "),
+        quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
+        amount: totalAmount,
+        deliveryFee,
+        address: `${localStorage.getItem("street")} ${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zipcode")} ${localStorage.getItem("country")}`,
+        status,
+        userId: localStorage.getItem("userId"),
+        paymentMethod: status === "Pending" ? "COD" : "PayPal",
+      });
+
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
+        updates: cartDetails.map((item) => ({
+          id: item.id,
+          size: item.size,
+          quantity: item.quantity,
+        })),
+      });
+
+      clearCart();
+      toast.success(`Order placed successfully! (${status})`);
+      navigate("/myorders");
+    } catch (error) {
+      console.error("Transaction error:", error);
+      toast.error("Failed to place order. Please try again.");
+    }
+  };
+
   const handlePaymentSuccess = async (paymentDetails) => {
     console.log("Payment Details:", paymentDetails);
   
@@ -382,66 +420,14 @@ export const PlaceOrder = () => {
         })),
       });
   
-      // Delete Cart
-      /*await axios.post("https://ip-tienda-han-backend.onrender.com/api/deleteCart", {
-        userId: localStorage.getItem("userId"),
-      });*/
-  
-      // Clear Cart in Frontend
       clearCart();
   
-      // Redirect to My Orders
       alert("Order successfully placed!");
-      //navigate("/myorders");
     } catch (error) {
       console.error("Post-payment error:", error);
       alert("Failed to process order. Please contact support.");
     }
   };
-  
-  
-  const handlePayment = async () => {
-    setLoading(true);
-    try {
-      const totalAmount = getTotalCartAmount();
-      const response = await axios.post(
-        "https://api-m.paypal.com/v2/checkout/orders",
-        {
-          intent: "CAPTURE",
-          purchase_units: [
-            {
-              amount: {
-                currency_code: "PHP",
-                value: totalAmount.toFixed(2),
-              },
-            },
-          ],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Basic ${auth}`,
-          },
-        }
-      );
-  
-      console.log("PayPal API Response:", response.data);
-  
-      const { id, links } = response.data;
-      setTransactionId(id);
-  
-      const approvalUrl = links.find((link) => link.rel === "approve").href;
-      console.log("Approval URL:", approvalUrl);
-  
-      window.location.href = approvalUrl;
-    } catch (error) {
-      console.error("Payment Error:", error.response ? error.response.data : error);
-      toast.error("Failed to initiate payment. Please check your PayPal credentials and try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
 
   return (
     <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
@@ -552,22 +538,13 @@ export const PlaceOrder = () => {
             <hr />
             <div className="cartitems-total-item">
               <h3>Total</h3>
-              {/*
-              /*<h3>
-                ₱
-                {getTotalCartAmount() === 0
-                  ? 0
-                  : getTotalCartAmount() + deliveryFee}
-                </h3>*/}
-                 <h3>₱{totalAmount}</h3> {/* ✅ Now it has a proper value */}
+                 <h3>₱{totalAmount}</h3>
             </div>
           </div>
-          {/*<button type="submit">PROCEED TO PAYMENT</button>*/}
-
           <PayPalCheckout totalAmount={totalAmount} onPaymentSuccess={handlePaymentSuccess} />
-          {/*<button onClick={handlePayment} disabled={loading}>
-        {loading ? "Processing..." : "Pay with PayPal"}
-      </button>*/}
+          <button onClick={handleCashOnDelivery} className="cod-button">
+          Cash on Delivery (COD)
+        </button>
         </div>
       </div>
     </form>
