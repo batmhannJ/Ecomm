@@ -565,9 +565,9 @@ export const PlaceOrder = () => {
           {/*<button type="submit">PROCEED TO PAYMENT</button>*/}
 
           <PayPalCheckout totalAmount={totalAmount} onPaymentSuccess={handlePaymentSuccess} />
-          <button onClick={handlePayment} disabled={loading}>
+          {/*<button onClick={handlePayment} disabled={loading}>
         {loading ? "Processing..." : "Pay with PayPal"}
-      </button>
+      </button>*/}
         </div>
       </div>
     </form>

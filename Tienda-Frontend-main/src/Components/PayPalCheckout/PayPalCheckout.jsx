@@ -26,6 +26,16 @@ const PayPalCheckout = ({ totalAmount, onPaymentSuccess }) => {
             if (onPaymentSuccess) {
               await onPaymentSuccess(details);
             }
+
+            setTimeout(() => {
+              if (window.opener) {
+                // If PayPal opened a new window, close it
+                window.close();
+              } else {
+                // If it's a modal, force refresh to close it
+                window.location.href = "/myorders"; // Redirect to orders page
+              }
+            }, 5000); // 5 seconds delay
             
           });
         }}
