@@ -19,6 +19,7 @@ const userRoutes = require("./routes/userRoute");
 const transactionRoutes = require("./routes/transactionRoute");
 const productRoute = require("./routes/productRoute");
 const cartRoute = require("./routes/cartRoute");
+const paypalRoutes = require("./routes/paypal");
 const { signup } = require("./controllers/sellerController");
 const { getUsers } = require("./controllers/userController");
 const { searchAdmin } = require("./controllers/adminController");
@@ -96,6 +97,8 @@ app.use(express.json());
 app.use("/api/transactions", transactionRoutes);
 app.use("/api", productRoute);
 app.use("/api/cart", cartRoute);
+app.use("/api/paypal", paypalRoutes);
+
 app.use((req, res, next) => {
   // Enforce HTTPS
   res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");

@@ -6,6 +6,32 @@ import parcel_icon from "../../assets/parcel_icon.png";
 const Orders = () => {
   const [orders, setOrders] = useState([]);
 
+  const processPayPalPayment = async (order) => {
+    try {
+      const response = await fetch("https://ip-tienda-han-backend.onrender.com/api/paypal/charge", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: order.amount, // Total amount to be charged
+          currency: "PHP",
+          userEmail: order.email, // Email ng user na gagamitin sa PayPal
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to process PayPal payment");
+      }
+  
+      toast.success("Payment successfully processed via PayPal!");
+    } catch (error) {
+      console.error("Error processing PayPal payment:", error);
+      toast.error("Payment failed via PayPal");
+    }
+  };
+  
+
   // Fetch all orders (transactions)
   const fetchAllOrders = async () => {
     try {
@@ -28,17 +54,16 @@ const Orders = () => {
   const statusHandler = async (event, transactionId) => {
     const newStatus = event.target.value;
   
-    // Show confirmation dialog before updating status
     if (window.confirm(`Are you sure you want to change the status to "${newStatus}"?`)) {
       try {
         const response = await fetch(
           `https://ip-tienda-han-backend.onrender.com/api/transactions/${transactionId}`,
           {
-            method: "PATCH", // Using PATCH to update
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ status: newStatus }), // Send new status
+            body: JSON.stringify({ status: newStatus }),
           }
         );
   
@@ -46,7 +71,15 @@ const Orders = () => {
           throw new Error("Failed to update status");
         }
   
-        // Update local state to reflect the status change
+        // Kunin ang updated na order
+        const updatedOrder = orders.find((order) => order.transactionId === transactionId);
+  
+        // Kapag COD at naging "Delivered", auto-process PayPal payment
+        if (updatedOrder.paymentMethod === "COD" && newStatus === "Delivered") {
+          await processPayPalPayment(updatedOrder);
+        }
+  
+        // Update ang local state
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order.transactionId === transactionId
@@ -62,6 +95,7 @@ const Orders = () => {
       }
     }
   };
+  
 
   useEffect(() => {
     fetchAllOrders();
