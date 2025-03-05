@@ -208,7 +208,7 @@ useEffect(() => {
   
       // Capture the authorized payment
       const response = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/capture", {
-        orderId: transactionId, // ✅ Use transactionId instead
+        orderId: paypalOrderId, // ✅ Send stored PayPal Order ID for capturing
       });
   
       if (response.data.success) {  
