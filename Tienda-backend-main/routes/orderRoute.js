@@ -124,7 +124,6 @@ router.post("/paypal/payout", async (req, res) => {
     }
   });
   
-
   router.post("/paypal/capture", async (req, res) => {
     console.log("🔍 Capturing PayPal Payment:", req.body); // ✅ Debug log
   
@@ -137,7 +136,7 @@ router.post("/paypal/payout", async (req, res) => {
   
     try {
       const captureResponse = await axios.post(
-        `${PAYPAL_API}/v2/checkout/orders/${orderId}/capture`,
+        `${PAYPAL_API}/v2/checkout/orders/${orderId}/capture`, // ✅ Use transactionId
         {},
         {
           headers: {
@@ -155,6 +154,7 @@ router.post("/paypal/payout", async (req, res) => {
       res.status(500).json({ success: false, message: "Failed to capture PayPal payment." });
     }
   });
+  
   
 
 module.exports = orderRouter;

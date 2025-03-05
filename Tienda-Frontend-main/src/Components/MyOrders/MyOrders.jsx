@@ -191,38 +191,26 @@ useEffect(() => {
       socket.disconnect();
     };
   }, [userId]);
-
   const handleConfirmOrderReceived = async (orderId) => {
     try {
-      // Get PayPal Order ID from the backend
-      const transactionResponse = await axios.get(
-        `https://ip-tienda-han-backend.onrender.com/api/transactions/${orderId}`
-      );
+      console.log("🔍 Capturing PayPal Payment for Transaction ID:", orderId); // ✅ Debug log
   
-      const paypalOrderId = transactionResponse.data.paypalOrderId; // ✅ Retrieve saved PayPal Order ID
-  
-      if (!paypalOrderId) {
-        toast.error("Failed to retrieve PayPal Order ID.");
-        return;
-      }
-  
-      // Capture the authorized payment
+      // Send request to capture payment using transactionId
       const response = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/capture", {
-        orderId: paypalOrderId, // ✅ Send stored PayPal Order ID for capturing
+        orderId, // ✅ Use transactionId as PayPal Order ID
       });
   
-      if (response.data.success) {  
+      if (response.data.success) {
         toast.success("Payment successfully processed!");
         fetchOrders(); // Refresh orders
       } else {
         toast.error("Payment failed. Please contact support.");
       }
     } catch (error) {
-      console.error("Error processing payment:", error);
+      console.error("❌ Error processing payment:", error);
       toast.error("Failed to process payment.");
     }
   };
-  
   
 
   return (
