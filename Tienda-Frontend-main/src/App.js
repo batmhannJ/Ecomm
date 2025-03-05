@@ -21,6 +21,8 @@ import UserProfile from "./Pages/User/UserProfile";
 import UserSideBar from "./Components/UserProfile/UserSideBar";
 import AccountSettings from "./Components/UserProfile/AccountSettings";
 import Offices from "./Components/Offices/Offices"; // Add this import
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 import {
   regions,
   provincesByCode,

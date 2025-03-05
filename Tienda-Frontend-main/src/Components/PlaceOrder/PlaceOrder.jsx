@@ -4,6 +4,8 @@ import "./PlaceOrder.css";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom"; // useLocation for URL
 import axios from "axios";
+import PayPalCheckout from "../PayPalCheckout/PayPalCheckout";
+
 import {
   regions,
   provincesByCode,
@@ -262,8 +264,9 @@ export const PlaceOrder = () => {
       Authorization: `Basic ${btoa(secretKey)}`,
     };
   
-    const totalAmount = (getTotalCartAmount() + deliveryFee) * 100; // Amount in cents
-  
+    //const totalAmount = (getTotalCartAmount() + deliveryFee) * 100; // Amount in cents
+    const totalAmount = (getTotalCartAmount() + deliveryFee); // Amount in cents
+
     try {
       const deliveryFeeItem = {
         name: "Delivery Fee",
@@ -501,6 +504,8 @@ export const PlaceOrder = () => {
             </div>
           </div>
           {/*<button type="submit">PROCEED TO PAYMENT</button>*/}
+
+          <PayPalCheckout totalAmount={totalAmount} />
           <button onClick={handlePayment} disabled={loading}>
         {loading ? "Processing..." : "Pay with PayPal"}
       </button>
