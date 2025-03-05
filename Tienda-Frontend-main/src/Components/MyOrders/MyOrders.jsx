@@ -191,25 +191,35 @@ useEffect(() => {
       socket.disconnect();
     };
   }, [userId]);
-
   const handleConfirmOrderReceived = async (orderId) => {
+    console.log("🔍 handleConfirmOrderReceived triggered for orderId:", orderId); // ✅ Debugging line
+  
     try {
       // Get PayPal Order ID from the backend
+      console.log("📡 Sending GET request to:", `https://ip-tienda-han-backend.onrender.com/api/transactions/${orderId}`);
+      
       const transactionResponse = await axios.get(
         `https://ip-tienda-han-backend.onrender.com/api/transactions/${orderId}`
       );
   
-      const paypalOrderId = transactionResponse.data.transactionId; // ✅ Use transactionId instead
+      console.log("✅ Transaction Response:", transactionResponse.data); // ✅ Debugging line
+  
+      const paypalOrderId = transactionResponse.data.transactionId; 
   
       if (!paypalOrderId) {
+        console.error("❌ Failed to retrieve PayPal Order ID.");
         toast.error("Failed to retrieve PayPal Order ID.");
         return;
       }
   
+      console.log("📡 Sending POST request to capture payment:", paypalOrderId);
+  
       // Capture the authorized payment
       const response = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/capture", {
-        orderId: paypalOrderId, // ✅ Send stored PayPal Order ID for capturing
+        orderId: paypalOrderId,
       });
+  
+      console.log("✅ PayPal Capture Response:", response.data); // ✅ Debugging line
   
       if (response.data.success) {  
         toast.success("Payment successfully processed!");
@@ -218,11 +228,10 @@ useEffect(() => {
         toast.error("Payment failed. Please contact support.");
       }
     } catch (error) {
-      console.error("Error processing payment:", error);
+      console.error("❌ Error processing payment:", error);
       toast.error("Failed to process payment.");
     }
   };
-  
   
 
   return (
@@ -255,9 +264,13 @@ useEffect(() => {
                   <td>{order.status}</td>
                   <td>
                     {order.status === "Pending" ? (
-                      <button onClick={() => handleConfirmOrderReceived(order.transactionId, order.amount)}>
+                      <button onClick={() => {
+                        console.log("🖱 Button Clicked for Order:", order.transactionId);
+                        handleConfirmOrderReceived(order.transactionId);
+                      }}>
                         Order Received
                       </button>
+                      
                     ) : (
                       <span>Status: {order.status}</span> // Debugging line
                     )}
