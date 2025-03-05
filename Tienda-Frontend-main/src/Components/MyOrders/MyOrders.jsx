@@ -242,12 +242,14 @@ useEffect(() => {
                   <td>{order.amount}</td>
                   <td>{order.status}</td>
                   <td>
-          {order.status === "Pending" && order.paymentMethod === "cod" && (
-            <button onClick={() => handleConfirmOrderReceived(order.transactionId, order.amount)}>
-              Order Received
-            </button>
-          )}
-        </td>
+                    {order.status === "Pending" ? (
+                      <button onClick={() => handleConfirmOrderReceived(order.transactionId, order.amount)}>
+                        Order Received
+                      </button>
+                    ) : (
+                      <span>Status: {order.status}</span> // Debugging line
+                    )}
+                  </td>
                 </tr>
               ))
             ) : (

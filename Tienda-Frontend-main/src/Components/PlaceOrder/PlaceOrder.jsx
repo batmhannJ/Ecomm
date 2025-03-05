@@ -317,11 +317,11 @@ export const PlaceOrder = () => {
         window.location.href = checkoutSession.attributes.checkout_url;
         toast.success("Redirecting to payment gateway...");
       } else {
-        toast.error("Failed to create checkout session. Please try again.");
+        //toast.error("Failed to create checkout session. Please try again.");
       }
     } catch (error) {
-      console.error("Checkout Error:", error.response || error);
-      toast.error("Failed to process payment. Please try again.");
+      //console.error("Checkout Error:", error.response || error);
+      //toast.error("Failed to process payment. Please try again.");
     }
   };
   
