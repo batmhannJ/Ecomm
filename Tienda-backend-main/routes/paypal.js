@@ -4,10 +4,12 @@ require("dotenv").config();
 
 const router = express.Router();
 
-const PAYPAL_CLIENT_ID = "LIVE_PAYPAL_CLIENT_ID";
-const PAYPAL_SECRET = "LIVE_PAYPAL_SECRET";
+
+const PAYPAL_CLIENT_ID = "AZHXvh50TSv6IaOBD6EDYYjAIYXKB3MhH6MnYeUL6cSCk5a-Cg01hJi5jGcKHyyCDy2B1HcgQn4um5JT";
+const PAYPAL_SECRET = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
 const PAYPAL_API = "https://api-m.paypal.com"; // Live environment
-const SELLER_EMAIL = "YOUR_PAYPAL_BUSINESS_EMAIL"; // Dito papasok ang pera
+
+const SELLER_EMAIL = "reyeshannahjoy82@gmail.com"; // Dito papasok ang pera
 
 // Function to get PayPal access token
 const getAccessToken = async () => {
