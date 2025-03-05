@@ -192,65 +192,6 @@ useEffect(() => {
     };
   }, [userId]);
 
-
-  const handleConfirmOrderReceived = async (orderId) => {
-    console.log("🔍 handleConfirmOrderReceived triggered for orderId:", orderId); // ✅ Debugging line
-  
-    try {
-      // Get PayPal Order ID from the backend
-      console.log("📡 Sending GET request to:", `https://ip-tienda-han-backend.onrender.com/api/transactions/paypal/${orderId}`);
-      
-      const transactionResponse = await axios.get(
-        `https://ip-tienda-han-backend.onrender.com/api/transactions/paypal/${orderId}`
-      );
-  
-      console.log("✅ Transaction Response:", transactionResponse.data); // ✅ Debugging line
-  
-      const paypalOrderId = transactionResponse.data.transactionId; 
-  
-      if (!paypalOrderId) {
-        console.error("❌ Failed to retrieve PayPal Order ID.");
-        toast.error("Failed to retrieve PayPal Order ID.");
-        return;
-      }
-  
-      console.log("📡 Sending POST request to capture payment:", paypalOrderId);
-  
-      // Capture the authorized payment
-      const response = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/capture", {
-        orderId: paypalOrderId,
-      });
-  
-      console.log("✅ PayPal Capture Response:", response.data); // ✅ Debugging line
-  
-      if (response.data.success) {  
-        toast.success("Payment successfully processed!");
-        fetchOrders(); // Refresh orders
-      } else {
-        toast.error("Payment failed. Please contact support.");
-      }
-    }catch (error) {
-  if (error.response) {
-    // Server responded with a status code that falls out of the range of 2xx
-    console.error("❌ Server responded with error:");
-    console.error("Status:", error.response.status);
-    console.error("Data:", error.response.data);
-    console.error("Headers:", error.response.headers);
-  } else if (error.request) {
-    // The request was made but no response was received
-    console.error("❌ No response received from server:");
-    console.error(error.request);
-  } else {
-    // Something happened in setting up the request that triggered an error
-    console.error("❌ Error setting up request:", error.message);
-  }
-
-  toast.error("Failed to process payment. See console for details.");
-}
-
-  };
-  
-
   return (
     <div className="my-order-container">
       <h1>My Orders</h1>
@@ -266,7 +207,6 @@ useEffect(() => {
               <th>Quantity</th>
               <th>Amount</th>
               <th>Status</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -279,24 +219,11 @@ useEffect(() => {
                   <td>{order.quantity}</td>
                   <td>{order.amount}</td>
                   <td>{order.status}</td>
-                  <td>
-                    {order.status === "Pending" ? (
-                      <button onClick={() => {
-                        console.log("🖱 Button Clicked for Order:", order.transactionId);
-                        handleConfirmOrderReceived(order.transactionId);
-                      }}>
-                        Order Received
-                      </button>
-                      
-                    ) : (
-                      <span>Status: {order.status}</span> // Debugging line
-                    )}
-                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7">No orders found</td>
+                <td colSpan="6">No orders found</td>
               </tr>
             )}
           </tbody>
