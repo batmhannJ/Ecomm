@@ -117,10 +117,8 @@ app.use((req, res, next) => {
 
   res.setHeader(
     "Content-Security-Policy",
-    "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com"
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.paypal.com https://www.paypalobjects.com https://www.paypal.cn https://objects.paypal.cn;"
   );
-
-
 
   next();
 });
