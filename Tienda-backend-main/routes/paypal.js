@@ -34,22 +34,18 @@ const getAccessToken = async () => {
   }
 };
 
-
 router.post("/charge", async (req, res) => {
     try {
-      const { amount, currency, userEmail } = req.body;
+      const { amount, currency } = req.body;
       const accessToken = await getAccessToken();
-      console.log("PayPal Access Token:", accessToken);
-      console.log("Amount:", amount);
-    console.log("Currency:", currency);
-    console.log("User Email:", userEmail);
-
-
-      // Step 1: Create an order with payment_source
+  
+      console.log("Creating PayPal order...");
+  
+      // Step 1: Create an order
       const orderResponse = await axios.post(
         `${PAYPAL_API}/v2/checkout/orders`,
         {
-          intent: "CAPTURE",
+          intent: "CAPTURE", // Direktang i-ca-capture
           purchase_units: [
             {
               amount: {
@@ -60,7 +56,10 @@ router.post("/charge", async (req, res) => {
           ],
           payment_source: {
             paypal: {
-              email_address: userEmail, // Direktang gagamitin ang email ng user
+              experience_context: {
+                payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
+                user_action: "PAY_NOW",
+              },
             },
           },
         },
@@ -71,6 +70,8 @@ router.post("/charge", async (req, res) => {
           },
         }
       );
+  
+      console.log("Order Created:", orderResponse.data);
   
       // Step 2: Auto-capture payment
       const captureResponse = await axios.post(
@@ -84,13 +85,15 @@ router.post("/charge", async (req, res) => {
         }
       );
   
+      console.log("Payment Captured:", captureResponse.data);
+  
       res.status(200).json({
         message: "Payment captured successfully",
         data: captureResponse.data,
       });
   
     } catch (error) {
-      console.error("PayPal charge error:", error);
+      console.error("PayPal charge error:", error.response?.data || error);
       res.status(500).json({ message: "Payment failed", error: error.message });
     }
   });
