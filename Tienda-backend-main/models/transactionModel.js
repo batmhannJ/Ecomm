@@ -11,6 +11,7 @@ const transactionSchema = new mongoose.Schema({
   transactionId: { type: String, required: true },
   status: { type: String, required: true },
   userId: { type: String, required: true },
+  paymentMethod: {type: String},
 });
 
 module.exports = mongoose.model("Transaction", transactionSchema);

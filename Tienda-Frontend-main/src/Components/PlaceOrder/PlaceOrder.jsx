@@ -375,6 +375,7 @@ export const PlaceOrder = () => {
         address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
         status: "Pending",
         userId: localStorage.getItem("userId"),
+        paymentMethod: "COD",
       });
   
       // Step 3: Update Stock
