@@ -383,9 +383,9 @@ export const PlaceOrder = () => {
       });
   
       // Delete Cart
-      await axios.post("https://ip-tienda-han-backend.onrender.com/api/deleteCart", {
+      /*await axios.post("https://ip-tienda-han-backend.onrender.com/api/deleteCart", {
         userId: localStorage.getItem("userId"),
-      });
+      });*/
   
       // Clear Cart in Frontend
       clearCart();
