@@ -201,11 +201,6 @@ app.post("/upload", upload.single("product"), (req, res) => {
   });
 });
 
-app.use(helmet({
-  contentSecurityPolicy: false
-}));
-
-
 app.post("/api/signup", upload.single("idPicture"), signup);
 
 const CartItems = require("./models/orderedItemsModel");
