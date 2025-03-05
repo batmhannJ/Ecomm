@@ -348,19 +348,20 @@ export const PlaceOrder = () => {
 
     try {
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
-        transactionId,
+        transactionId: referenceNumber,
         date: new Date(),
-        name: `${localStorage.getItem("firstName")} ${localStorage.getItem("lastName")}`,
-        contact: localStorage.getItem("phone"),
+        name: `${data.firstName} ${data.lastName}`,
+        contact: data.phone,
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
         amount: totalAmount,
-        deliveryFee,
-        address: `${localStorage.getItem("street")} ${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zipcode")} ${localStorage.getItem("country")}`,
-        status,
+        deliveryFee: deliveryFee,
+        address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
+        status: "Cart Processing",
         userId: localStorage.getItem("userId"),
       });
-
+  
+      // Update Stock
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
         updates: cartDetails.map((item) => ({
           id: item.id,
@@ -368,7 +369,7 @@ export const PlaceOrder = () => {
           quantity: item.quantity,
         })),
       });
-
+  
       clearCart();
       toast.success(`Order placed successfully! (${status})`);
       navigate("/myorders");
