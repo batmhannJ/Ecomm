@@ -16,14 +16,16 @@ const Orders = () => {
         body: JSON.stringify({
           amount: order.amount, // Total amount to be charged
           currency: "PHP",
-          userEmail: order.email, // Email ng user na gagamitin sa PayPal
+          userEmail: "hannahjoyreyes08@gmail.com", // Email ng user na gagamitin sa PayPal
         }),
       });
   
       if (!response.ok) {
+        console.error("PayPal Error Response:", data);
         throw new Error("Failed to process PayPal payment");
       }
-  
+      console.log("PayPal Success Response:", data);
+
       toast.success("Payment successfully processed via PayPal!");
     } catch (error) {
       console.error("Error processing PayPal payment:", error);
