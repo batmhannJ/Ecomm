@@ -34,59 +34,61 @@ const getAccessToken = async () => {
   }
 };
 
-// PayPal charge endpoint
-router.post("/charge", async (req, res) => {
-  try {
-    const { amount, currency } = req.body;
-    const accessToken = await getAccessToken();
 
-    // Step 1: Create Order
-    const orderResponse = await axios.post(
-      `${PAYPAL_API}/v2/checkout/orders`,
-      {
-        intent: "CAPTURE",
-        purchase_units: [
-          {
-            amount: {
-              currency_code: currency,
-              value: amount,
+router.post("/charge", async (req, res) => {
+    try {
+      const { amount, currency, userEmail } = req.body;
+      const accessToken = await getAccessToken();
+  
+      // Step 1: Create an order with payment_source
+      const orderResponse = await axios.post(
+        `${PAYPAL_API}/v2/checkout/orders`,
+        {
+          intent: "CAPTURE",
+          purchase_units: [
+            {
+              amount: {
+                currency_code: currency,
+                value: amount,
+              },
             },
-            payee: {
-              email_address: SELLER_EMAIL, // ✅ Siguradong tama ang tatanggap ng payment
+          ],
+          payment_source: {
+            paypal: {
+              email_address: userEmail, // Direktang gagamitin ang email ng user
             },
           },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
         },
-      }
-    );
-
-    const orderId = orderResponse.data.id;
-    console.log("PayPal Order Created:", orderId);
-
-    // Step 2: Capture Payment
-    const captureResponse = await axios.post(
-      `${PAYPAL_API}/v2/checkout/orders/${orderId}/capture`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    console.log("Payment Captured:", captureResponse.data);
-    res.status(200).json({ message: "Payment successful", data: captureResponse.data });
-
-  } catch (error) {
-    console.error("PayPal payment error:", error.response?.data || error.message);
-    res.status(500).json({ message: "Payment failed", error: error.response?.data || error.message });
-  }
-});
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      // Step 2: Auto-capture payment
+      const captureResponse = await axios.post(
+        `${PAYPAL_API}/v2/checkout/orders/${orderResponse.data.id}/capture`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      res.status(200).json({
+        message: "Payment captured successfully",
+        data: captureResponse.data,
+      });
+  
+    } catch (error) {
+      console.error("PayPal charge error:", error);
+      res.status(500).json({ message: "Payment failed", error: error.message });
+    }
+  });
+  
 
 module.exports = router;
