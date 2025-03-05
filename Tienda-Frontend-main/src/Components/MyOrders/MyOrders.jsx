@@ -191,6 +191,8 @@ useEffect(() => {
       socket.disconnect();
     };
   }, [userId]);
+
+
   const handleConfirmOrderReceived = async (orderId) => {
     console.log("🔍 handleConfirmOrderReceived triggered for orderId:", orderId); // ✅ Debugging line
   
@@ -227,10 +229,25 @@ useEffect(() => {
       } else {
         toast.error("Payment failed. Please contact support.");
       }
-    } catch (error) {
-      console.error("❌ Error processing payment:", error);
-      toast.error("Failed to process payment.");
-    }
+    }catch (error) {
+  if (error.response) {
+    // Server responded with a status code that falls out of the range of 2xx
+    console.error("❌ Server responded with error:");
+    console.error("Status:", error.response.status);
+    console.error("Data:", error.response.data);
+    console.error("Headers:", error.response.headers);
+  } else if (error.request) {
+    // The request was made but no response was received
+    console.error("❌ No response received from server:");
+    console.error(error.request);
+  } else {
+    // Something happened in setting up the request that triggered an error
+    console.error("❌ Error setting up request:", error.message);
+  }
+
+  toast.error("Failed to process payment. See console for details.");
+}
+
   };
   
 
