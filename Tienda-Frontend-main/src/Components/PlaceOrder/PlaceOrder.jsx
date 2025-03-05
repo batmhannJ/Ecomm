@@ -359,7 +359,6 @@ export const PlaceOrder = () => {
         address: `${localStorage.getItem("street")} ${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zipcode")} ${localStorage.getItem("country")}`,
         status,
         userId: localStorage.getItem("userId"),
-        paymentMethod: status === "Pending" ? "COD" : "PayPal",
       });
 
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
