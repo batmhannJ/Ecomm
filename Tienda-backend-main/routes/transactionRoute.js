@@ -369,6 +369,8 @@ router.get("/userTransactions/:userId", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
 router.get("/transactions/:transactionId", async (req, res) => {
   try {
     const { transactionId } = req.params;
@@ -390,8 +392,12 @@ router.get("/transactions/:transactionId", async (req, res) => {
 
     console.log("✅ Transaction found:", JSON.stringify(transaction, null, 2)); // ✅ Log transaction details
 
-    res.json(transaction);
-  } catch (error) {
+    res.json({
+      transactionId: transaction.transactionId, // ✅ Make sure this is included
+      amount: transaction.amount,
+      status: transaction.status,
+    });
+      } catch (error) {
     console.error("❌ Error fetching transaction:", error);
     res.status(500).json({ 
       success: false, 
