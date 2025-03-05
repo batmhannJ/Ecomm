@@ -194,7 +194,7 @@ useEffect(() => {
 
   const handleConfirmOrderReceived = async (orderId, amount) => {
     try {
-      const response = await axios.post("https://ip-tienda-han-backend.onrender.com/api/paypal/payout", {
+      const response = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/payout", {
         orderId,
         amount,
         userId: getUserIdFromToken(),

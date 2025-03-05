@@ -41,6 +41,8 @@ const getPayPalAccessToken = async () => {
 
 
 router.post("/paypal/payout", async (req, res) => {
+    console.log("Received payout request:", req.body); // ✅ Debugging line
+
     const { orderId, amount } = req.body;
   
     const accessToken = await getPayPalAccessToken();
