@@ -26,6 +26,7 @@ const PayPalCheckout = ({ totalAmount, onPaymentSuccess }) => {
             if (onPaymentSuccess) {
               await onPaymentSuccess(details);
             }
+            
           });
         }}
         onError={(err) => {

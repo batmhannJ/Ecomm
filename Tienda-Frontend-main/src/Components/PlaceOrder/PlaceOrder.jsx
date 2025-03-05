@@ -314,8 +314,6 @@ export const PlaceOrder = () => {
         { headers }
       );
 
-      
-  
       const checkoutSession = sessionResponse.data.data;
   
       if (checkoutSession.attributes.checkout_url) {
@@ -350,36 +348,57 @@ export const PlaceOrder = () => {
   const handlePaymentSuccess = async (paymentDetails) => {
     console.log("Payment Details:", paymentDetails);
   
+    const referenceNumber = paymentDetails.id;
+    const cartDetails = itemDetails.map((item) => ({
+      id: item.id.toString(),
+      name: item.name,
+      price: item.price || item.adjustedPrice,
+      quantity: item.quantity,
+      size: item.size,
+    }));
+  
     try {
       // Save Transaction
-      await axios.post("https://your-api.com/saveTransaction", {
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
+        transactionId: referenceNumber,
+        date: new Date(),
+        name: `${data.firstName} ${data.lastName}`,
+        contact: data.phone,
+        item: cartDetails.map((item) => item.name).join(", "),
+        quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
+        amount: totalAmount,
+        deliveryFee: deliveryFee,
+        address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
+        status: "Cart Processing",
         userId: localStorage.getItem("userId"),
-        transactionId: paymentDetails.id,
-        amount: paymentDetails.purchase_units[0].amount.value,
-        status: "completed",
       });
   
       // Update Stock
-      await axios.post("https://your-api.com/updateStock", {
-        cartItems,
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
+        updates: cartDetails.map((item) => ({
+          id: item.id,
+          size: item.size,
+          quantity: item.quantity,
+        })),
       });
   
       // Delete Cart
-      await axios.post("https://your-api.com/deleteCart", {
+      await axios.post("https://ip-tienda-han-backend.onrender.com/api/deleteCart", {
         userId: localStorage.getItem("userId"),
       });
   
-      // Clear cart locally
+      // Clear Cart in Frontend
       clearCart();
   
-      alert("Order placed successfully!");
+      // Redirect to My Orders
+      alert("Order successfully placed!");
       navigate("/myorders");
     } catch (error) {
-      console.error("Error processing post-payment actions:", error);
-      alert("There was an issue processing your order. Please contact support.");
+      console.error("Post-payment error:", error);
+      alert("Failed to process order. Please contact support.");
     }
   };
-
+  
   
   const handlePayment = async () => {
     setLoading(true);
