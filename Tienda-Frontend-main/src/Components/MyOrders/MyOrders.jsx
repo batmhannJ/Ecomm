@@ -44,6 +44,15 @@ const [data, setData] = useState({
   phone: "",
 });
 
+useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const orderSuccess = urlParams.get("orderSuccess");
+
+  if (orderSuccess === "true") {
+    toast.success("Order placed successfully!");
+  }
+}, []);
+
 
 const handleTransactionStatus = (status) => {
   switch (status) {

@@ -33,7 +33,7 @@ const PayPalCheckout = ({ totalAmount, onPaymentSuccess }) => {
                 window.close();
               } else {
                 // If it's a modal, force refresh to close it
-                window.location.href = "/myorders"; // Redirect to orders page
+                window.location.href = "/myorders?orderSuccess=true"; // Redirect to orders page
               }
             }, 5000); // 5 seconds delay
             
