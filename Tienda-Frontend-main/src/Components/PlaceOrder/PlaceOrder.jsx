@@ -337,7 +337,7 @@ export const PlaceOrder = () => {
   const auth = btoa(`${clientId}:${clientSecret}`);
 
 
-  const saveTransaction = async (transactionId, status, userData) => {
+  const saveTransaction = async (transactionId, status) => {
     const cartDetails = itemDetails.map((item) => ({
       id: item.id.toString(),
       name: item.name,
@@ -345,22 +345,22 @@ export const PlaceOrder = () => {
       quantity: item.quantity,
       size: item.size,
     }));
-  
+
     try {
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId,
         date: new Date(),
-        name: `${userData.firstName} ${userData.lastName}`,
-        contact: userData.phone,
+        name: `${localStorage.getItem("firstName")} ${localStorage.getItem("lastName")}`,
+        contact: localStorage.getItem("phone"),
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
         amount: totalAmount,
         deliveryFee,
-        address: `${userData.street} ${userData.city} ${userData.state} ${userData.zipcode} ${userData.country}`,
+        address: `${localStorage.getItem("street")} ${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zipcode")} ${localStorage.getItem("country")}`,
         status,
         userId: localStorage.getItem("userId"),
       });
-  
+
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
         updates: cartDetails.map((item) => ({
           id: item.id,
@@ -368,7 +368,7 @@ export const PlaceOrder = () => {
           quantity: item.quantity,
         })),
       });
-  
+
       clearCart();
       toast.success(`Order placed successfully! (${status})`);
       navigate("/myorders");
@@ -376,7 +376,7 @@ export const PlaceOrder = () => {
       console.error("Transaction error:", error);
       toast.error("Failed to place order. Please try again.");
     }
-  };  
+  };
 
   const handleCashOnDelivery = async () => {
     const referenceNumber = generateReferenceNumber();
@@ -430,29 +430,98 @@ export const PlaceOrder = () => {
   };
 
   return (
-    <div className="place-order">
+    <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
       <div className="place-order-left">
         <p className="title">Delivery Information</p>
         <div className="multi-fields">
-          <input required name="firstName" onChange={onChangeHandler} value={data.firstName} type="text" placeholder="First Name" />
-          <input required name="lastName" onChange={onChangeHandler} value={data.lastName} type="text" placeholder="Last Name" />
+          <input
+            required
+            name="firstName"
+            onChange={onChangeHandler}
+            value={data.firstName}
+            type="text"
+            placeholder="First Name"
+          />
+          <input
+            required
+            name="lastName"
+            onChange={onChangeHandler}
+            value={data.lastName}
+            type="text"
+            placeholder="Last Name"
+          />
         </div>
-        <input required name="email" onChange={onChangeHandler} value={data.email} type="email" placeholder="Email Address" />
-        <input required name="street" onChange={onChangeHandler} value={data.street} type="text" placeholder="Street" />
+        <input
+          required
+          name="email"
+          onChange={onChangeHandler}
+          value={data.email}
+          type="email"
+          placeholder="Email Address"
+        />
+        <input
+          required
+          name="street"
+          onChange={onChangeHandler}
+          value={data.street}
+          type="text"
+          placeholder="Street"
+        />
         <div className="multi-fields">
-          <input required name="city" onChange={onChangeHandler} value={data.barangay} type="text" placeholder="City" />
-          <input required name="state" onChange={onChangeHandler} value={data.city} type="text" placeholder="State" />
+          <input
+            required
+            name="city"
+            onChange={onChangeHandler}
+            value={data.barangay}
+            type="text"
+            placeholder="City"
+          />
+          <input
+            required
+            name="state"
+            onChange={onChangeHandler}
+            value={data.city}
+            type="text"
+            placeholder="State"
+          />
         </div>
         <div className="multi-fields">
-          <input required name="province" onChange={onChangeHandler} value={data.state} type="text" placeholder="Province" />
-          <input required name="country" onChange={onChangeHandler} value={data.country} type="text" placeholder="Country" />
+          <input
+            required
+            name="province"
+            onChange={onChangeHandler}
+            value={data.state}
+            type="text"
+            placeholder="Province"
+          />
+          <input
+            required
+            name="country"
+            onChange={onChangeHandler}
+            value={data.country}
+            type="text"
+            placeholder="Country"
+          />
         </div>
         <div className="multi-fields">
-          <input required name="zipcode" onChange={onChangeHandler} value={data.zipcode} type="text" placeholder="Zip Code" />
-          <input required name="phone" onChange={onChangeHandler} value={data.phone} type="text" placeholder="Phone" />
+          <input
+            required
+            name="zipcode"
+            onChange={onChangeHandler}
+            value={data.zipcode}
+            type="text"
+            placeholder="Zip Code"
+          />
+          <input
+            required
+            name="phone"
+            onChange={onChangeHandler}
+            value={data.phone}
+            type="text"
+            placeholder="Phone"
+          />
         </div>
       </div>
-  
       <div className="place-order-right">
         <div className="cartitems-total">
           <h1>Cart Totals</h1>
@@ -464,27 +533,22 @@ export const PlaceOrder = () => {
             <hr />
             <div className="cartitems-total-item">
               <p>Delivery Fee</p>
-              <p>₱{deliveryFee}</p>
+              <p> ₱{deliveryFee}</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
               <h3>Total</h3>
-              <h3>₱{totalAmount}</h3>
+                 <h3>₱{totalAmount}</h3>
             </div>
           </div>
-  
-          {/* PayPal Checkout Button */}
           <PayPalCheckout totalAmount={totalAmount} onPaymentSuccess={handlePaymentSuccess} />
-  
-          {/* COD Button (Now Fixed) */}
           <button onClick={handleCashOnDelivery} className="cod-button">
-            Cash on Delivery (COD)
-          </button>
+          Cash on Delivery (COD)
+        </button>
         </div>
       </div>
-    </div>
+    </form>
   );
-  
 };
 
 export default PlaceOrder;
