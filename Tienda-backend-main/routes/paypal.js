@@ -39,7 +39,12 @@ router.post("/charge", async (req, res) => {
     try {
       const { amount, currency, userEmail } = req.body;
       const accessToken = await getAccessToken();
-  
+      console.log("PayPal Access Token:", accessToken);
+      console.log("Amount:", amount);
+    console.log("Currency:", currency);
+    console.log("User Email:", userEmail);
+
+
       // Step 1: Create an order with payment_source
       const orderResponse = await axios.post(
         `${PAYPAL_API}/v2/checkout/orders`,
