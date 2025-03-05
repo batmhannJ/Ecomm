@@ -430,7 +430,7 @@ export const PlaceOrder = () => {
   };
 
   return (
-    <form noValidate onSubmit={handleProceedToCheckout} className="place-order">
+    <form noValidate className="place-order">
       <div className="place-order-left">
         <p className="title">Delivery Information</p>
         <div className="multi-fields">
