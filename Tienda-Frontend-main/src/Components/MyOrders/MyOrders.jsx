@@ -198,7 +198,7 @@ useEffect(() => {
   
     try {
       // Get PayPal Order ID from the backend
-      console.log("📡 Sending GET request to:", `https://ip-tienda-han-backend.onrender.com/api/transactions/${orderId}`);
+      console.log("📡 Sending GET request to:", `https://ip-tienda-han-backend.onrender.com/api/transactions/paypal/${orderId}`);
       
       const transactionResponse = await axios.get(
         `https://ip-tienda-han-backend.onrender.com/api/transactions/${orderId}`

@@ -370,7 +370,7 @@ router.get("/userTransactions/:userId", async (req, res) => {
   }
 });
 
-router.get("/transactions/:transactionId", async (req, res) => {
+router.get("/transactions/paypal/:transactionId", async (req, res) => {
   try {
     const { transactionId } = req.params;
     console.log(`🔍 Fetching transaction with ID: ${transactionId}`); // ✅ Debugging log
