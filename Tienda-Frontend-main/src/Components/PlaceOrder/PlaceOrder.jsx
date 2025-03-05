@@ -336,11 +336,9 @@ export const PlaceOrder = () => {
   const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
   const auth = btoa(`${clientId}:${clientSecret}`);
 
-
-  const handleCashOnDelivery = async (paymentDetails) => {
-    console.log("Payment Details:", paymentDetails);
+  const handleCashOnDelivery = async () => {
+    const referenceNumber = generateReferenceNumber(); // Generate unique transaction ID
   
-    const referenceNumber = paymentDetails.id;
     const cartDetails = itemDetails.map((item) => ({
       id: item.id.toString(),
       name: item.name,
@@ -350,7 +348,7 @@ export const PlaceOrder = () => {
     }));
   
     try {
-      // Save Transaction
+      // Save Transaction as Pending
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
         date: new Date(),
@@ -359,7 +357,7 @@ export const PlaceOrder = () => {
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
         amount: totalAmount,
-        deliveryFee: deliveryFee,
+        deliveryFee,
         address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
         status: "Pending",
         userId: localStorage.getItem("userId"),
@@ -375,13 +373,14 @@ export const PlaceOrder = () => {
       });
   
       clearCart();
-  
-      alert("Order successfully placed!");
+      toast.success("Order placed successfully! (Cash on Delivery)");
+      navigate("/myorders");
     } catch (error) {
-      console.error("Post-payment error:", error);
-      alert("Failed to process order. Please contact support.");
+      console.error("COD Order Error:", error);
+      toast.error("Failed to place COD order. Please try again.");
     }
   };
+  
 
   const handlePaymentSuccess = async (paymentDetails) => {
     console.log("Payment Details:", paymentDetails);
