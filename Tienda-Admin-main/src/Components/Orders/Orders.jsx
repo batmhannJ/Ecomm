@@ -19,6 +19,8 @@ const Orders = () => {
           userEmail: "hannahjoyreyes08@gmail.com", // Email ng user na gagamitin sa PayPal
         }),
       });
+
+      const data = await response.json(); // Ensure response is parsed properly
   
       if (!response.ok) {
         console.error("PayPal Error Response:", data);
