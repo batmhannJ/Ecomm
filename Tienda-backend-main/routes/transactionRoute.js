@@ -372,42 +372,34 @@ router.get("/userTransactions/:userId", async (req, res) => {
 router.get("/transactions/:transactionId", async (req, res) => {
   try {
     const { transactionId } = req.params;
-    console.log(`🔍 Fetching transaction with ID: ${transactionId}`); // ✅ Log request
+    console.log(`🔍 Fetching transaction with ID: ${transactionId}`); // ✅ Log transaction ID
 
-    // Check MongoDB connection
+    // Ensure MongoDB connection is active
     if (!Transaction) {
-      console.log("❌ Transaction model is not defined");
-      return res.status(500).json({ success: false, message: "Database model error" });
+      console.log("❌ Transaction model is not defined.");
+      return res.status(500).json({ success: false, message: "Database model error." });
     }
 
-    // Fetch transaction from database
+    // Fetch transaction from the database
     const transaction = await Transaction.findOne({ transactionId });
 
     if (!transaction) {
-      console.log("❌ Transaction not found in database.");
-      return res.status(404).json({ success: false, message: "Transaction not found" });
+      console.log(`❌ Transaction ${transactionId} not found in database.`);
+      return res.status(404).json({ success: false, message: "Transaction not found." });
     }
 
-    console.log("✅ Transaction found:", transaction); // ✅ Log transaction details
+    console.log("✅ Transaction found:", JSON.stringify(transaction, null, 2)); // ✅ Log transaction details
 
-    // Return structured response
-    res.json({
-      success: true,
-      transactionId: transaction.transactionId,
-      date: transaction.date,
-      name: transaction.name,
-      contact: transaction.contact,
-      item: transaction.item,
-      quantity: transaction.quantity,
-      amount: transaction.amount,
-      address: transaction.address,
-      status: transaction.status,
-      userId: transaction.userId,
-    });
+    res.json(transaction);
   } catch (error) {
     console.error("❌ Error fetching transaction:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+    res.status(500).json({ 
+      success: false, 
+      message: "Internal Server Error", 
+      error: error.message 
+    });
   }
 });
+
 
 module.exports = router;
