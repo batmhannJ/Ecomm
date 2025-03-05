@@ -211,7 +211,7 @@ useEffect(() => {
         orderId: paypalOrderId, // ✅ Send stored PayPal Order ID for capturing
       });
   
-      if (response.data.success) {
+      if (response.data.success) {  
         toast.success("Payment successfully processed!");
         fetchOrders(); // Refresh orders
       } else {

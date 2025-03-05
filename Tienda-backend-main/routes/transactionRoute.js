@@ -370,5 +370,42 @@ router.get("/userTransactions/:userId", async (req, res) => {
   }
 });
 
+router.get("/transactions/:transactionId", async (req, res) => {
+  try {
+    const { transactionId } = req.params;
+    console.log(`Fetching transaction with ID: ${transactionId}`); // ✅ Debug log
+
+    // Fetch transaction from the database
+    const transaction = await Transaction.findOne({ transactionId });
+
+    if (!transaction) {
+      console.log("Transaction not found in database.");
+      return res.status(404).json({ success: false, message: "Transaction not found" });
+    }
+
+    console.log("Transaction found:", transaction); // ✅ Debug log
+
+    // Return structured response
+    res.json({
+      success: true,
+      transactionId: transaction.transactionId,
+      date: transaction.date,
+      name: transaction.name,
+      contact: transaction.contact,
+      item: transaction.item,
+      quantity: transaction.quantity,
+      amount: transaction.amount,
+      address: transaction.address,
+      status: transaction.status,
+      userId: transaction.userId,
+      paypalOrderId: transaction.paypalOrderId || null, // ✅ Ensure PayPal Order ID is included
+    });
+  } catch (error) {
+    console.error("Error fetching transaction:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+  }
+});
+
+
 
 module.exports = router;
