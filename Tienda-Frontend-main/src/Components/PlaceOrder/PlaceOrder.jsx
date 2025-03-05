@@ -337,7 +337,7 @@ export const PlaceOrder = () => {
   const auth = btoa(`${clientId}:${clientSecret}`);
 
 
-  const saveTransaction = async (transactionId, status) => {
+  const saveTransaction = async (transactionId, status, userData) => {
     const cartDetails = itemDetails.map((item) => ({
       id: item.id.toString(),
       name: item.name,
@@ -345,22 +345,22 @@ export const PlaceOrder = () => {
       quantity: item.quantity,
       size: item.size,
     }));
-
+  
     try {
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId,
         date: new Date(),
-        name: `${localStorage.getItem("firstName")} ${localStorage.getItem("lastName")}`,
-        contact: localStorage.getItem("phone"),
+        name: `${userData.firstName} ${userData.lastName}`,
+        contact: userData.phone,
         item: cartDetails.map((item) => item.name).join(", "),
         quantity: cartDetails.reduce((sum, item) => sum + item.quantity, 0),
         amount: totalAmount,
         deliveryFee,
-        address: `${localStorage.getItem("street")} ${localStorage.getItem("city")} ${localStorage.getItem("state")} ${localStorage.getItem("zipcode")} ${localStorage.getItem("country")}`,
+        address: `${userData.street} ${userData.city} ${userData.state} ${userData.zipcode} ${userData.country}`,
         status,
         userId: localStorage.getItem("userId"),
       });
-
+  
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
         updates: cartDetails.map((item) => ({
           id: item.id,
@@ -368,7 +368,7 @@ export const PlaceOrder = () => {
           quantity: item.quantity,
         })),
       });
-
+  
       clearCart();
       toast.success(`Order placed successfully! (${status})`);
       navigate("/myorders");
@@ -376,7 +376,7 @@ export const PlaceOrder = () => {
       console.error("Transaction error:", error);
       toast.error("Failed to place order. Please try again.");
     }
-  };
+  };  
 
   const handleCashOnDelivery = async () => {
     const referenceNumber = generateReferenceNumber();
