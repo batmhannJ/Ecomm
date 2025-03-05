@@ -115,6 +115,13 @@ app.use((req, res, next) => {
     "camera=(), microphone=(), geolocation=(), interest-cohort=()"
   );
 
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com"
+  );
+
+
+
   next();
 });
 // Database Connection
