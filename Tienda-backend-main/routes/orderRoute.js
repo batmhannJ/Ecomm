@@ -84,4 +84,43 @@ router.post("/paypal/payout", async (req, res) => {
   });
   
 
+  router.post("/paypal/authorize", async (req, res) => {
+    console.log("Received authorization request:", req.body);
+    const { totalAmount } = req.body;
+  
+    const accessToken = await getPayPalAccessToken();
+    if (!accessToken) {
+      return res.status(500).json({ success: false, message: "Failed to authenticate with PayPal." });
+    }
+  
+    try {
+      const orderResponse = await axios.post(
+        `${PAYPAL_API}/v2/checkout/orders`,
+        {
+          intent: "AUTHORIZE", // ✅ Hold funds, do not capture yet
+          purchase_units: [
+            {
+              amount: {
+                currency_code: "PHP",
+                value: totalAmount.toFixed(2),
+              },
+            },
+          ],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      res.json({ success: true, orderId: orderResponse.data.id });
+    } catch (error) {
+      console.error("PayPal Authorization Error:", error.response?.data || error);
+      res.status(500).json({ success: false, message: "Failed to authorize PayPal payment." });
+    }
+  });
+  
+
 module.exports = orderRouter;

@@ -335,7 +335,6 @@ export const PlaceOrder = () => {
   const clientId = "AZHXvh50TSv6IaOBD6EDYYjAIYXKB3MhH6MnYeUL6cSCk5a-Cg01hJi5jGcKHyyCDy2B1HcgQn4um5JT";
   const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
   const auth = btoa(`${clientId}:${clientSecret}`);
-
   const handleCashOnDelivery = async () => {
     const referenceNumber = generateReferenceNumber(); // Generate unique transaction ID
   
@@ -348,9 +347,21 @@ export const PlaceOrder = () => {
     }));
   
     try {
-      // Save Transaction as Pending
+      // Step 1: Request an Order ID from PayPal
+      const paypalResponse = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/authorize", {
+        totalAmount,
+      });
+  
+      if (!paypalResponse.data.success) {
+        throw new Error("Failed to get PayPal Order ID");
+      }
+  
+      const paypalOrderId = paypalResponse.data.orderId; // ✅ Store PayPal Order ID
+  
+      // Step 2: Save Transaction as Pending (with PayPal Order ID)
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
+        paypalOrderId, // ✅ Save this for later payment capture
         date: new Date(),
         name: `${data.firstName} ${data.lastName}`,
         contact: data.phone,
@@ -363,7 +374,7 @@ export const PlaceOrder = () => {
         userId: localStorage.getItem("userId"),
       });
   
-      // Update Stock
+      // Step 3: Update Stock
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
         updates: cartDetails.map((item) => ({
           id: item.id,
@@ -380,6 +391,7 @@ export const PlaceOrder = () => {
       toast.error("Failed to place COD order. Please try again.");
     }
   };
+  
   
 
   const handlePaymentSuccess = async (paymentDetails) => {
