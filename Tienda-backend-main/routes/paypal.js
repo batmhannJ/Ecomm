@@ -36,31 +36,41 @@ const getAccessToken = async () => {
 
 router.post("/charge", async (req, res) => {
     try {
-      const { amount, currency } = req.body;
+      const { amount, currency, userEmail } = req.body;
       const accessToken = await getAccessToken();
   
       console.log("Creating PayPal order...");
   
-      // Step 1: Create an order
+      // Step 1: Create an order with auto-approved settings
       const orderResponse = await axios.post(
         `${PAYPAL_API}/v2/checkout/orders`,
         {
-          intent: "CAPTURE", // Direktang i-ca-capture
+          intent: "CAPTURE",
+          application_context: {
+            user_action: "PAY_NOW", // Auto-approve ang payment
+            return_url: "https://https://ip-tienda-han-admin.onrender.com/admin/orderproduct",
+            cancel_url: "https://https://ip-tienda-han-admin.onrender.com/admin/orderproduct",
+          },
           purchase_units: [
             {
               amount: {
                 currency_code: currency,
                 value: amount,
               },
+              payee: {
+                email_address: SELLER_EMAIL, // Ang tatanggap ng payment
+              },
             },
           ],
           payment_source: {
             paypal: {
               experience_context: {
-                payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
+                payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED", // Auto-pay
+                brand_name: "Tienda",
+                locale: "en-US",
+                landing_page: "LOGIN",
                 user_action: "PAY_NOW",
               },
-              email_address: "hannahjoyreyes08@gmail.com",
             },
           },
         },
@@ -94,7 +104,10 @@ router.post("/charge", async (req, res) => {
       });
   
     } catch (error) {
-      console.error("PayPal charge error:", error.response?.data || error);
+      console.error(
+        "PayPal charge error:",
+        error.response?.data || error
+      );
       res.status(500).json({ message: "Payment failed", error: error.message });
     }
   });
