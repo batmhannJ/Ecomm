@@ -60,7 +60,7 @@ router.post("/charge", async (req, res) => {
                 payment_method_preference: "IMMEDIATE_PAYMENT_REQUIRED",
                 user_action: "PAY_NOW",
               },
-              email_address: userEmail,
+              email_address: "hannahjoyreyes08@gmail.com",
             },
           },
         },
