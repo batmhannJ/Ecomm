@@ -417,7 +417,7 @@ const generatePDF = async () => {
 
             {/* Most Produced Product */}
             <div className='metric-box'>
-                <h3>Most Produced Product</h3>
+                <h3>Most Purchased Product</h3>
                 <p>{salesData.mostProducedProduct || 'N/A'}</p>
             </div>
         </div>
