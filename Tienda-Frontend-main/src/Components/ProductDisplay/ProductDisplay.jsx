@@ -128,6 +128,9 @@ const ProductDisplay = (props) => {
     }
   };
 
+  // Check if the button should be disabled
+  const isButtonDisabled = !selectedSize || currentStock === 0 || currentStock === null || currentStock === undefined;
+
   return (
     <div className="productdisplay">
       <div className="productdisplay-left">
@@ -215,10 +218,15 @@ const ProductDisplay = (props) => {
 
           <button
             onClick={handleAddToCart}
-            disabled={currentStock === 0 || !selectedSize}
+            disabled={isButtonDisabled}
             className="productdisplay-button"
           >
-            {currentStock === 0 ? "OUT OF STOCK" : "ADD TO CART"}
+            {!selectedSize 
+              ? "SELECT SIZE FIRST" 
+              : currentStock === 0 || currentStock === null || currentStock === undefined
+              ? "OUT OF STOCK" 
+              : "ADD TO CART"
+            }
           </button>
         </div>
       </div>
