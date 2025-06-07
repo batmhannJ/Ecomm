@@ -359,7 +359,7 @@ export const PlaceOrder = () => {
         amount: totalAmount,
         deliveryFee,
         address: `${data.street} ${data.city} ${data.state} ${data.zipcode} ${data.country}`,
-        status: "Pending",
+        status: "Cart Processing",
         userId: localStorage.getItem("userId"),
         paymentMethod: "COD",
       });

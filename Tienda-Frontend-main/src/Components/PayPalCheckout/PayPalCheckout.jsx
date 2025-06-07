@@ -3,7 +3,7 @@ import axios from "axios";
 
 const PayPalCheckout = ({ totalAmount, onPaymentSuccess }) => {
   return (
-    <PayPalScriptProvider options={{ "client-id": "AZHXvh50TSv6IaOBD6EDYYjAIYXKB3MhH6MnYeUL6cSCk5a-Cg01hJi5jGcKHyyCDy2B1HcgQn4um5JT", currency: "PHP" }}>
+    <PayPalScriptProvider options={{ "client-id": "AbXtYpGvq8DoiaoNknMCN2MNzmp9Q2DeVkJq8RluWM5D5LgwiDzztIId1gVHMJP5n2i6KezCeiAJ04dE", currency: "PHP" }}>
       <PayPalButtons
         createOrder={(data, actions) => {
           return actions.order.create({
