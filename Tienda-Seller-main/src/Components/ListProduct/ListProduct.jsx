@@ -82,10 +82,28 @@ export const ListProduct = () => {
     setIsModalOpen(true);
   };
 
+  // Helper function to handle number input changes and prevent negative values
+  const handleNumberChange = (field, value) => {
+    // Convert to number and ensure it's not negative
+    const numValue = Math.max(0, parseFloat(value) || 0);
+    setFormData({ ...formData, [field]: numValue });
+  };
+
   const updateProduct = async () => {
     // Validate form data
     if (!formData.name || !formData.old_price || !formData.new_price || !formData.category) {
       alert('Please fill out all required fields.');
+      return;
+    }
+
+    // Additional validation to ensure no negative values
+    if (formData.old_price < 0 || formData.new_price < 0) {
+      alert('Prices cannot be negative.');
+      return;
+    }
+
+    if (formData.s_stock < 0 || formData.m_stock < 0 || formData.l_stock < 0 || formData.xl_stock < 0) {
+      alert('Stock quantities cannot be negative.');
       return;
     }
 
@@ -200,8 +218,10 @@ const handleFileChange = (e) => {
         <input
           id="old-price"
           type="number"
+          min="0"
+          step="0.01"
           value={formData.old_price}
-          onChange={(e) => setFormData({ ...formData, old_price: e.target.value })}
+          onChange={(e) => handleNumberChange('old_price', e.target.value)}
           placeholder="Old Price"
         />
       </div>
@@ -211,8 +231,10 @@ const handleFileChange = (e) => {
         <input
           id="new-price"
           type="number"
+          min="0"
+          step="0.01"
           value={formData.new_price}
-          onChange={(e) => setFormData({ ...formData, new_price: e.target.value })}
+          onChange={(e) => handleNumberChange('new_price', e.target.value)}
           placeholder="New Price"
         />
       </div>
@@ -236,8 +258,9 @@ const handleFileChange = (e) => {
         <input
           id="s-stock"
           type="number"
+          min="0"
           value={formData.s_stock}
-          onChange={(e) => setFormData({ ...formData, s_stock: e.target.value || 0})}
+          onChange={(e) => handleNumberChange('s_stock', e.target.value)}
           placeholder="Small Stock"
         />
       </div>
@@ -247,8 +270,9 @@ const handleFileChange = (e) => {
         <input
           id="m-stock"
           type="number"
+          min="0"
           value={formData.m_stock}
-          onChange={(e) => setFormData({ ...formData, m_stock: e.target.value || 0})}
+          onChange={(e) => handleNumberChange('m_stock', e.target.value)}
           placeholder="Medium Stock"
         />
       </div>
@@ -258,8 +282,9 @@ const handleFileChange = (e) => {
         <input
           id="l-stock"
           type="number"
+          min="0"
           value={formData.l_stock}
-          onChange={(e) => setFormData({ ...formData, l_stock: e.target.value || 0})}
+          onChange={(e) => handleNumberChange('l_stock', e.target.value)}
           placeholder="Large Stock"
         />
       </div>
@@ -269,8 +294,9 @@ const handleFileChange = (e) => {
         <input
           id="xl-stock"
           type="number"
+          min="0"
           value={formData.xl_stock}
-          onChange={(e) => setFormData({ ...formData, xl_stock: e.target.value || 0})}
+          onChange={(e) => handleNumberChange('xl_stock', e.target.value)}
           placeholder="XL Stock"
         />
       </div>
