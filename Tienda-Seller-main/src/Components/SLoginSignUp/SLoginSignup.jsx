@@ -16,7 +16,7 @@ const SLoginSignup = () => {
     idPicture: null,  // New field for ID picture
   });
   const [passwordError, setPasswordError] = useState('');
-  const [isLogin, setIsLogin] = useState(false); // To toggle between login and sign up
+  const [isLogin, setIsLogin] = useState(true); // To toggle between login and sign up
   const navigate = useNavigate();
   const [forgotPassword, setForgotPassword] = useState(false); // State for forgot password
   const [email, setEmail] = useState('');
