@@ -336,9 +336,8 @@ export const PlaceOrder = () => {
   const clientSecret = "EOMgIpqgolvwt558kUHf2w-vjqqlF7sLI5BAzxkeNdGsUYalJCBtD0E7-ASHxplQFRdXO-SN6PwUIH3Z";
   const auth = btoa(`${clientId}:${clientSecret}`);
 
-
   const handleCashOnDelivery = async () => {
-    const referenceNumber = generateReferenceNumber(); // Generate unique transaction ID
+    const referenceNumber = generateReferenceNumber();
   
     const cartDetails = itemDetails.map((item) => ({
       id: item.id.toString(),
@@ -349,22 +348,9 @@ export const PlaceOrder = () => {
     }));
   
     try {
-      // Step 1: Request an Order ID from PayPal
-      const paypalResponse = await axios.post("https://ip-tienda-han-backend.onrender.com/api/orders/paypal/authorize", {
-        totalAmount,
-        transactionId: referenceNumber, // ✅ Use transactionId as PayPal Order ID
-      });
-  
-      if (!paypalResponse.data.success) {
-        throw new Error("Failed to get PayPal Order ID");
-      }
-  
-      const paypalOrderId = paypalResponse.data.orderId; // ✅ Store PayPal Order ID
-  
-      // Step 2: Save Transaction as Pending (with PayPal Order ID)
+      // Step 1: Save Transaction as Pending
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/transactions", {
         transactionId: referenceNumber,
-        paypalOrderId, // ✅ Save this for later payment capture
         date: new Date(),
         name: `${data.firstName} ${data.lastName}`,
         contact: data.phone,
@@ -378,7 +364,7 @@ export const PlaceOrder = () => {
         paymentMethod: "COD",
       });
   
-      // Step 3: Update Stock
+      // Step 2: Update Stock
       await axios.post("https://ip-tienda-han-backend.onrender.com/api/updateStock", {
         updates: cartDetails.map((item) => ({
           id: item.id,
@@ -387,6 +373,7 @@ export const PlaceOrder = () => {
         })),
       });
   
+      // Step 3: Clear Cart and Navigate
       clearCart();
       toast.success("Order placed successfully! (Cash on Delivery)");
       navigate("/myorders");
@@ -395,7 +382,6 @@ export const PlaceOrder = () => {
       toast.error("Failed to place COD order. Please try again.");
     }
   };
-  
   
 
   const handlePaymentSuccess = async (paymentDetails) => {
