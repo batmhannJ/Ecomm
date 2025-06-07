@@ -12,7 +12,7 @@ const ProductDisplay = (props) => {
   const [selectedSize, setSelectedSize] = useState("");
   const [adjustedPrice, setAdjustedPrice] = useState(product.new_price);
   const [adjustedOldPrice, setAdjustedPriceOld] = useState(product.old_price);
-  const [currentStock, setCurrentStock] = useState(0); // Start with 0 until size is selected
+  const [currentStock, setCurrentStock] = useState(product.stock); // Default to total stock
   const [quantity, setQuantity] = useState(1); // State for quantity
   const [activeTab, setActiveTab] = useState("details");
 
@@ -20,8 +20,8 @@ const ProductDisplay = (props) => {
     // Reset adjustedPrice, stock, and quantity when product changes
     setAdjustedPrice(product.new_price);
     setAdjustedPriceOld(product.old_price);
-    setSelectedSize(""); // Reset size
-    setCurrentStock(0); // Reset to 0 until size is selected
+    setSelectedSize(""); // Optionally reset size
+    setCurrentStock(product.stock); // Reset to default total stock
     setQuantity(1); // Reset quantity
   }, [product]);
 
@@ -54,24 +54,21 @@ const ProductDisplay = (props) => {
     setAdjustedPriceOld(product.old_price + priceAdjustmentOld);
 
     // Adjust stock based on size selection
-    let stockAdjustment = 0; // Default to 0
+    let stockAdjustment = "";
     if (size === "S") {
-      stockAdjustment = product.s_stock || 0;
+      stockAdjustment = product.s_stock;
     } else if (size === "M") {
-      stockAdjustment = product.m_stock || 0;
+      stockAdjustment = product.m_stock;
     } else if (size === "L") {
-      stockAdjustment = product.l_stock || 0;
+      stockAdjustment = product.l_stock;
     } else if (size === "XL") {
-      stockAdjustment = product.xl_stock || 0;
+      stockAdjustment = product.xl_stock;
     }
 
     console.log(`Selected Size: ${size}, Stock Available: ${stockAdjustment}`); // Log selected size and stock
 
     // Ensure stock is updated
     setCurrentStock(stockAdjustment);
-    
-    // Reset quantity to 1 when size changes to avoid quantity being higher than new stock
-    setQuantity(1);
   };
 
   const handleAddToCart = async () => {
@@ -90,12 +87,6 @@ const ProductDisplay = (props) => {
       if (!selectedSize) {
         toast.info("Please select a size before adding to cart.", {
           position: "bottom-left",
-        });
-        return;
-      }
-      if (currentStock <= 0) {
-        toast.error("This item is out of stock.", {
-          position: "top-left",
         });
         return;
       }
@@ -136,9 +127,6 @@ const ProductDisplay = (props) => {
       setQuantity(quantity + delta);
     }
   };
-
-  // Check if button should be disabled
-  const isButtonDisabled = !selectedSize || currentStock <= 0;
 
   return (
     <div className="productdisplay">
@@ -189,34 +177,21 @@ const ProductDisplay = (props) => {
             </div>
           </div>
           <div className="productdisplay-stock">
-            <p>No. of Stock: {selectedSize ? currentStock : 'Please select a size'}</p>
+            <p>No. of Stock: {currentStock ?? 0}</p>
           </div>
           <h2>Select Size</h2>
           <div className="productdisplay-right-sizes">
-            {["S", "M", "L", "XL"].map((size) => {
-              // Get stock for each size to show availability
-              let sizeStock = 0;
-              if (size === "S") sizeStock = product.s_stock || 0;
-              else if (size === "M") sizeStock = product.m_stock || 0;
-              else if (size === "L") sizeStock = product.l_stock || 0;
-              else if (size === "XL") sizeStock = product.xl_stock || 0;
-              
-              return (
-                <div
-                  key={size}
-                  onClick={() => sizeStock > 0 ? handleSizeChange(size) : null}
-                  className={`size-option ${
-                    selectedSize === size ? "selected" : ""
-                  } ${sizeStock <= 0 ? "out-of-stock" : ""}`}
-                  style={{
-                    opacity: sizeStock <= 0 ? 0.5 : 1,
-                    cursor: sizeStock <= 0 ? "not-allowed" : "pointer"
-                  }}
-                >
-                  {size} {sizeStock <= 0 && "(Out of Stock)"}
-                </div>
-              );
-            })}
+            {["S", "M", "L", "XL"].map((size) => (
+              <div
+                key={size}
+                onClick={() => handleSizeChange(size)}
+                className={`size-option ${
+                  selectedSize === size ? "selected" : ""
+                }`}
+              >
+                {size}
+              </div>
+            ))}
           </div>
 
           <div className="quantity-controls">
@@ -224,7 +199,6 @@ const ProductDisplay = (props) => {
             <button
               className="quantity-button"
               onClick={() => handleQuantityChange(-1)}
-              disabled={!selectedSize || currentStock <= 0}
             >
               {" "}
               -{" "}
@@ -233,7 +207,6 @@ const ProductDisplay = (props) => {
             <button
               className="quantity-button"
               onClick={() => handleQuantityChange(1)}
-              disabled={!selectedSize || currentStock <= 0}
             >
               {" "}
               +{" "}
@@ -242,19 +215,10 @@ const ProductDisplay = (props) => {
 
           <button
             onClick={handleAddToCart}
-            disabled={isButtonDisabled}
+            disabled={currentStock === 0 || !selectedSize}
             className="productdisplay-button"
-            style={{
-              opacity: isButtonDisabled ? 0.6 : 1,
-              cursor: isButtonDisabled ? "not-allowed" : "pointer"
-            }}
           >
-            {!selectedSize 
-              ? "SELECT SIZE" 
-              : currentStock <= 0 
-                ? "OUT OF STOCK" 
-                : "ADD TO CART"
-            }
+            {currentStock === 0 ? "OUT OF STOCK" : "ADD TO CART"}
           </button>
         </div>
       </div>
