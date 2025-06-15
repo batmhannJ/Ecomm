@@ -4,7 +4,7 @@ import axios from "axios";
 import SellerSearchBar from "../SearchBar/SellerSearchBar";
 import { toast } from "react-toastify";
 import "./SellerRequest.css";
-import "./ViewUserModal.css";
+//import "./ViewUserModal.css";
 
 function SellerRequest() {
   const [sellers, setSellers] = useState([]);
@@ -12,7 +12,6 @@ function SellerRequest() {
   const [approving, setApproving] = useState(false);
   const [error, setError] = useState(null);
   const [originalSellers, setOriginalSellers] = useState([]); // To keep original seller data
-  const [viewSeller, setViewSeller] = useState(null);
 
   const adminToken = localStorage.getItem("admin_token"); // Ensure the key matches when storing
 
@@ -105,17 +104,15 @@ function SellerRequest() {
     }
   };
 
-  const handleViewSeller = (seller) => {
-    setViewSeller(seller);
-  };
-
   const handleSearch = async (searchTerm) => {
     try {
+      // If search term is empty, reset to original sellers
       if (!searchTerm || searchTerm.trim() === "") {
         setSellers(originalSellers);
         return;
       }
 
+      // Make API call for server-side search of pending sellers only
       const response = await axios.get(
         `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${searchTerm}`,
         {
@@ -125,6 +122,7 @@ function SellerRequest() {
         }
       );
       
+      // Since backend already filters for pending only, no need to filter again
       setSellers(response.data);
       
     } catch (error) {
@@ -135,30 +133,26 @@ function SellerRequest() {
       const filteredSellers = originalSellers.filter(seller => 
         seller._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         seller.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (seller.name && seller.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (seller.phone && seller.phone.toLowerCase().includes(searchTerm.toLowerCase()))
+        (seller.name && seller.name.toLowerCase().includes(searchTerm.toLowerCase()))
       );
       setSellers(filteredSellers);
     }
   };
 
   return (
-    <div className="user-management-container">
+    <div className="seller-management-container">
       <h1>Manage Admin Requests</h1>
       <SellerSearchBar onSearch={handleSearch} />
-      
       {loading ? (
         <p>Loading pending admins...</p>
       ) : sellers.length === 0 ? (
         <p>No pending admin requests.</p>
       ) : (
-        <table className="user-table">
+        <table className="seller-table">
           <thead>
             <tr>
               <th>Id</th>
-              <th>Name</th>
               <th>Email</th>
-              <th>Contact</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -166,16 +160,17 @@ function SellerRequest() {
             {sellers.map((seller) => (
               <tr key={seller._id}>
                 <td>{seller._id}</td>
-                <td>{seller.name || 'N/A'}</td>
+                {/*<td>{seller.name}</td>*/}
                 <td>{seller.email}</td>
-                <td>{seller.phone || 'N/A'}</td>
+                {/*<td>
+                  <img
+                    src={`http://localhost:4000/upload/${seller.idPicture}`} // Adjust this path to match your server's setup
+                    alt="ID Picture"
+                    style={{ width: "100px", height: "auto" }} // You can adjust the size as needed
+                  />
+                </td>*/}
+                {/* Ensure 'idProfile' exists in Seller model */}
                 <td>
-                  <button
-                    className="action-button view"
-                    onClick={() => handleViewSeller(seller)}
-                  >
-                    View
-                  </button>
                   <button
                     className="action-button approve"
                     onClick={() => handleApproveSeller(seller._id)}
@@ -194,41 +189,6 @@ function SellerRequest() {
             ))}
           </tbody>
         </table>
-      )}
-
-      {viewSeller && (
-        <div className="view-user-overlay">
-          <div className="view-user-details">
-            <h2>View Admin Request</h2>
-            <button
-              type="button"
-              className="close-button"
-              onClick={() => setViewSeller(null)}
-            >
-              X
-            </button>
-            <div className="user-detail">
-              <strong>ID:</strong> {viewSeller._id}
-            </div>
-            <div className="user-detail">
-              <strong>Name:</strong> {viewSeller.name || 'N/A'}
-            </div>
-            <div className="user-detail">
-              <strong>Email:</strong> {viewSeller.email}
-            </div>
-            <div className="user-detail">
-              <strong>Contact:</strong> {viewSeller.phone || 'N/A'}
-            </div>
-            <div className="user-detail">
-              <strong>Status:</strong> Pending Approval
-            </div>
-            {viewSeller.password && (
-              <div className="user-detail">
-                <strong>Password:</strong> {'*'.repeat(viewSeller.password.length)}
-              </div>
-            )}
-          </div>
-        </div>
       )}
     </div>
   );
