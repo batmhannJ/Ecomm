@@ -16,6 +16,44 @@ router.patch("/approve/:adminId", approveAdmin); // Add this line for approving 
 router.get("/superadmin/:id", getsuperAdminById);
 router.patch("/editsuperadmin/:id", updateSuperAdmin);
 router.get("/pending", getPendingAdmins);
+
+// Search route for pending admins
+router.get("/search", async (req, res) => {
+  try {
+    const { term } = req.query;
+    
+    if (!term || term.trim() === "") {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Search term is required." 
+      });
+    }
+
+    // Search for admins that match the search term and are not approved (pending)
+    const searchResults = await AdminUser.find({
+      $and: [
+        { isApproved: false }, // Only pending admins
+        {
+          $or: [
+            { name: { $regex: term, $options: "i" } }, // Case-insensitive search
+            { email: { $regex: term, $options: "i" } },
+            { _id: { $regex: term, $options: "i" } },
+            { phone: { $regex: term, $options: "i" } }
+          ]
+        }
+      ]
+    });
+
+    res.status(200).json(searchResults);
+  } catch (error) {
+    console.error("Error searching pending admins:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error while searching." 
+    });
+  }
+});
+
 router.patch("/:id/approve", async (req, res) => {
   try {
     const { id } = req.params;
@@ -39,4 +77,5 @@ router.patch("/:id/approve", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error." });
   }
 });
+
 module.exports = router;
