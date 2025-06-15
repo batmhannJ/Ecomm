@@ -52,6 +52,7 @@ function SellerRequest() {
       return;
 
     setApproving(true);
+    try {
       const response = await axios.patch(
         `https://ip-tienda-han-backend.onrender.com/api/superadmin/${id}/approve`, // Ensure this route matches your backend
         {},
@@ -70,7 +71,12 @@ function SellerRequest() {
       setOriginalSellers(
         originalSellers.filter((seller) => seller._id !== id)
       );
-    
+    } catch (error) {
+      console.error("Error approving admin:", error);
+      toast.error("Error approving admin.");
+    } finally {
+      setApproving(false);
+    }
   };
 
   const handleDeleteSeller = async (id) => {
@@ -98,15 +104,44 @@ function SellerRequest() {
     }
   };
 
-  const handleSearch = (filteredSellers) => {
-    setSellers(filteredSellers);
+  const handleSearch = async (searchTerm) => {
+    try {
+      // If search term is empty, reset to original sellers
+      if (!searchTerm || searchTerm.trim() === "") {
+        setSellers(originalSellers);
+        return;
+      }
+
+      // Filter locally first (for immediate response)
+      const filteredSellers = originalSellers.filter(seller => 
+        seller._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        seller.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (seller.name && seller.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      
+      setSellers(filteredSellers);
+
+      // Optionally, you can also make an API call for server-side search
+      // const response = await axios.get(
+      //   `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${searchTerm}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${adminToken}`,
+      //     },
+      //   }
+      // );
+      // setSellers(response.data);
+      
+    } catch (error) {
+      console.error("Error searching sellers:", error);
+      toast.error("Search failed. Please try again.");
+    }
   };
 
   return (
     <div className="seller-management-container">
       <h1>Manage Admin Requests</h1>
-      {/*<SellerSearchBar sellers={originalSellers} onSearch={handleSearch} />{" "}*/}
-      {/* Pass sellers and search handler */}
+      <SellerSearchBar onSearch={handleSearch} />
       {loading ? (
         <p>Loading pending admins...</p>
       ) : sellers.length === 0 ? (
