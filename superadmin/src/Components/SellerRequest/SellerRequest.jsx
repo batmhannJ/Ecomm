@@ -121,16 +121,15 @@ function SellerRequest() {
       
       setSellers(filteredSellers);
 
-      // Optionally, you can also make an API call for server-side search
-      // const response = await axios.get(
-      //   `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${searchTerm}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${adminToken}`,
-      //     },
-      //   }
-      // );
-      // setSellers(response.data);
+      const response = await axios.get(
+      `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${searchTerm}`,
+      {
+       headers: {
+       Authorization: `Bearer ${adminToken}`,
+      },
+      }
+      );
+      setSellers(response.data);
       
     } catch (error) {
       console.error("Error searching sellers:", error);
