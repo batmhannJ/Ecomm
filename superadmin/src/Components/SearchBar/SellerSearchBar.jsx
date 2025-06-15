@@ -2,29 +2,31 @@
 import React, { useState } from "react";
 import "./SearchBar.css"; // Optional CSS for styling
 
-const SellerSearchBar = ({ sellers, onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
-
-    const filteredSellers = sellers.filter((seller) =>
-      seller.name.toLowerCase().includes(query) || 
-      seller.email.toLowerCase().includes(query)
-    );
-
-    onSearch(filteredSellers); // Pass the filtered results to the parent component
-  };
+const SellerSearchBar = ({ onSearch }) => {
+ const [searchTerm, setSearchTerm] = useState("");
+ 
+   const handleSubmit = (e) => {
+     e.preventDefault();
+ 
+     if (!searchTerm.trim()) {
+       toast.warning("Please enter a search term."); // Notify user
+       return; // Stop function execution
+     }
+ 
+     onSearch(searchTerm); // Call the onSearch function passed from props
+   };
 
   return (
     <div className="search-bar">
-      <input
-        type="text"
-        placeholder="Search seller by name or email"
-        value={searchQuery}
-        onChange={handleSearch}
-      />
+      <form onSubmit={handleSubmit} style={{ width: "100%", display: "flex" }}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search for users..."
+        />
+        <button type="submit">Search</button>
+      </form>
     </div>
   );
 };
