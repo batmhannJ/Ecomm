@@ -112,28 +112,31 @@ function SellerRequest() {
         return;
       }
 
-      // Filter locally first (for immediate response)
+      // Make API call for server-side search of pending sellers only
+      const response = await axios.get(
+        `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${searchTerm}`,
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
+      );
+      
+      // Filter results to only show non-approved sellers (isApproved: false)
+      const pendingResults = response.data.filter(seller => seller.isApproved === false);
+      setSellers(pendingResults);
+      
+    } catch (error) {
+      console.error("Error searching sellers:", error);
+      toast.error("Search failed. Please try again.");
+      
+      // Fallback to local search if API fails
       const filteredSellers = originalSellers.filter(seller => 
         seller._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         seller.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (seller.name && seller.name.toLowerCase().includes(searchTerm.toLowerCase()))
       );
-      
       setSellers(filteredSellers);
-
-      const response = await axios.get(
-      `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${searchTerm}`,
-      {
-       headers: {
-       Authorization: `Bearer ${adminToken}`,
-      },
-      }
-      );
-      setSellers(response.data);
-      
-    } catch (error) {
-      console.error("Error searching sellers:", error);
-      toast.error("Search failed. Please try again.");
     }
   };
 
