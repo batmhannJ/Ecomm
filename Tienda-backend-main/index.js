@@ -1673,6 +1673,37 @@ app.get("/redirect", (req, res) => {
   }
 });
 
+app.post('/api/send-email', async (req, res) => {
+  const { to, subject, html } = req.body;
+  
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Sender email
+      to: to, // Recipient email
+      subject: subject, // Email subject
+      html: html // Email content
+    };
+
+    // Send email using your existing transporter
+    await transporter.sendMail(mailOptions);
+    
+    console.log('Email sent successfully to:', to);
+    res.status(200).json({ 
+      success: true, 
+      message: 'Email sent successfully' 
+    });
+    
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to send email',
+      details: error.message 
+    });
+  }
+});
+
+
 // Admin Routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/", adminRoutes);
