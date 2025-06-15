@@ -155,39 +155,7 @@ function SellerRequest() {
     <div className="seller-management-container">
       <h1>Manage Admin Requests</h1>
       
-      {/* Custom Search Bar with Button */}
-      <div className="search-container" style={{ marginBottom: '20px', marginRight: '100px', display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <input
-          type="text"
-          placeholder="Search by ID, Email, Name, or Phone..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            fontSize: '14px',
-            flex: '1',
-            maxWidth: '300px'
-          }}
-        />
-        <button
-          onClick={handleSearch}
-          disabled={searching}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          {searching ? 'Searching...' : 'Search'}
-        </button>
-      </div>
+     <SellerSearchBar onSearch={handleSearch} />
       {loading ? (
         <p>Loading pending admins...</p>
       ) : sellers.length === 0 ? (
