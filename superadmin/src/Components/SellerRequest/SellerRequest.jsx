@@ -104,11 +104,16 @@ function SellerRequest() {
     }
   };
 
-  const handleSearch = async (searchTerm) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searching, setSearching] = useState(false);
+
+  const handleSearch = async () => {
+    setSearching(true);
     try {
       // If search term is empty, reset to original sellers
       if (!searchTerm || searchTerm.trim() === "") {
         setSellers(originalSellers);
+        setSearching(false);
         return;
       }
 
@@ -122,9 +127,8 @@ function SellerRequest() {
         }
       );
       
-      // Filter results to only show non-approved sellers (isApproved: false)
-      const pendingResults = response.data.filter(seller => seller.isApproved === false);
-      setSellers(pendingResults);
+      // Since backend already filters for pending only, no need to filter again
+      setSellers(response.data);
       
     } catch (error) {
       console.error("Error searching sellers:", error);
@@ -137,13 +141,67 @@ function SellerRequest() {
         (seller.name && seller.name.toLowerCase().includes(searchTerm.toLowerCase()))
       );
       setSellers(filteredSellers);
+    } finally {
+      setSearching(false);
     }
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setSellers(originalSellers);
   };
 
   return (
     <div className="seller-management-container">
       <h1>Manage Admin Requests</h1>
-      <SellerSearchBar onSearch={handleSearch} />
+      
+      {/* Custom Search Bar with Button */}
+      <div className="search-container" style={{ marginBottom: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <input
+          type="text"
+          placeholder="Search by ID, Email, Name, or Phone..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          style={{
+            padding: '8px 12px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            fontSize: '14px',
+            flex: '1',
+            maxWidth: '300px'
+          }}
+        />
+        <button
+          onClick={handleSearch}
+          disabled={searching}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          {searching ? 'Searching...' : 'Search'}
+        </button>
+        <button
+          onClick={handleClearSearch}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#6c757d',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          Clear
+        </button>
+      </div>
       {loading ? (
         <p>Loading pending admins...</p>
       ) : sellers.length === 0 ? (
