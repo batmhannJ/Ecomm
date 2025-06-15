@@ -54,7 +54,7 @@ const Orders = () => {
             </div>
             
             <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
-              <p>This is an automated notification from your Han Store system.</p>
+              <p>This is an automated notification from your Tienda system.</p>
             </div>
           </div>
         `
