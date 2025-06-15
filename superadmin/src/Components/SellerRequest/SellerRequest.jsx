@@ -4,21 +4,20 @@ import axios from "axios";
 import SellerSearchBar from "../SearchBar/SellerSearchBar";
 import { toast } from "react-toastify";
 import "./SellerRequest.css";
-//import "./ViewUserModal.css";
 
 function SellerRequest() {
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [approving, setApproving] = useState(false);
   const [error, setError] = useState(null);
-  const [originalSellers, setOriginalSellers] = useState([]); // To keep original seller data
+  const [originalSellers, setOriginalSellers] = useState([]);
+  const [searching, setSearching] = useState(false);
 
-  const adminToken = localStorage.getItem("admin_token"); // Ensure the key matches when storing
+  const adminToken = localStorage.getItem("admin_token");
 
   useEffect(() => {
     if (!adminToken) {
       toast.error("Admin not authenticated. Please log in.");
-      // Optionally, redirect to admin login page
       return;
     }
     fetchPendingSellers();
@@ -37,7 +36,7 @@ function SellerRequest() {
       );
       const fetchedSellers = Array.isArray(response.data) ? response.data : [];
       setSellers(fetchedSellers);
-      setOriginalSellers(fetchedSellers); // Save the original list for filtering
+      setOriginalSellers(fetchedSellers);
     } catch (error) {
       console.error("Error fetching pending admin:", error);
       setError("Failed to fetch pending admin.");
@@ -54,7 +53,7 @@ function SellerRequest() {
     setApproving(true);
     try {
       const response = await axios.patch(
-        `https://ip-tienda-han-backend.onrender.com/api/superadmin/${id}/approve`, // Ensure this route matches your backend
+        `https://ip-tienda-han-backend.onrender.com/api/superadmin/${id}/approve`,
         {},
         {
           headers: {
@@ -66,7 +65,6 @@ function SellerRequest() {
       toast.success(
         `Admin ${response.data.admin.name} approved successfully.`
       );
-      // Remove the approved seller from the list
       setSellers(sellers.filter((seller) => seller._id !== id));
       setOriginalSellers(
         originalSellers.filter((seller) => seller._id !== id)
@@ -104,10 +102,8 @@ function SellerRequest() {
     }
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searching, setSearching] = useState(false);
-
-  const handleSearch = async () => {
+  // Updated handleSearch function to receive searchTerm as parameter
+  const handleSearch = async (searchTerm) => {
     setSearching(true);
     try {
       // If search term is empty, reset to original sellers
@@ -119,7 +115,7 @@ function SellerRequest() {
 
       // Make API call for server-side search of pending sellers only
       const response = await axios.get(
-        `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${searchTerm}`,
+        `https://ip-tienda-han-backend.onrender.com/api/superadmin/search?term=${encodeURIComponent(searchTerm)}`,
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -127,7 +123,6 @@ function SellerRequest() {
         }
       );
       
-      // Since backend already filters for pending only, no need to filter again
       setSellers(response.data);
       
     } catch (error) {
@@ -146,16 +141,14 @@ function SellerRequest() {
     }
   };
 
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    setSellers(originalSellers);
-  };
-
   return (
     <div className="seller-management-container">
       <h1>Manage Admin Requests</h1>
       
-     <SellerSearchBar onSearch={handleSearch} />
+      <SellerSearchBar onSearch={handleSearch} />
+      
+      {searching && <p>Searching...</p>}
+      
       {loading ? (
         <p>Loading pending admins...</p>
       ) : sellers.length === 0 ? (
@@ -173,16 +166,7 @@ function SellerRequest() {
             {sellers.map((seller) => (
               <tr key={seller._id}>
                 <td>{seller._id}</td>
-                {/*<td>{seller.name}</td>*/}
                 <td>{seller.email}</td>
-                {/*<td>
-                  <img
-                    src={`http://localhost:4000/upload/${seller.idPicture}`} // Adjust this path to match your server's setup
-                    alt="ID Picture"
-                    style={{ width: "100px", height: "auto" }} // You can adjust the size as needed
-                  />
-                </td>*/}
-                {/* Ensure 'idProfile' exists in Seller model */}
                 <td>
                   <button
                     className="action-button approve"
