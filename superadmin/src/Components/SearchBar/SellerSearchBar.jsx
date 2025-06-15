@@ -19,7 +19,7 @@ const SellerSearchBar = ({ onSearch }) => {
 
   return (
     <div className="search-bar">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ width: "100%", display: "flex" }}>
         <input
           type="text"
           value={searchTerm}
