@@ -30,7 +30,7 @@ const Shop = () => {
         <h3 style={{ color: '#333', marginBottom: '10px' }}>📱 Download the Tienda Mobile App</h3>
         <p style={{ color: '#555', fontSize: '14px', marginBottom: '10px' }}>Click the button below to download the Tienda mobile app and start shopping on the go!</p>
         <a 
-          href="https://drive.google.com/file/d/1OpjRMTLpfOSz9P4mqbPEhTVj4TgBcvOc/view?usp=sharing" 
+          href="https://drive.google.com/file/d/1vpWGR-GLggfYLpjsBzbRjKwS2ZvlP0c4/view?usp=sharing" 
           target="_blank" 
           rel="noopener noreferrer" 
           style={{ 
