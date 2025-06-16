@@ -52,6 +52,11 @@ const sendEmail = async (to, subject, text) => {
     });
   });
 };
+
+const PAYPAL_CLIENT_ID = 'AbBI5ApHeALU38Hey0f-qjn7I72JcgnjAXv2OUkUsg459L7i5Aeis9sbGKUwM22l_U_taUImxdK-eB6a';
+const PAYPAL_CLIENT_SECRET = 'ECkwR7ekjVF5X7981tz0iceQvI1Fc5AyrYmQfdQrgTdVCYAEd-4jOqTJjA91I0gDgSZsrcN9pIMlf1XW';
+const PAYPAL_BASE_URL = 'https://api.paypal.com'; // Use https://api.paypal.com for production
+
 const allowedOrigins = [  
   'http://localhost:3000', 
   'http://localhost:28429',
@@ -1703,6 +1708,84 @@ app.post('/api/send-email', async (req, res) => {
   }
 });
 
+
+async function getPayPalAccessToken() {
+  try {
+    const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64');
+    
+    const response = await axios.post(`${PAYPAL_BASE_URL}/v1/oauth2/token`, 
+      'grant_type=client_credentials',
+      {
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
+    
+    return response.data.access_token;
+  } catch (error) {
+    console.error('Error getting PayPal access token:', error);
+    throw error;
+  }
+}
+
+// Create PayPal order
+app.post('/api/create-order', async (req, res) => {
+  try {
+    const { amount, currency = 'PHP', referenceNumber } = req.body;
+    
+    const accessToken = await getPayPalAccessToken();
+    
+    const orderData = {
+      intent: 'CAPTURE',
+      purchase_units: [{
+        reference_id: referenceNumber,
+        amount: {
+          currency_code: currency,
+          value: amount.toFixed(2)
+        }
+      }],
+      application_context: {
+        return_url: 'https://ip-tienda-han.onrender.com/success',
+        cancel_url: 'https://ip-tienda-han.onrender.com/cancel'
+      }
+    };
+
+    const response = await axios.post(`${PAYPAL_BASE_URL}/v2/checkout/orders`, orderData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    res.json({ orderID: response.data.id, approvalUrl: response.data.links[1].href });
+  } catch (error) {
+    console.error('Error creating PayPal order:', error);
+    res.status(500).json({ error: 'Failed to create PayPal order' });
+  }
+});
+
+// Capture PayPal payment
+app.post('/api/capture-order', async (req, res) => {
+  try {
+    const { orderID } = req.body;
+    
+    const accessToken = await getPayPalAccessToken();
+    
+    const response = await axios.post(`${PAYPAL_BASE_URL}/v2/checkout/orders/${orderID}/capture`, {}, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error capturing PayPal order:', error);
+    res.status(500).json({ error: 'Failed to capture PayPal payment' });
+  }
+});
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);
