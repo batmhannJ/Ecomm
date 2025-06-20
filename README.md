@@ -10,11 +10,15 @@ By giving Indigenous communities a digital platform to display and sell their in
 2. Navigate to the project directory
 - **cd** Tienda
 
-3. Install the dependencies
-- npm install
+3. Install all dependencies
+- npm i
 
 4. Run the app locally
-- npm start
+- Tienda-backend-main - **npm start**
+- Tienda-Frontend-main - **npm run dev**
+- Tienda-Seller-main - **npm run dev**
+- Tienda-Admin-main - **npm run dev**
+- superadmin - **npm run dev**
 
 ### 💡 Ensure you have Node.js and npm installed.
 
