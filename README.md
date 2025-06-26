@@ -11,7 +11,7 @@ By giving Indigenous communities a digital platform to display and sell their in
 - **cd** Tienda
 
 3. Install all dependencies
-- npm i
+- npm install
 
 4. Run the app locally
 - Tienda-backend-main - **npm start**
